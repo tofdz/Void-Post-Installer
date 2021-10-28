@@ -1,4 +1,4 @@
-# VOID-Post-Installer by tofdz
+# VOID-Post-Installer
 
 Permet la post installation de VoidLinux pour les débutants qui veulent passer de Windows à VoidLinux
 
@@ -19,3 +19,4 @@ Permet la post installation de VoidLinux pour les débutants qui veulent passer 
 
 
 Ainsi que tout le necessaire pour utiliser son systeme d'exploitation au quotidien :).
+2021 tofdz
