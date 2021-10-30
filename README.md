@@ -11,15 +11,24 @@ Permet la post installation de VoidLinux pour les débutants qui veulent passer 
 - Installation complete Discord
 
 - Gestionnaire de paquet vpm pour une utilisation simplifiée dans le terminal et octoxbps en mode graphique depuis le bureau.
+- Gparted pour gérer vos disques durs & partitions 
 - Minitube pour une navigation sur youtube épurée de toute publicité
-- ytmdl pour recuper vidéo et musique directement depuis le terminal
+- ytmdl pour recuper vidéo et musique directement depuis Youtube sur le terminal
 - Gestion des souris steelseries grace à l'ajout du script rivalcfg.
 - LibreOffice
 - Notepadqq (équivalent à notepad++)
+- Gimp pour la retouche photo
+- Xarchiver pour compresser/décompresser vos archives
+- Htop & ytop pour monitorer votre systeme
+- Zenmap pour securiser & tester votre réseau privé
+- Et pleins d'autres applications sympa sur les dépots de void et de github !
 
 
-Ainsi que tout le necessaire pour utiliser son systeme d'exploitation au quotidien :).
-2021 tofdz
+
+Tout le necessaire pour utiliser son systeme d'exploitation au quotidien :).
+Une bonne config de base, un set d'outil pour commencer à etre productif.
+Et pouvoir game ;)
+
 
 
 # Installation
@@ -33,4 +42,10 @@ sudo chmod +x install.sh
 ./install.sh
 
 Enjoy ^^  
-Tofdz
+2021 Tofdz
+
+source github (Merci à eux !) :
+
+	rivalcfg 					      https://github.com/flozz/rivalcfg
+	Fonts San Francisco			https://github.com/supermarin/YosemiteSanFranciscoFont
+	
