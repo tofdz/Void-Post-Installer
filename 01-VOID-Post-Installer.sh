@@ -38,6 +38,9 @@ done
 function SSHKEYTEST(){
 
 # Vérification & Création des clés SSH en ed25519
+SSHDIR=/etc/ssh/
+PRIK=id_ed25519
+PUBK=id_ed15519.pub
 
 if [ ! -f $SSHDIR$PRIK ] || [ ! -f $SSHDIR$PUBK ];then
         echo "ssh-keygen -t ed25519"
