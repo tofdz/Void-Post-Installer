@@ -48,14 +48,6 @@ fi
 function ELOGIND(){
 # Configuration clavier azerty pour
 # se connecter à sa session.
-
-if [ -x 03-VOID-Login_AZERTY.sh ];then
-echo "03-VOID-Login_AZERTY.sh : non executable, modification en cours"
-sudo chmod +x 03-VOID-Login_AZERTY.sh
-echo "03-VOID-Login_AZERTY.sh : executable"
-else
-echo "03-VOID-Login_AZERTY.sh deja executable"
-fi
 sudo ./03-VOID-Login_AZERTY.sh
 }
 function BASEINSTALL(){
@@ -64,7 +56,7 @@ sudo xbps-install -Syuv xbps;sudo xbps-install -Syuv;
 # INSTALLATION VPM
 sudo xbps-install -Syuv vpm vsv;
 sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree
-sudo vpm i -y nano octoxbps notepadqq mc htop tmux zsh curl wget cifs-utils python3-pip xarchiver xfburn flatpak unzip smbclient minitube arduino zenmap vlc gimp gparted blender pycp cdrtools git-all socklog socklog-void 
+sudo vpm i -y git-all nano zsh curl wget cifs-utils python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver xfburn flatpak unzip smbclient minitube arduino zenmap vlc gimp gparted blender pycp cdrtools socklog socklog-void ytmdl
 sudo ln -s /etc/sv/socklog-unix /var/services;sudo ln -s /etc/sv/nanoklogd /var/services;
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
@@ -85,13 +77,6 @@ flatpak install Discord Parsec #app/com.valvesoftware.Steam/x86_64/stable
 function I3INSTALLER(){
 echo "Installation Paquets pour le gestionnaire i3"
 sudo vpm i -y i3 i3ipc-glib i3status i3wsr dmenu rofi i3blocks i3blocks-blocklets pasystray font-awesome5 lxappearance feh
-if [ -x 08-VOID-i3.sh ];then
-echo "08-VOID-i3.sh : non executable, modification en cours"
-sudo chmod +x 08-VOID-i3.sh
-echo "08-VOID-i3.sh : executable"
-else
-echo "08-VOID-i3.sh deja executable"
-fi
 ./08-VOID-i3.sh
 }
 function NANORC(){
@@ -129,21 +114,7 @@ function HOSTS(){
 # Configuration Reseau (adresse définie)
 # Appel un script pour avoir les droits root en écriture sur
 # le fichier /etc/hosts
-
-echo "Démarrage du script"
-#chmod +x 02-VOID-Host_Modifier.sh
-#sudo ./02-VOID-Host_Modifier.sh
-echo "02-VOID-Host_Modifier.sh : Test si executable"
-if [ -x 02-VOID-Host_Modifier.sh ];then
-echo "02-VOID-Host_Modifier.sh : non executable, modification en cours"
-chmod +x 02-VOID-Host_Modifier.sh
-echo "02-VOID-Host_Modifier.sh : executable"
-else
-echo "02-VOID-Host_Modifier.sh deja executable"
-fi
 sudo ./02-VOID-Host_Modifier.sh
-
-
 }
 
 function T420(){
@@ -175,33 +146,12 @@ sudo vpm i -y xfce4-pulseaudio-plugin nvidia
 
 function STEAM(){
 # Configuration installation Steam
-if [ -x 05-VOID-Steam.sh ];then
-echo "05-VOID-Steam.sh : non executable, modification en cours"
-sudo chmod +x 05-VOID-Steam.sh
-echo "05-VOID-Steam.sh : executable"
-else
-echo "05-VOID-Steam.sh deja executable"
-fi
 ./05-VOID-Steam.sh
 }
 function GOG(){
-if [ -x 06-VOID-GOG.sh ];then
-echo "06-VOID-GOG.sh : non executable, modification en cours"
-sudo chmod +x 06-VOID-GOG.sh
-echo "06-VOID-GOG.sh : executable"
-else
-echo "06-VOID-GOG.sh deja executable"
-fi
 ./06-VOID-GOG.sh
 }
 function STEELSERIES(){
-if [ -x 07-VOID-rivalcfg.sh ];then
-echo "07-VOID-rivalcfg.sh  : non executable, modification en cours"
-sudo chmod +x 07-VOID-rivalcfg.sh
-echo "07-VOID-rivalcfg.sh : executable"
-else
-echo "07-VOID-rivalcfg.sh deja executable"
-fi
 ./07-VOID-rivalcfg.sh
 }
 
@@ -246,11 +196,4 @@ echo "Travail terminé ! Reboot en cours"
 }
 
 MAIN
-sudo vpm up
-echo "Fin de l'installation"
-echo "Appuyez sur une touche pour redémarrer"
-read touche
-case $touche in
-*)	sudo reboot
-	;;
-esac
+echo "Fin de l'installation - Merci et bonne journée sur VoidLinux"
