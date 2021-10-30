@@ -127,8 +127,6 @@ sudo vsv restart acpid;
 }
 function X250(){
 
-int NEKO_PATCH_intel_grub = 0;
-
 if [ -n $(sudo grep 'intel' /etc/default/grub) ];then
 	echo "Modification du fichier /etc/default/grub"
 	sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4" intel_iommu=igfx_off/' /etc/default/grub
@@ -136,7 +134,7 @@ if [ -n $(sudo grep 'intel' /etc/default/grub) ];then
 	echo "Mise à jour de Grub"
 	sudo update-grub
 else
-	echo "Fichier deja modifie"
+	echo "Fichier déjà modifié"
 fi
 
 sudo vpm i -y linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode mesa-dri mesa-vulkan-intel
