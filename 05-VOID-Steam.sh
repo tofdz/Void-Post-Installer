@@ -14,7 +14,7 @@ sudo usermod -a -G input $USER
 
 function NVIDIA(){
 #Installe les drivers nvidia new gen (RTX compatible)
-sudo vpm i -y nvidia-libs-32bit-470.74_1
+sudo vpm i -y nvidia-libs-32bit
 }
 
 function OPENSOURCE(){
