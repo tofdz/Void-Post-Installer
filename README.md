@@ -29,8 +29,8 @@ Dans un terminal, tapez :
 sudo xbps-install -Suyv git-all  
 git clone https://github.com/tofdz/Void-Post-Installer/  
 cd Void-Post-Installer  
-sudo chmod +x 01-VOID-Post-Installer.sh  
-./01-VOID-Post-Installer.sh
+sudo chmod +x install.sh  
+./install.sh
 
 Enjoy ^^  
 Tofdz
