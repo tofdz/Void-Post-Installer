@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source ~/.config/user-dirs.dirs
 # NAME : VOID_TofF-Installer.sh
 # Ver  : 0.0.2
 # Date : 16/11/2020 maj 30/10/2021
@@ -62,8 +62,8 @@ sudo ln -s /etc/sv/socklog-unix /var/services;sudo ln -s /etc/sv/nanoklogd /var/
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
 sudo vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
 sudo rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
-# INSTALLATION PAQUETS TofF Installer
-
+# INSTALLATION Wallpaper
+pycp wallpaper/* $XDG_PICTURES_DIR
 }
 
 function FLATPAK(){
