@@ -84,6 +84,7 @@ flatpak install Discord Parsec #app/com.valvesoftware.Steam/x86_64/stable
 }
 function I3INSTALLER(){
 echo "Installation Paquets pour le gestionnaire i3"
+sudo vpm i -y i3 i3ipc-glib i3status i3wsr i3-gaps dmenu rofi i3blocks i3blocks-blocklets pasystray font-awesome5 lxappearance
 if [ -x 08-VOID-i3.sh ];then
 echo "08-VOID-i3.sh : non executable, modification en cours"
 sudo chmod +x 08-VOID-i3.sh
