@@ -15,6 +15,8 @@ fi
 
 # TELECHARGEMENT DES PAQUETS POUR i3
 echo "Installation Paquets pour le gestionnaire i3"
+sudo vpm up
+echo "Installation des paquets pour i3"
 sudo vpm i -y i3 i3ipc-glib i3status i3wsr i3-gaps dmenu rofi i3blocks i3blocks-blocklets pasystray font-awesome5 lxappearance
 
 # PREPARATION DES FICHIERS DE CONFIF ET CLEAN POUR L'INSTALL
