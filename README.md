@@ -46,6 +46,6 @@ Enjoy ^^
 
 source github (Merci à eux !) :
 
-rivalcfg			https://github.com/flozz/rivalcfg
-Fonts San Francisco		https://github.com/supermarin/YosemiteSanFranciscoFont
+rivalcfg			https://github.com/flozz/rivalcfg  
+Fonts San Francisco		https://github.com/supermarin/YosemiteSanFranciscoFont  
 	
