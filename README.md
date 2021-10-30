@@ -20,3 +20,16 @@ Permet la post installation de VoidLinux pour les débutants qui veulent passer 
 
 Ainsi que tout le necessaire pour utiliser son systeme d'exploitation au quotidien :).
 2021 tofdz
+
+
+# Installation
+
+Dans un terminal, tapez :
+
+sudo xbps-install -Suyv git-all;git clone https://github.com/tofdz/Void-Post-Installer/
+cd Void-Post-Installer
+sudo chmod +x 01-VOID-Post-Installer.sh
+./01-VOID-Post-Installer.sh
+
+Enjoy ^^
+Tofdz
