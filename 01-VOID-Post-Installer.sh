@@ -247,6 +247,7 @@ echo "Travail terminé ! Reboot en cours"
 }
 
 MAIN
+sudo vpm up
 echo "Fin de l'installation"
 echo "Appuyez sur une touche pour redémarrer"
 read touche
