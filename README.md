@@ -26,11 +26,11 @@ Ainsi que tout le necessaire pour utiliser son systeme d'exploitation au quotidi
 
 Dans un terminal, tapez :
 
-sudo xbps-install -Suyv git-all;
-git clone https://github.com/tofdz/Void-Post-Installer/;
-cd Void-Post-Installer;
-sudo chmod +x 01-VOID-Post-Installer.sh;
-./01-VOID-Post-Installer.sh;
+sudo xbps-install -Suyv git-all  
+git clone https://github.com/tofdz/Void-Post-Installer/  
+cd Void-Post-Installer  
+sudo chmod +x 01-VOID-Post-Installer.sh  
+./01-VOID-Post-Installer.sh
 
-Enjoy ^^
+Enjoy ^^  
 Tofdz
