@@ -7,24 +7,30 @@ if [ ! -d $HOME/.fonts ];then
 else
 echo "Dossier .fonts déjà présent"
 fi
+if [ ! -d $I3CONF ];then
+	mkdir $I3CONF
+else
+echo "Dossier i3 déjà présent"
+fi
 
 # TELECHARGEMENT DES PAQUETS POUR i3
 echo "Installation Paquets pour le gestionnaire i3"
 sudo vpm i -y i3 i3ipc-glib i3status i3wsr i3-gaps dmenu rofi iblocks i3blocks-blocklets pasystray font-awesome5-5.15.4_1 lxappearance
 
 # PREPARATION DES FICHIERS DE CONFIF ET CLEAN POUR L'INSTALL
-pycp $I3CONF/config $I3CONF/config.ori
+if [ -f $I3CONF/config ];then
+sudo pycp $I3CONF/config $I3CONF/config.ori
 rm -fv $I3CONF/config
-
+else
 # INSTALLATION DES FICHIERS DE CONFIGURATION
-pycp config/config $I3CONF
-pycp config/i3blocks.conf $I3CONF
-
+sudo pycp $HOME/Void-Post-Installer/config/config $I3CONF
+sudo pycp $HOME/Void-Post-Installer/config/i3blocks.conf $I3CONF
+fi
 #Installer la police qui va bien
 #OUUUUUUUUUPPPP OUUUUUUUUUUP THAAAAAAAT'S DAAAAAAAAA SOUUUUUUUUUN OF DAAAAAAAAAA POOOOOOOOOLICE !
 cd $HOME
 git clone https://github.com/supermarin/YosemiteSanFranciscoFont
-pycp YosemiteSanFranciscoFont/'Text Face (Alternate)/'*.ttf $HOME/.fonts/
+sudo pycp $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
 fc-cache -fv
 echo "Suppression des Fichiers inutile"
 rm -rfv YosemiteSanFranciscoFont

@@ -51,7 +51,7 @@ function ELOGIND(){
 
 if [ -x 03-VOID-Login_AZERTY.sh ];then
 echo "03-VOID-Login_AZERTY.sh : non executable, modification en cours"
-chmod +x 03-VOID-Login_AZERTY.sh
+sudo chmod +x 03-VOID-Login_AZERTY.sh
 echo "03-VOID-Login_AZERTY.sh : executable"
 else
 echo "03-VOID-Login_AZERTY.sh deja executable"
@@ -86,7 +86,7 @@ function I3INSTALLER(){
 echo "Installation Paquets pour le gestionnaire i3"
 if [ -x 08-VOID-i3.sh ];then
 echo "08-VOID-i3.sh : non executable, modification en cours"
-chmod +x 08-VOID-i3.sh
+sudo chmod +x 08-VOID-i3.sh
 echo "08-VOID-i3.sh : executable"
 else
 echo "08-VOID-i3.sh deja executable"
@@ -176,17 +176,17 @@ function STEAM(){
 # Configuration installation Steam
 if [ -x 05-VOID-Steam.sh ];then
 echo "05-VOID-Steam.sh : non executable, modification en cours"
-chmod +x 05-VOID-Steam.sh
+sudo chmod +x 05-VOID-Steam.sh
 echo "05-VOID-Steam.sh : executable"
 else
 echo "05-VOID-Steam.sh deja executable"
 fi
-sudo ./05-VOID-Steam.sh
+./05-VOID-Steam.sh
 }
 function GOG(){
 if [ -x 06-VOID-GOG.sh ];then
 echo "06-VOID-GOG.sh : non executable, modification en cours"
-chmod +x 06-VOID-GOG.sh
+sudo chmod +x 06-VOID-GOG.sh
 echo "06-VOID-GOG.sh : executable"
 else
 echo "06-VOID-GOG.sh deja executable"
@@ -196,7 +196,7 @@ fi
 function STEELSERIES(){
 if [ -x 07-VOID-rivalcfg.sh ];then
 echo "07-VOID-rivalcfg.sh  : non executable, modification en cours"
-chmod +x 07-VOID-rivalcfg.sh
+sudo chmod +x 07-VOID-rivalcfg.sh
 echo "07-VOID-rivalcfg.sh : executable"
 else
 echo "07-VOID-rivalcfg.sh deja executable"
