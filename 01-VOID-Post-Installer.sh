@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source ~/.config/user-dirs.dirs
 # NAME : VOID_TofF-Installer.sh
 # Ver  : 0.0.2
 # Date : 16/11/2020 maj 30/10/2021
@@ -38,6 +38,9 @@ done
 function SSHKEYTEST(){
 
 # Vérification & Création des clés SSH en ed25519
+SSHDIR=/etc/ssh/
+PRIK=id_ed25519
+PUBK=id_ed15519.pub
 
 if [ ! -f $SSHDIR$PRIK ] || [ ! -f $SSHDIR$PUBK ];then
         echo "ssh-keygen -t ed25519"
@@ -48,14 +51,6 @@ fi
 function ELOGIND(){
 # Configuration clavier azerty pour
 # se connecter à sa session.
-
-if [ -x 03-VOID-Login_AZERTY.sh ];then
-echo "03-VOID-Login_AZERTY.sh : non executable, modification en cours"
-chmod +x 03-VOID-Login_AZERTY.sh
-echo "03-VOID-Login_AZERTY.sh : executable"
-else
-echo "03-VOID-Login_AZERTY.sh deja executable"
-fi
 sudo ./03-VOID-Login_AZERTY.sh
 }
 function BASEINSTALL(){
@@ -64,14 +59,14 @@ sudo xbps-install -Syuv xbps;sudo xbps-install -Syuv;
 # INSTALLATION VPM
 sudo xbps-install -Syuv vpm vsv;
 sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree
-sudo vpm i -y nano octoxbps notepadqq mc htop tmux zsh curl wget cifs-utils python3-pip xarchiver xfburn flatpak unzip smbclient minitube arduino zenmap vlc gimp gparted blender pycp cdrtools git-all socklog socklog-void 
+sudo vpm i -y git-all nano zsh curl wget cifs-utils python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver xfburn flatpak unzip smbclient minitube arduino zenmap vlc gimp gparted blender pycp cdrtools socklog socklog-void ytmdl
 sudo ln -s /etc/sv/socklog-unix /var/services;sudo ln -s /etc/sv/nanoklogd /var/services;
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
 sudo vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
 sudo rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
-# INSTALLATION PAQUETS TofF Installer
-
+# INSTALLATION Wallpaper
+pycp wallpaper/* $XDG_PICTURES_DIR
 }
 
 function FLATPAK(){
@@ -83,6 +78,7 @@ flatpak install Discord Parsec #app/com.valvesoftware.Steam/x86_64/stable
 
 }
 function I3INSTALLER(){
+echo "Installation Paquets pour le gestionnaire i3"
 ./08-VOID-i3.sh
 }
 function NANORC(){
@@ -120,21 +116,7 @@ function HOSTS(){
 # Configuration Reseau (adresse définie)
 # Appel un script pour avoir les droits root en écriture sur
 # le fichier /etc/hosts
-
-echo "Démarrage du script"
-#chmod +x 02-VOID-Host_Modifier.sh
-#sudo ./02-VOID-Host_Modifier.sh
-echo "02-VOID-Host_Modifier.sh : Test si executable"
-if [ -x 02-VOID-Host_Modifier.sh ];then
-echo "02-VOID-Host_Modifier.sh : non executable, modification en cours"
-chmod +x 02-VOID-Host_Modifier.sh
-echo "02-VOID-Host_Modifier.sh : executable"
-else
-echo "02-VOID-Host_Modifier.sh deja executable"
-fi
 sudo ./02-VOID-Host_Modifier.sh
-
-
 }
 
 function T420(){
@@ -144,8 +126,6 @@ sudo vsv restart acpid;
 }
 function X250(){
 
-int NEKO_PATCH_intel_grub = 0;
-
 if [ -n $(sudo grep 'intel' /etc/default/grub) ];then
 	echo "Modification du fichier /etc/default/grub"
 	sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4" intel_iommu=igfx_off/' /etc/default/grub
@@ -153,7 +133,7 @@ if [ -n $(sudo grep 'intel' /etc/default/grub) ];then
 	echo "Mise à jour de Grub"
 	sudo update-grub
 else
-	echo "Fichier deja modifie"
+	echo "Fichier déjà modifié"
 fi
 
 sudo vpm i -y linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode mesa-dri mesa-vulkan-intel
@@ -166,33 +146,12 @@ sudo vpm i -y xfce4-pulseaudio-plugin nvidia
 
 function STEAM(){
 # Configuration installation Steam
-if [ -x 05-VOID-Steam.sh ];then
-echo "05-VOID-Steam.sh : non executable, modification en cours"
-chmod +x 05-VOID-Steam.sh
-echo "05-VOID-Steam.sh : executable"
-else
-echo "05-VOID-Steam.sh deja executable"
-fi
-sudo ./05-VOID-Steam.sh
+./05-VOID-Steam.sh
 }
 function GOG(){
-if [ -x 06-VOID-GOG.sh ];then
-echo "06-VOID-GOG.sh : non executable, modification en cours"
-chmod +x 06-VOID-GOG.sh
-echo "06-VOID-GOG.sh : executable"
-else
-echo "06-VOID-GOG.sh deja executable"
-fi
 ./06-VOID-GOG.sh
 }
 function STEELSERIES(){
-if [ -x 07-VOID-rivalcfg.sh ];then
-echo "07-VOID-rivalcfg.sh  : non executable, modification en cours"
-chmod +x 07-VOID-rivalcfg.sh
-echo "07-VOID-rivalcfg.sh : executable"
-else
-echo "07-VOID-rivalcfg.sh deja executable"
-fi
 ./07-VOID-rivalcfg.sh
 }
 
@@ -202,6 +161,7 @@ function OHMYZSH(){
 
 sudo vpm i -y zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+exit
 }
 
 
@@ -220,7 +180,6 @@ BASEINSTALL
 FLATPAK
 I3INSTALLER
 NANORC
-#HOSTS
 
 #T420
 #X250
@@ -237,10 +196,4 @@ echo "Travail terminé ! Reboot en cours"
 }
 
 MAIN
-echo "Fin de l'installation"
-echo "Appuyez sur une touche pour redémarrer"
-read touche
-case $touche in
-*)	sudo reboot
-	;;
-esac
+echo "Fin de l'installation - Merci et bonne journée sur VoidLinux"

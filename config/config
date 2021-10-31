@@ -50,16 +50,13 @@ exec_always feh --bg-center $HOME/Images/Venom_dark.jpeg
 exec_always compton
 
 exec xfce4-terminal
-exec Notepadqq
-
+exec notepadqq
 exec firefox
 exec flatpak run com.parsecgaming.parsec
 exec flatpak run com.discordapp.Discord
-exec flatpak run com.valvesoftware.Steam
-exec Thunar
-#exec --no-startup-id Thunar
+exec steam
 exec --no-startup-id minitube				
-
+exec Thunar
 
 #===========================================================
 #===========================================================
@@ -141,20 +138,20 @@ bindsym $mod+q focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1 :   "
-set $ws2 "2 :   "
-set $ws3 "3 :   "
-set $ws4 "4 :   "
-set $ws5 "5 :   "
-set $ws6 "6 :   "
-set $ws7 "7 :   "
-set $ws8 "8 :   "
-set $ws9 "9 :   "
-set $ws10 "10 :  "
+set $ws1 " 1 :     "
+set $ws2 " 2 :     "
+set $ws3 " 3 :      "
+set $ws4 " 4 :     "
+set $ws5 " 5 :     "
+set $ws6 " 6 :     "
+set $ws7 " 7 :     "
+set $ws8 " 8 :     "
+set $ws9 " 9 :     "
+set $ws10 " 10 :    "
 
 # assigner les apps sur les workspaces  
 #assign [class=""]
-
+assign [class="steam_app_374320|steam_app_374320|RocketLeague"] $ws1
 assign [class="xfce4-terminal|Xfce4-terminal"] $ws2
 assign [class="notepadqq-bin|Notepadqq"] $ws3
 assign [class="firefox|Navigator|Firefox"] $ws4
@@ -162,7 +159,11 @@ assign [class="thunar|Thunar"] $ws5
 assign [class="minitube|Minitube"] $ws6
 assign [class="Parsec|parsec"] $ws7
 assign [class="discord|discord"] $ws8
-assign [class="Steam|Steam"] $ws9 
+assign [class="Steam"] $ws9 
+assign [class="SC Controller"] $ws10
+
+
+#" "
 
 # switch to workspace
 bindsym $mod+ampersand workspace number $ws1
