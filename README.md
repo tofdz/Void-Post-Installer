@@ -21,6 +21,7 @@ Permet la post installation de VoidLinux pour les débutants qui veulent passer 
 - Xarchiver pour compresser/décompresser vos archives
 - Htop & ytop pour monitorer votre systeme
 - Zenmap pour securiser & tester votre réseau privé
+- Le choix au démarrage entre xfce ou i3 deja configuré pour VoidLinux
 - Et pleins d'autres applications sympa sur les dépots de void et de github !
 
 
