@@ -6,8 +6,8 @@
 
 function BASE(){
 #Installe le necessaire pour faire fonctionner steam & gamepad
-flatpak install app/com.valvesoftware.Steam/x86_64/stable
-sudo vpm i -y libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mono void-repo-multilib{,-nonfree}
+#flatpak install app/com.valvesoftware.Steam/x86_64/stable
+sudo vpm i -y steam libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mono void-repo-multilib{,-nonfree}
 
 sudo usermod -a -G input $USER 
 }
