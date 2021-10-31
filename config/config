@@ -156,11 +156,30 @@ assign [class="xfce4-terminal|Xfce4-terminal"] $ws2
 assign [class="notepadqq-bin|Notepadqq"] $ws3
 assign [class="firefox|Navigator|Firefox"] $ws4
 assign [class="thunar|Thunar"] $ws5
+assign [class="gpartedbin|GParted"] $ws5
 assign [class="minitube|Minitube"] $ws6
 assign [class="Parsec|parsec"] $ws7
+assign [class="zenmap|Zenmap"] $ws7
 assign [class="discord|discord"] $ws8
-assign [class="Steam"] $ws9 
+assign [class="Steam"] $ws9
 assign [class="SC Controller"] $ws10
+assign [class="lxappearance|Lxappearance"] $ws10
+assign [class="nm-connection-editor|Nm-connection-editor"] $ws10
+assign [class="pavucontrol|Pavucontrol"] $ws10
+assign [class="xfce4-taskmanager|Xfce4-taskmanager"] $ws10
+assign [class="xfce4-power-manager-settings|Xfce4-power-manager-settings"] $ws10
+assign [class="nvidia-settings|Nvidia-settings"] $ws10
+assign [class="xfce4-appfinder|Xfce4-appfinder"] $ws10
+assign [class="octoxbps|octoxbps"] $ws10
+#assign [class=""] $ws10
+#assign [class=""] $ws10
+#assign [class=""] $ws10
+#assign [class=""] $ws10
+
+
+
+
+
 
 
 #" "
@@ -230,4 +249,8 @@ bar {
 	status_command i3blocks -c ~/.config/i3/i3blocks.conf
 }
 
-#gap inner = 10
+for_window [class=".*"] border_pixel 5
+for_window [class=".*"] title_format " %title"
+gaps inner 5
+smart_gaps on
+smart_borders on
