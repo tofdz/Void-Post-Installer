@@ -28,35 +28,40 @@ exec --no-startup-id dex --autostart --environment i3
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-
+#exec --no-startup-id xss-lock --transfer-sleep-lock --i3lock --nofork
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
 #===========================================================
 #===========================================================
-
-exec "source $HOME/.config/user-dirs.dirs"
+# bind de la touche Mod+x pour couper l'ecran et verrouille la session
+#bindsym $mod+x exec --no-startup-id xset dpms force off && i3lock -c 000000B3 -i $HOME/Images/Venom_dark.jpeg -t
+bindsym $mod+x exec --no-startup-id blurlock 
+#&& xset dpms force off
 
 # FOND D'ECRAN
 # Gestion par feh, editer le lien qui pointe vers "/home/$USER/Images"
-exec "setxkbmap -layout fr"
-#exec_always feh --bg-center $XDG_PICTURES_DIR/Venom_dark.jpeg
-exec_always feh --bg-center $HOME/Images/Venom_dark.jpeg
+
+exec --no-startup-id autolock -time 1 -locker blurlock
+# -c 00000000 && xset dpms force off
+
 
 # Start Apps
 # Applis au démarrage
-exec_always compton
 
-exec xfce4-terminal
-exec notepadqq
+exec "setxkbmap -layout fr"
+exec_always compton
+exec_always feh --bg-center $HOME/Images/Venom_dark.jpeg
+exec_always --no-startup-id octoxbps-notifier
+#exec xfce4-terminal
+#exec notepadqq
 exec firefox
-exec flatpak run com.parsecgaming.parsec
+#exec flatpak run com.parsecgaming.parsec
 exec flatpak run com.discordapp.Discord
-exec steam
-exec --no-startup-id minitube				
-exec Thunar
+#exec steam
+#exec --no-startup-id minitube				
+#exec Thunar
 
 #===========================================================
 #===========================================================
@@ -250,7 +255,6 @@ bar {
 }
 
 for_window [class=".*"] border_pixel 5
-for_window [class=".*"] title_format " %title"
 gaps inner 5
 smart_gaps on
 smart_borders on
