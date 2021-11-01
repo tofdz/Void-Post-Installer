@@ -59,8 +59,9 @@ sudo xbps-install -Syuv xbps;sudo xbps-install -Syuv;
 # INSTALLATION VPM
 sudo xbps-install -Syuv vpm vsv;
 sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree
-sudo vpm i -y git-all nano zsh curl wget cifs-utils python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver xfburn flatpak unzip smbclient minitube arduino zenmap vlc gimp gparted blender pycp cdrtools socklog socklog-void ytmdl
+sudo vpm i -y git-all nano zsh curl wget cifs-utils python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver xfburn flatpak unzip smbclient minitube arduino zenmap vlc gimp gparted blender pycp cdrtools socklog socklog-void ytmdl adwaita-qt qt5ct
 sudo ln -s /etc/sv/socklog-unix /var/services;sudo ln -s /etc/sv/nanoklogd /var/services;
+sudo ./02-VOID-Qt5ct.sh
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
 sudo vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
@@ -74,8 +75,7 @@ function FLATPAK(){
 echo "Flatpak : Création des repos si non existant"
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 echo "Flatpak : Installation Discord & Parsec"
-flatpak install Discord Parsec #app/com.valvesoftware.Steam/x86_64/stable
-
+flatpak install Discord Parsec
 }
 function I3INSTALLER(){
 echo "Installation Paquets pour le gestionnaire i3"
@@ -180,9 +180,9 @@ BASEINSTALL
 FLATPAK
 I3INSTALLER
 NANORC
-
-#T420
-#X250
+# Choisir suivant l'installation souhaitée
+# T420
+# X250
 RTX
 
 STEELSERIES
