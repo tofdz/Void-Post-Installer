@@ -39,7 +39,7 @@ exec --no-startup-id nm-applet
 
 # FOND D'ECRAN
 # Gestion par feh, editer le lien qui pointe vers "/home/$USER/Images"
-exec --no-startup-id autolock -time 1 -locker blurlock
+exec --no-startup-id xautolock -time 1 -locker blurlock
 
 # bind de la touche Mod+x pour couper l'ecran et verrouille la session
 #bindsym $mod+x exec --no-startup-id xset dpms force off && i3lock -c 000000B3 -i $HOME/Images/Venom_dark.jpeg -t
@@ -151,9 +151,13 @@ set $ws7 " 7 :     "
 set $ws8 " 8 :     "
 set $ws9 " 9 :     "
 set $ws10 " 10 :    "
+set $ws11 "        "
+
+
+
 
 # assigner les apps sur les workspaces  
-assign [class="steam_app_374320|steam_app_374320|RocketLeague"] $ws1
+#
 assign [class="xfce4-terminal|Xfce4-terminal"] $ws2
 assign [class="notepadqq-bin|Notepadqq"] $ws3
 assign [class="firefox|Navigator|Firefox"] $ws4
@@ -162,6 +166,7 @@ assign [class="gpartedbin|GParted"] $ws5
 assign [class="minitube|Minitube"] $ws6
 assign [class="Parsec|parsec"] $ws7
 assign [class="zenmap|Zenmap"] $ws7
+assign [class="VirtualBox Manager"] $ws7
 assign [class="discord|discord"] $ws8
 assign [class="Steam"] $ws9
 assign [class="SC Controller"] $ws10
@@ -173,8 +178,11 @@ assign [class="xfce4-power-manager-settings|Xfce4-power-manager-settings"] $ws10
 assign [class="nvidia-settings|Nvidia-settings"] $ws10
 assign [class="xfce4-appfinder|Xfce4-appfinder"] $ws10
 assign [class="octoxbps|octoxbps"] $ws10
+assign [class="steam_app_*"] $ws11
+
 
 # switch to workspace
+#
 bindsym $mod+ampersand workspace number $ws1
 bindsym $mod+eacute workspace number $ws2
 bindsym $mod+quotedbl workspace number $ws3
