@@ -2,4 +2,5 @@
 
 
 sudo vpm i -y virtualbox-ose virtualbox-ose-dkms
-modules-load
+sudo xbps-reconfigure -f virtualbox-ose-dkms
+sudo modules-load
