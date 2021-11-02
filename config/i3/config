@@ -10,6 +10,7 @@
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
+exec "setxkbmap -layout fr"
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -35,22 +36,18 @@ exec --no-startup-id nm-applet
 
 #===========================================================
 #===========================================================
-# bind de la touche Mod+x pour couper l'ecran et verrouille la session
-#bindsym $mod+x exec --no-startup-id xset dpms force off && i3lock -c 000000B3 -i $HOME/Images/Venom_dark.jpeg -t
-bindsym $mod+x exec --no-startup-id blurlock 
-#&& xset dpms force off
 
 # FOND D'ECRAN
 # Gestion par feh, editer le lien qui pointe vers "/home/$USER/Images"
-
 exec --no-startup-id autolock -time 1 -locker blurlock
-# -c 00000000 && xset dpms force off
 
+# bind de la touche Mod+x pour couper l'ecran et verrouille la session
+#bindsym $mod+x exec --no-startup-id xset dpms force off && i3lock -c 000000B3 -i $HOME/Images/Venom_dark.jpeg -t
+bindsym $mod+x exec --no-startup-id blurlock 
 
 # Start Apps
 # Applis au démarrage
 
-exec "setxkbmap -layout fr"
 exec_always compton
 exec_always feh --bg-center $HOME/Images/Venom_dark.jpeg
 exec_always --no-startup-id octoxbps-notifier
@@ -156,7 +153,6 @@ set $ws9 " 9 :     "
 set $ws10 " 10 :    "
 
 # assigner les apps sur les workspaces  
-#assign [class=""]
 assign [class="steam_app_374320|steam_app_374320|RocketLeague"] $ws1
 assign [class="xfce4-terminal|Xfce4-terminal"] $ws2
 assign [class="notepadqq-bin|Notepadqq"] $ws3
@@ -177,18 +173,6 @@ assign [class="xfce4-power-manager-settings|Xfce4-power-manager-settings"] $ws10
 assign [class="nvidia-settings|Nvidia-settings"] $ws10
 assign [class="xfce4-appfinder|Xfce4-appfinder"] $ws10
 assign [class="octoxbps|octoxbps"] $ws10
-#assign [class=""] $ws10
-#assign [class=""] $ws10
-#assign [class=""] $ws10
-#assign [class=""] $ws10
-
-
-
-
-
-
-
-#" "
 
 # switch to workspace
 bindsym $mod+ampersand workspace number $ws1
