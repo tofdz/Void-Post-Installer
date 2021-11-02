@@ -141,20 +141,21 @@ bindsym $mod+q focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 " 1 :     "
+set $ws1 " 1 :     "
 set $ws2 " 2 :     "
-set $ws3 " 3 :      "
+set $ws3 " 3 :     "
 set $ws4 " 4 :     "
 set $ws5 " 5 :     "
 set $ws6 " 6 :     "
 set $ws7 " 7 :     "
 set $ws8 " 8 :     "
 set $ws9 " 9 :     "
-set $ws10 " 10 :    "
+set $ws10 " 10 :    "
 set $ws11 "        "
-
-
-
+set $ws12 "        "
+set $ws13 "        "
+set $ws14 "      "
+set $ws15 "       "
 
 # assigner les apps sur les workspaces  
 #
@@ -165,8 +166,6 @@ assign [class="thunar|Thunar"] $ws5
 assign [class="gpartedbin|GParted"] $ws5
 assign [class="minitube|Minitube"] $ws6
 assign [class="Parsec|parsec"] $ws7
-assign [class="zenmap|Zenmap"] $ws7
-assign [class="VirtualBox Manager"] $ws7
 assign [class="discord|discord"] $ws8
 assign [class="Steam"] $ws9
 assign [class="SC Controller"] $ws10
@@ -179,7 +178,10 @@ assign [class="nvidia-settings|Nvidia-settings"] $ws10
 assign [class="xfce4-appfinder|Xfce4-appfinder"] $ws10
 assign [class="octoxbps|octoxbps"] $ws10
 assign [class="steam_app_*"] $ws11
-
+#assign [class=""] $ws12
+assign [class="vlc"] $ws13
+assign [class="zenmap|Zenmap"] $ws14
+assign [class="VirtualBox Manager"] $ws15
 
 # switch to workspace
 #
