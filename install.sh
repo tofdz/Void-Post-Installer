@@ -1,9 +1,6 @@
 #!/bin/bash
-VPIDIR=$(pwd)
-chmod +x $VPIDIR/scripts/*
-source ~/.config/user-dirs.dirs
 # NAME : VOID_TofF-Installer.sh
-# Ver  : 0.0.2
+# Ver  : 0.0.3
 # Date : 16/11/2020 maj 30/10/2021
 
 clear
@@ -14,7 +11,12 @@ echo -e "##			V 0.0.2	     		   ##"
 echo -e "##				       			   ##"
 echo -e "####################################"
 
+
+# On rend les scripts de l'installation executable automatiquement
+
 WDIR=$(pwd)
+chmod +x $WDIR/scripts/*
+source ~/.config/user-dirs.dirs
 
 function NET(){
 echo "Fonction NET()"
