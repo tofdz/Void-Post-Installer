@@ -168,13 +168,20 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 exit
 }
 
-
 function MAIN(){
 
 # La fonction principale qui envoie toutes les autres
 
 clear
 echo "Bonjour, Post Installation de Voidlinux by TofF en cours !"
+
+function CLEAN(){
+
+# Nettoyage avant redemarrage
+cd $HOME
+rm -rfv Void-Post-Install
+sudo vpm up
+}
 
 NET
 SSHKEYTEST
@@ -200,4 +207,5 @@ echo "Travail terminé ! Reboot en cours"
 }
 
 MAIN
-echo "Fin de l'installation - Merci et bonne journée sur VoidLinux"
+CLEAN
+sudo reboot
