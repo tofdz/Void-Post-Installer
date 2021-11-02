@@ -35,13 +35,6 @@ Permet la post installation de VoidLinux pour les débutants qui veulent passer 
 Le choix entre deux bureau : xfce4 pour une interface plus typée windows, i3 pour une expérience épurée et intuitive 
 		(déjà préconfigurée avec toute l'installation de base, n'hésitez pas à l'essayer !)
 
-
-Tout le necessaire pour utiliser son systeme d'exploitation au quotidien :).
-Une bonne config de base, un set d'outil pour commencer à etre productif.
-Et pouvoir game ;)
-
-
-
 # Installation
 
 Dans un terminal, tapez :
