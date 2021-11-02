@@ -26,6 +26,7 @@ rm -fv $I3FILE
 fi
 
 sudo pycp $WDIR/scripts/blurlock /bin/
-sudo pycp $WDIR/config/i3blocks.conf $WDIR/config/config $I3CONF
+sudo pycp $WDIR/config/i3blocks.conf $I3CONF
+sudo pycp $WDIR/config/config $I3CONF
 
 sudo chmod +x /bin/blurlock
