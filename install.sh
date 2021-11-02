@@ -70,7 +70,7 @@ sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree
 sudo vpm i -y git-all nano zsh curl wget cifs-utils python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver xfburn flatpak unzip smbclient minitube arduino zenmap vlc gimp gparted blender pycp cdrtools socklog socklog-void ytmdl adwaita-qt qt5ct
 sudo ln -s /etc/sv/socklog-unix /var/services;sudo ln -s /etc/sv/nanoklogd /var/services;
 cd $WDIR/scripts/
-sudo .02-VOID-Qt5ct.sh
+sudo ./02-VOID-Qt5ct.sh
 cd $HOME
 git clone https://github.com/supermarin/YosemiteSanFranciscoFont
 if [ ! -d $HOME/.fonts ];then
@@ -174,18 +174,18 @@ cd $WDIR
 }
 function GOG(){
 cd $WDIR/scripts/
-.$WDIR/scripts/06-VOID-GOG.sh
+./06-VOID-GOG.sh
 cd $WDIR
 }
 function STEELSERIES(){
 cd $WDIR/scripts/
-.$WDIR/scripts/07-VOID-rivalcfg.sh
+./07-VOID-rivalcfg.sh
 cd $WDIR
 }
 function VIRTUALBOX(){
 echo "Installation Paquets pour VirtualBox"
 cd $WDIR/scripts/
-.$WDIR/scripts/09-VOID-VirtualBox.sh
+./09-VOID-VirtualBox.sh
 cd $WDIR
 }
 
