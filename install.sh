@@ -57,7 +57,9 @@ fi
 function ELOGIND(){
 # Configuration clavier azerty pour
 # se connecter à sa session.
-sudo .$WDIR/scripts/03-VOID-Login_AZERTY.sh
+cd $WDIR/scripts/
+sudo ./03-VOID-Login_AZERTY.sh
+cd $WDIR
 }
 function BASEINSTALL(){
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
@@ -67,7 +69,9 @@ sudo xbps-install -Syuv vpm vsv;
 sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree
 sudo vpm i -y git-all nano zsh curl wget cifs-utils python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver xfburn flatpak unzip smbclient minitube arduino zenmap vlc gimp gparted blender pycp cdrtools socklog socklog-void ytmdl adwaita-qt qt5ct
 sudo ln -s /etc/sv/socklog-unix /var/services;sudo ln -s /etc/sv/nanoklogd /var/services;
-sudo .$WDIR/scripts/02-VOID-Qt5ct.sh
+cd $WDIR/scripts/
+sudo .02-VOID-Qt5ct.sh
+cd $HOME
 git clone https://github.com/supermarin/YosemiteSanFranciscoFont
 if [ ! -d $HOME/.fonts ];then
 	mkdir $HOME/.fonts/
@@ -93,7 +97,9 @@ flatpak install Discord Parsec
 }
 function I3INSTALLER(){
 echo "Installation Paquets pour le gestionnaire i3"
-.$WDIR/scripts/08-VOID-i3.sh
+cd $WDIR/scripts/
+./08-VOID-i3.sh
+cd $WDIR
 }
 function NANORC(){
 # Configuration highlighting pour nano 
@@ -130,7 +136,9 @@ function HOSTS(){
 # Configuration Reseau (adresse définie)
 # Appel un script pour avoir les droits root en écriture sur
 # le fichier /etc/hosts
-sudo .$WDIR/scripts/02-VOID-Host_Modifier.sh
+cd $WDIR/scripts/
+sudo ./02-VOID-Host_Modifier.sh
+cd $WDIR
 }
 
 function T420(){
@@ -160,17 +168,25 @@ sudo vpm i -y xfce4-pulseaudio-plugin nvidia
 
 function STEAM(){
 # Configuration installation Steam
-.$WDIR/scripts/05-VOID-Steam.sh
+cd $WDIR/scripts/
+./05-VOID-Steam.sh
+cd $WDIR
 }
 function GOG(){
+cd $WDIR/scripts/
 .$WDIR/scripts/06-VOID-GOG.sh
+cd $WDIR
 }
 function STEELSERIES(){
+cd $WDIR/scripts/
 .$WDIR/scripts/07-VOID-rivalcfg.sh
+cd $WDIR
 }
 function VIRTUALBOX(){
 echo "Installation Paquets pour VirtualBox"
+cd $WDIR/scripts/
 .$WDIR/scripts/09-VOID-VirtualBox.sh
+cd $WDIR
 }
 
 function OHMYZSH(){
