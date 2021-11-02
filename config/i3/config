@@ -39,7 +39,7 @@ exec --no-startup-id nm-applet
 
 # FOND D'ECRAN
 # Gestion par feh, editer le lien qui pointe vers "/home/$USER/Images"
-exec --no-startup-id xautolock -time 1 -locker blurlock
+exec_always --no-startup-id xautolock -time 1 -locker blurlock
 
 # bind de la touche Mod+x pour couper l'ecran et verrouille la session
 #bindsym $mod+x exec --no-startup-id xset dpms force off && i3lock -c 000000B3 -i $HOME/Images/Venom_dark.jpeg -t
