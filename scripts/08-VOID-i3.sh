@@ -1,6 +1,7 @@
 #!/bin/bash
 ## VARIABLES
-
+cd ..
+WDIR=$(pwd)
 I3CONF=$HOME/.config/i3				# Dossier .config/i3/
 I3FILE=$I3CONF/config				# Fichier .config/i3/config
 
