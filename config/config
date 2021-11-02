@@ -54,14 +54,14 @@ exec "setxkbmap -layout fr"
 exec_always compton
 exec_always feh --bg-center $HOME/Images/Venom_dark.jpeg
 exec_always --no-startup-id octoxbps-notifier
-#exec xfce4-terminal
-#exec notepadqq
+exec xfce4-terminal
+exec notepadqq
 exec firefox
-#exec flatpak run com.parsecgaming.parsec
+exec flatpak run com.parsecgaming.parsec
 exec flatpak run com.discordapp.Discord
-#exec steam
-#exec --no-startup-id minitube				
-#exec Thunar
+exec steam
+exec --no-startup-id minitube				
+exec Thunar
 
 #===========================================================
 #===========================================================
