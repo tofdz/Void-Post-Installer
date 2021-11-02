@@ -67,7 +67,7 @@ sudo ./02-VOID-Qt5ct.sh
 sudo vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
 sudo rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
 # INSTALLATION Wallpaper
-pycp wallpaper/* $XDG_PICTURES_DIR
+pycp wallpapers/* $XDG_PICTURES_DIR
 }
 
 function FLATPAK(){
@@ -178,9 +178,8 @@ echo "Bonjour, Post Installation de Voidlinux by TofF en cours !"
 function CLEAN(){
 
 # Nettoyage avant redemarrage
-cd $HOME
-rm -rfv Void-Post-Install
-sudo vpm up
+rm -rfv $HOME/Void-Post-Install
+sudo reboot
 }
 
 NET
@@ -208,4 +207,4 @@ echo "Travail terminé ! Reboot en cours"
 
 MAIN
 CLEAN
-sudo reboot
+
