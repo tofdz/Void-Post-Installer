@@ -57,7 +57,7 @@ fi
 function ELOGIND(){
 # Configuration clavier azerty pour
 # se connecter à sa session.
-sudo ./$WDIR/scripts/03-VOID-Login_AZERTY.sh
+sudo .$WDIR/scripts/03-VOID-Login_AZERTY.sh
 }
 function BASEINSTALL(){
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
@@ -67,7 +67,7 @@ sudo xbps-install -Syuv vpm vsv;
 sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree
 sudo vpm i -y git-all nano zsh curl wget cifs-utils python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver xfburn flatpak unzip smbclient minitube arduino zenmap vlc gimp gparted blender pycp cdrtools socklog socklog-void ytmdl adwaita-qt qt5ct
 sudo ln -s /etc/sv/socklog-unix /var/services;sudo ln -s /etc/sv/nanoklogd /var/services;
-sudo ./$WDIR/scripts/02-VOID-Qt5ct.sh
+sudo .$WDIR/scripts/02-VOID-Qt5ct.sh
 git clone https://github.com/supermarin/YosemiteSanFranciscoFont
 if [ ! -d $HOME/.fonts ];then
 	mkdir $HOME/.fonts/
@@ -93,7 +93,7 @@ flatpak install Discord Parsec
 }
 function I3INSTALLER(){
 echo "Installation Paquets pour le gestionnaire i3"
-./$WDIR/scripts/08-VOID-i3.sh
+.$WDIR/scripts/08-VOID-i3.sh
 }
 function NANORC(){
 # Configuration highlighting pour nano 
