@@ -18,9 +18,10 @@ if [ -f $I3CONF/config ];then
 sudo pycp $I3CONF/config $I3CONF/config.ori
 rm -fv $I3CONF/config
 else
-# INSTALLATION DES FICHIERS DE CONFIGURATION
+# INSTALLATION DES FICHIERS DE CONFIGURATION & WALLPAPERS
 sudo pycp $HOME/Void-Post-Installer/config/config $I3CONF
 sudo pycp $HOME/Void-Post-Installer/config/i3blocks.conf $I3CONF
+sudo pycp $HOME/Void-Post-Installer/wallpaper/* $HOME/Images/
 fi
 #Installer la police qui va bien
 #OUUUUUUUUUPPPP OUUUUUUUUUUP THAAAAAAAT'S DAAAAAAAAA SOUUUUUUUUUN OF DAAAAAAAAAA POOOOOOOOOLICE !
