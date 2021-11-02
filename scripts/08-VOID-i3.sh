@@ -26,7 +26,7 @@ sudo pycp $I3FILE $I3CONF/config.ori
 rm -fv $I3FILE
 fi
 
-sudo pycp $HOME/Void-Post-Installer/blurlock /bin/
-sudo pycp $HOME/Void-Post-Installer/config/i3blocks.conf $HOME/Void-Post-Installer/config/config $I3CONF
+sudo pycp $WDIR/blurlock /bin/
+sudo pycp $$WDIR/config/i3blocks.conf $WDIR/config/config $I3CONF
 
 sudo chmod +x /bin/blurlock
