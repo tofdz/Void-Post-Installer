@@ -20,6 +20,7 @@ rm -fv $I3CONF/config
 fi
 # INSTALLATION DES FICHIERS DE CONFIGURATION & WALLPAPERS
 sudo pycp $HOME/Void-Post-Installer/blurlock /bin/
+sudo chmod +x /bin/blurlock 
 sudo pycp $HOME/Void-Post-Installer/config/config $I3CONF
 sudo pycp $HOME/Void-Post-Installer/config/i3blocks.conf $I3CONF
 sudo pycp $HOME/Void-Post-Installer/wallpapers/* $HOME/Images/
