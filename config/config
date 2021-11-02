@@ -60,6 +60,7 @@ exec firefox
 exec flatpak run com.parsecgaming.parsec
 exec flatpak run com.discordapp.Discord
 exec steam
+exec VirtualBox
 exec --no-startup-id minitube				
 exec Thunar
 
