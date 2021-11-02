@@ -47,7 +47,7 @@ function SSHKEYTEST(){
 SSHDIR=/etc/ssh/
 PRIK=id_ed25519
 PUBK=id_ed15519.pub
-
+echo "===> CHECK CLES SSH"
 if [ ! -f $SSHDIR$PRIK ] || [ ! -f $SSHDIR$PUBK ];then
         echo "ssh-keygen -t ed25519"
         else
@@ -55,6 +55,7 @@ if [ ! -f $SSHDIR$PRIK ] || [ ! -f $SSHDIR$PUBK ];then
 fi
 }
 function ELOGIND(){
+echo "===> CONFIGURATION AZERTY AU LOGIN"
 # Configuration clavier azerty pour
 # se connecter à sa session.
 cd $WDIR/scripts/
@@ -62,6 +63,7 @@ sudo ./03-VOID-Login_AZERTY.sh
 cd $WDIR
 }
 function BASEINSTALL(){
+echo "===> BASE INSTALL"
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
 sudo xbps-install -Syuv xbps;sudo xbps-install -Syuv;
 # INSTALLATION VPM
@@ -71,6 +73,13 @@ sudo vpm i -y git-all nano zsh curl wget cifs-utils python3-pip octoxbps notepad
 sudo ln -s /etc/sv/socklog-unix /var/services;sudo ln -s /etc/sv/nanoklogd /var/services;
 cd $WDIR/scripts/
 sudo ./02-VOID-Qt5ct.sh
+# OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
+sudo vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
+sudo rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
+# INSTALLATION Wallpaper
+pycp $WDIR/wallpapers/* $XDG_PICTURES_DIR
+# Installation fonts SanFrancisco
+echo "===> Fonts SanFrancisco"
 cd $HOME
 git clone https://github.com/supermarin/YosemiteSanFranciscoFont
 if [ ! -d $HOME/.fonts ];then
@@ -80,29 +89,27 @@ fi
 sudo pycp $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
 fc-cache -fv
 echo "Suppression des Fichiers inutile"
-rm -rfv YosemiteSanFranciscoFont
-# OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
-sudo vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
-sudo rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
-# INSTALLATION Wallpaper
-pycp wallpapers/* $XDG_PICTURES_DIR
+rm -rfv $HOME/YosemiteSanFranciscoFont
 }
 
 function FLATPAK(){
-# flatpak Discord & Parsec
+echo "===> FLATPAK"
+# installation via flatpak de Discord & Parsec
 echo "Flatpak : Création des repos si non existant"
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 echo "Flatpak : Installation Discord & Parsec"
 flatpak install Discord Parsec
 }
 function I3INSTALLER(){
-echo "Installation Paquets pour le gestionnaire i3"
+# configuration window manager i3
+echo echo "===> i3"
 cd $WDIR/scripts/
 ./08-VOID-i3.sh
 cd $WDIR
 }
 function NANORC(){
-# Configuration highlighting pour nano 
+# Configuration highlighting pour nano (met le code en couleur)
+echo "===> NANO HIGHLIGHTING"
 touch $HOME/.nanorc
 echo 'include "/usr/share/nano/asm.nanorc"' > $HOME/.nanorc
 echo 'include "/usr/share/nano/c.nanorc"' >> $HOME/.nanorc
