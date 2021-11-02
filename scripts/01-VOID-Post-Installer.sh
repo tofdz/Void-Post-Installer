@@ -64,7 +64,15 @@ sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree
 sudo vpm i -y git-all nano zsh curl wget cifs-utils python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver xfburn flatpak unzip smbclient minitube arduino zenmap vlc gimp gparted blender pycp cdrtools socklog socklog-void ytmdl adwaita-qt qt5ct
 sudo ln -s /etc/sv/socklog-unix /var/services;sudo ln -s /etc/sv/nanoklogd /var/services;
 sudo ./$WDIR/scripts/02-VOID-Qt5ct.sh
-
+git clone https://github.com/supermarin/YosemiteSanFranciscoFont
+if [ ! -d $HOME/.fonts ];then
+	mkdir $HOME/.fonts/
+	echo "Repertoire .fonts crée !"
+fi
+sudo pycp $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
+fc-cache -fv
+echo "Suppression des Fichiers inutile"
+rm -rfv YosemiteSanFranciscoFont
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
 sudo vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
 sudo rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
