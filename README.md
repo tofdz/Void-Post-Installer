@@ -5,32 +5,35 @@ Permet la post installation de VoidLinux pour les débutants qui veulent passer 
 - Ajout des repository VoidLinux.
 - Optimisation divers system (desactivation des services inutiles)
 - Correction du bug du clavier QWERTY au login
+- Gestion de la mise en veille de l'ecran avec verrouillage session sur timer
+- Verrouillage l'ecran avec un effet de floutage en faisant Mod+x.
 
-- Installation complète steam avec support manette Dualshock4 natif
 
-- Installation complète de Parsec
+# Application installées de base :
+(Graphique)
+- Steam		: Jouez avec support manette Xbox/Dualshock4 natif
+- Parsec	: Connectez sur vos autres machines à distance
+- Discord	: Restez en contacts avec vos amis !
+- VirtualBox	: Créez des machines virtuelles
+- Gparted	: Gérez vos disques durs & partitions 
+- Minitube	: Navigez sur youtube épurée de toute publicité
+- LibreOffice	: La suite office (word, excell ...)
+- Notepadqq	: Codez !!!! (équivalent à notepad++)
+- Gimp		: Retouchez/Editez vos images/photos (équivalent photoshop)
+- Xarchiver	: Compressez/décompressez vos archives (winrar)
+- Zenmap	: Testez votre réseau privé
 
-- Installation complète Discord
-
-- Installation complète de VirtualBox
-		( prise en charge complète, il ne vous reste plus qu'a créer vos machines virtuelles )
-
-- Le choix entre deux bureau : xfce4 pour une interface plus typée windows, i3 pour une expérience épurée et intuitive 
-		(déjà préconfigurée avec toute l'installation de base, n'hésitez pas à l'essayer !)
-
+(Terminal)
 - Gestionnaire de paquet vpm pour une utilisation simplifiée dans le terminal et octoxbps en mode graphique depuis le bureau.
-- Gparted pour gérer vos disques durs & partitions 
-- Minitube pour une navigation sur youtube épurée de toute publicité
 - ytmdl pour recuper vidéo et musique directement depuis Youtube sur le terminal
 - Gestion des souris steelseries grace à l'ajout du script rivalcfg.
-- LibreOffice
-- Notepadqq (équivalent à notepad++)
-- Gimp pour la retouche photo
-- Xarchiver pour compresser/décompresser vos archives
 - Htop & ytop pour monitorer votre systeme
-- Zenmap pour securiser & tester votre réseau privé
-- Le choix au démarrage entre xfce ou i3 deja configuré pour VoidLinux
 - Et pleins d'autres applications sympa sur les dépots de void et de github !
+
+# Interface graphique : 
+
+Le choix entre deux bureau : xfce4 pour une interface plus typée windows, i3 pour une expérience épurée et intuitive 
+		(déjà préconfigurée avec toute l'installation de base, n'hésitez pas à l'essayer !)
 
 
 Tout le necessaire pour utiliser son systeme d'exploitation au quotidien :).
