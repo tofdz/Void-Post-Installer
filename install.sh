@@ -22,14 +22,11 @@ function NET(){
 echo "Fonction NET()"
 ip[0]=8.8.8.8
 ip[1]=192.168.1.1
-
 i=0
-
 while ((${#ip[*]}!=$i)) ; do
 	ping -c1 -q ${ip[$i]};ipR[$i]=${?};
 	i=$((i+1));
 done
-
 i=0
 while ((${#ip[*]}!=$i)) ; do
 	if [ ${ipR[$i]} -eq 0 ];then
@@ -55,16 +52,18 @@ if [ ! -f $SSHDIR$PRIK ] || [ ! -f $SSHDIR$PUBK ];then
 fi
 }
 function ELOGIND(){
-echo "===> CONFIGURATION AZERTY AU LOGIN"
+
 # Configuration clavier azerty pour
 # se connecter à sa session.
+echo "===> CONFIGURATION AZERTY AU LOGIN"
 cd $WDIR/scripts/
 sudo ./03-VOID-Login_AZERTY.sh
 cd $WDIR
 }
 function BASEINSTALL(){
-echo "===> BASE INSTALL"
+
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
+echo "===> BASE INSTALL"
 sudo xbps-install -Syuv xbps;sudo xbps-install -Syuv;
 # INSTALLATION VPM
 sudo xbps-install -Syuv vpm vsv;
@@ -149,12 +148,15 @@ cd $WDIR
 }
 
 function T420(){
+
+echo "===> T420 addons"
 sudo vpm i -y tlp tlp-rdw tp_smapi-dkms tpacpi-bat mesa-dri linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel libva-intel-driver;
 # sudo cp lenovo-mutemic.sh /etc/acpi/&&sudo chmod +x /etc/acpi/lenovo-mutemic.sh;
 sudo vsv restart acpid;
 }
 function X250(){
 
+echo "===> X250 addons"
 if [ -n $(sudo grep 'intel' /etc/default/grub) ];then
 	echo "Modification du fichier /etc/default/grub"
 	sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4" intel_iommu=igfx_off/' /etc/default/grub
@@ -170,27 +172,32 @@ sudo vpm i -y tp_smapi-dkms tpacpi-bat
 
 }
 function RTX(){
+echo "===> nvidia INSTALL"
 sudo vpm i -y xfce4-pulseaudio-plugin nvidia
 }
 
 function STEAM(){
 # Configuration installation Steam
+echo "===> STEAM INSTALL"
 cd $WDIR/scripts/
 ./05-VOID-Steam.sh
 cd $WDIR
 }
 function GOG(){
+echo "===> GOG INSTALL"
 cd $WDIR/scripts/
 ./06-VOID-GOG.sh
 cd $WDIR
 }
 function STEELSERIES(){
+echo "===> STEELSERIES INSTALL"
 cd $WDIR/scripts/
 ./07-VOID-rivalcfg.sh
 cd $WDIR
 }
 function VIRTUALBOX(){
-echo "Installation Paquets pour VirtualBox"
+echo "===> VIRTUALBOX INSTALL"
+
 cd $WDIR/scripts/
 ./09-VOID-VirtualBox.sh
 cd $WDIR
@@ -199,7 +206,7 @@ cd $WDIR
 function OHMYZSH(){
 
 # Installation de OhmyZsh!
-
+echo "===> OHMYZSH INSTALL"
 sudo vpm i -y zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 exit
@@ -217,7 +224,6 @@ NET
 SSHKEYTEST
 ELOGIND
 BASEINSTALL
-
 FLATPAK
 I3INSTALLER
 NANORC
@@ -230,7 +236,7 @@ STEELSERIES
 STEAM
 #GOG
 
-#A Declencher en dernier parce que sinon ça fait chier
+#A Declencher en dernier
 OHMYZSH
 
 echo "Travail terminé ! Reboot en cours"
