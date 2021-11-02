@@ -1,7 +1,5 @@
 #!/bin/bash
 ## VARIABLES
-cd ..
-WDIR=$(pwd)
 I3CONF=$HOME/.config/i3				# Dossier .config/i3/
 I3FILE=$I3CONF/config				# Fichier .config/i3/config
 
@@ -27,7 +25,7 @@ sudo pycp $I3FILE $I3CONF/config.ori
 rm -fv $I3FILE
 fi
 
-sudo pycp $WDIR/blurlock /bin/
+sudo pycp $WDIR/scripts/blurlock /bin/
 sudo pycp $$WDIR/config/i3blocks.conf $WDIR/config/config $I3CONF
 
 sudo chmod +x /bin/blurlock
