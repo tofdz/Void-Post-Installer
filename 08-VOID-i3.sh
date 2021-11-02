@@ -21,7 +21,7 @@ else
 # INSTALLATION DES FICHIERS DE CONFIGURATION & WALLPAPERS
 sudo pycp $HOME/Void-Post-Installer/config/config $I3CONF
 sudo pycp $HOME/Void-Post-Installer/config/i3blocks.conf $I3CONF
-sudo pycp $HOME/Void-Post-Installer/wallpaper/* $HOME/Images/
+sudo pycp $HOME/Void-Post-Installer/wallpapers/* $HOME/Images/
 fi
 #Installer la police qui va bien
 #OUUUUUUUUUPPPP OUUUUUUUUUUP THAAAAAAAT'S DAAAAAAAAA SOUUUUUUUUUN OF DAAAAAAAAAA POOOOOOOOOLICE !
