@@ -12,6 +12,8 @@ echo -e "##			V 0.0.2	     		   ##"
 echo -e "##				       			   ##"
 echo -e "####################################"
 
+WDIR=$(pwd)
+
 function NET(){
 echo "Fonction NET()"
 ip[0]=8.8.8.8
@@ -51,7 +53,7 @@ fi
 function ELOGIND(){
 # Configuration clavier azerty pour
 # se connecter à sa session.
-sudo ./03-VOID-Login_AZERTY.sh
+sudo ./$WDIR/scripts/03-VOID-Login_AZERTY.sh
 }
 function BASEINSTALL(){
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
@@ -61,7 +63,7 @@ sudo xbps-install -Syuv vpm vsv;
 sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree
 sudo vpm i -y git-all nano zsh curl wget cifs-utils python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver xfburn flatpak unzip smbclient minitube arduino zenmap vlc gimp gparted blender pycp cdrtools socklog socklog-void ytmdl adwaita-qt qt5ct
 sudo ln -s /etc/sv/socklog-unix /var/services;sudo ln -s /etc/sv/nanoklogd /var/services;
-sudo ./02-VOID-Qt5ct.sh
+sudo ./$WDIR/scripts/02-VOID-Qt5ct.sh
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
 sudo vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
@@ -79,7 +81,7 @@ flatpak install Discord Parsec
 }
 function I3INSTALLER(){
 echo "Installation Paquets pour le gestionnaire i3"
-./08-VOID-i3.sh
+./$WDIR/scripts/08-VOID-i3.sh
 }
 function NANORC(){
 # Configuration highlighting pour nano 
@@ -116,7 +118,7 @@ function HOSTS(){
 # Configuration Reseau (adresse définie)
 # Appel un script pour avoir les droits root en écriture sur
 # le fichier /etc/hosts
-sudo ./02-VOID-Host_Modifier.sh
+sudo ./$WDIR/scripts/02-VOID-Host_Modifier.sh
 }
 
 function T420(){
@@ -146,17 +148,17 @@ sudo vpm i -y xfce4-pulseaudio-plugin nvidia
 
 function STEAM(){
 # Configuration installation Steam
-./05-VOID-Steam.sh
+./$WDIR/scripts/05-VOID-Steam.sh
 }
 function GOG(){
-./06-VOID-GOG.sh
+./$WDIR/scripts/06-VOID-GOG.sh
 }
 function STEELSERIES(){
-./07-VOID-rivalcfg.sh
+./$WDIR/scripts/07-VOID-rivalcfg.sh
 }
 function VIRTUALBOX(){
 echo "Installation Paquets pour VirtualBox"
-./09-VOID-VirtualBox.sh
+./$WDIR/scripts/09-VOID-VirtualBox.sh
 }
 
 function OHMYZSH(){
