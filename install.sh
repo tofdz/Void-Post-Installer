@@ -130,7 +130,7 @@ function HOSTS(){
 # Configuration Reseau (adresse définie)
 # Appel un script pour avoir les droits root en écriture sur
 # le fichier /etc/hosts
-sudo ./$WDIR/scripts/02-VOID-Host_Modifier.sh
+sudo .$WDIR/scripts/02-VOID-Host_Modifier.sh
 }
 
 function T420(){
@@ -160,17 +160,17 @@ sudo vpm i -y xfce4-pulseaudio-plugin nvidia
 
 function STEAM(){
 # Configuration installation Steam
-./$WDIR/scripts/05-VOID-Steam.sh
+.$WDIR/scripts/05-VOID-Steam.sh
 }
 function GOG(){
-./$WDIR/scripts/06-VOID-GOG.sh
+.$WDIR/scripts/06-VOID-GOG.sh
 }
 function STEELSERIES(){
-./$WDIR/scripts/07-VOID-rivalcfg.sh
+.$WDIR/scripts/07-VOID-rivalcfg.sh
 }
 function VIRTUALBOX(){
 echo "Installation Paquets pour VirtualBox"
-./$WDIR/scripts/09-VOID-VirtualBox.sh
+.$WDIR/scripts/09-VOID-VirtualBox.sh
 }
 
 function OHMYZSH(){
