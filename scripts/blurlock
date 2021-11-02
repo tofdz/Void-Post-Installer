@@ -8,6 +8,6 @@ convert /tmp/screenshot.png -blur 0x5 /tmp/screenshotblur.png
 rm /tmp/screenshot.png
 
 # lock the screen
-i3lock -i /tmp/screenshotblur.png -C
+i3lock -i /tmp/screenshotblur.png -C && xset dpms force off
 
 exit 0
