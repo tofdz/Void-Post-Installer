@@ -15,7 +15,8 @@ echo -e "####################################"
 
 # On rend les scripts de l'installation executable automatiquement
 
-WDIR=$(pwd)
+declare -x WDIR=$(pwd)
+echo $WDIR
 chmod +x $WDIR/scripts/*
 source ~/.config/user-dirs.dirs
 
