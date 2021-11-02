@@ -154,6 +154,10 @@ function GOG(){
 function STEELSERIES(){
 ./07-VOID-rivalcfg.sh
 }
+function VIRTUALBOX(){
+echo "Installation Paquets pour VirtualBox"
+./09-VOID-VirtualBox.sh
+}
 
 function OHMYZSH(){
 
