@@ -146,14 +146,6 @@ echo 'include "/usr/share/nano/tex.nanorc"' >> $HOME/.nanorc
 sudo cp $HOME/.nanorc /root/.nanorc
 sudo chown root: /root/.nanorc
 }
-function HOSTS(){
-# Configuration Reseau (adresse définie)
-# Appel un script pour avoir les droits root en écriture sur
-# le fichier /etc/hosts
-cd $WDIR/scripts/
-sudo ./02-VOID-Host_Modifier.sh
-cd $WDIR
-}
 
 function T420(){
 
