@@ -71,6 +71,7 @@ sudo xbps-install -Syuv xbps;sudo xbps-install -Syuv;
 sudo xbps-install -Syuv vpm vsv;
 sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree
 sudo vpm i -y git-all nano zsh curl wget cifs-utils python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver xfburn flatpak unzip smbclient minitube arduino zenmap vlc gimp gparted blender pycp cdrtools socklog socklog-void ytmdl adwaita-qt qt5ct
+sudo vpm i -y thunderbird birdtray
 sudo ln -s /etc/sv/socklog-unix /var/services;sudo ln -s /etc/sv/nanoklogd /var/services;
 cd $WDIR/scripts/
 sudo ./02-VOID-Qt5ct.sh
