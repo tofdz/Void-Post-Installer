@@ -39,7 +39,7 @@ exec --no-startup-id nm-applet
 
 # FOND D'ECRAN
 # Gestion par feh, editer le lien qui pointe vers "/home/$USER/Images"
-exec_always --no-startup-id xautolock -time 2 -locker blurlock -corners 0+0-
+exec_always --no-startup-id xautolock -time 1 -locker blurlock -corners ++--
 
 # bind de la touche Mod+x pour couper l'ecran et verrouille la session
 #bindsym $mod+x exec --no-startup-id xset dpms force off && i3lock -c 000000B3 -i $HOME/Images/Venom_dark.jpeg -t
@@ -51,6 +51,7 @@ bindsym $mod+x exec --no-startup-id blurlock
 exec_always compton
 exec_always feh --bg-center $HOME/Images/Venom_dark.jpeg
 exec_always --no-startup-id octoxbps-notifier
+exec_always --no-startup-id thunderbird
 exec xfce4-terminal
 exec notepadqq
 exec firefox
@@ -141,6 +142,11 @@ bindsym $mod+q focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
+
+## Personnalisation des workspaces
+
+# Workspaces : Icones
+
 set $ws1 " 1 :     "
 set $ws2 " 2 :     "
 set $ws3 " 3 :     "
@@ -151,12 +157,12 @@ set $ws7 " 7 :     "
 set $ws8 " 8 :     "
 set $ws9 " 9 :     "
 set $ws10 " 10 :    "
-set $ws11 "        "
-set $ws12 "        "
-set $ws13 "        "
-set $ws14 "      "
-set $ws15 "       "
-
+set $ws11 "     "
+set $ws12 "     "
+set $ws13 "     "
+set $ws14 "       "
+set $ws15 "      "
+set $ws16 "       "
 # assigner les apps sur les workspaces  
 #
 assign [class="xfce4-terminal|Xfce4-terminal"] $ws2
@@ -182,7 +188,10 @@ assign [class="steam_app_*"] $ws11
 assign [class="vlc"] $ws13
 assign [class="zenmap|Zenmap"] $ws14
 assign [class="VirtualBox Manager"] $ws15
-
+assign [class="Thunderbird|Claws"] $ws16
+# Workspace : switcher 
+bindsym $mod+Tab workspace next_on_output
+bindsym $mod+Shift+Tab workspace prev_on_output
 # switch to workspace
 #
 bindsym $mod+ampersand workspace number $ws1
@@ -250,6 +259,7 @@ bar {
 }
 
 for_window [class=".*"] border_pixel 5
-gaps inner 5
+gaps inner 15
 smart_gaps on
 smart_borders on
+
