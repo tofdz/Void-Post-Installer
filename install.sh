@@ -99,7 +99,7 @@ echo "===> FLATPAK"
 echo "Flatpak : Création des repos si non existant"
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 echo "Flatpak : Installation Discord & Parsec"
-flatpak install Discord Parsec
+flatpak install Discord Parsec org.freedesktop.Platform.GL.nvidia-470-74
 }
 function I3INSTALLER(){
 # configuration window manager i3
