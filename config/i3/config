@@ -255,7 +255,7 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
         position bottom
-	status_command i3blocks -c ~/.config/i3/i3blocks.conf
+	status_command i3blocks -c ~/.config/i3blocks/config
 }
 
 for_window [class=".*"] border_pixel 5
