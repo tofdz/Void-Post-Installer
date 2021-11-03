@@ -93,7 +93,12 @@ fc-cache -fv
 echo "Suppression des Fichiers inutile"
 rm -rfv $HOME/YosemiteSanFranciscoFont
 }
-
+function FIREWALL(){
+echo "===> FIREWALL"
+cd $WDIR/scripts/
+./01-VOID-Firewall.sh
+cd $WDIR
+}
 function FLATPAK(){
 echo "===> FLATPAK"
 # installation via flatpak de Discord & Parsec
