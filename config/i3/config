@@ -39,7 +39,7 @@ exec --no-startup-id nm-applet
 
 # FOND D'ECRAN
 # Gestion par feh, editer le lien qui pointe vers "/home/$USER/Images"
-exec_always --no-startup-id xautolock -time 1 -locker blurlock -corners +00-
+exec_always --no-startup-id xautolock -time 2 -locker blurlock -corners +00-
 
 # bind de la touche Mod+x pour couper l'ecran et verrouille la session
 #bindsym $mod+x exec --no-startup-id xset dpms force off && i3lock -c 000000B3 -i $HOME/Images/Venom_dark.jpeg -t
@@ -51,17 +51,16 @@ bindsym $mod+x exec --no-startup-id blurlock
 exec_always compton
 exec_always feh --bg-center $HOME/Images/Venom_dark.jpeg
 exec_always --no-startup-id octoxbps-notifier
-exec_always --no-startup-id thunderbird
-exec xfce4-terminal
-exec notepadqq
-exec firefox
-exec flatpak run com.parsecgaming.parsec
-exec flatpak run com.discordapp.Discord
-exec steam
-exec VirtualBox
+exec_always --no-startup-id birdtray
+exec --no-startup-id firefox
+exec --no-startup-id xfce4-terminal
+exec --no-startup-id notepadqq
+exec --no-startup-id flatpak run com.parsecgaming.parsec
+exec --no-startup-id flatpak run com.discordapp.Discord
+exec --no-startup-id steam
 exec --no-startup-id minitube				
-exec Thunar
-
+exec --no-startup-id Thunar
+exec --no-startup-id VirtualBox
 #===========================================================
 #===========================================================
 
