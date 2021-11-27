@@ -32,7 +32,7 @@ sudo pycp $I3FILE $I3DIRCONF/config.ori
 rm -fv $I3FILE
 fi
 if [ -f $ROFIFILE ];then
-sudo pycp $ROFIFILE $ROFIDIRCONF/config.rasi
+sudo pycp $ROFIFILE $ROFIDIRCONF/config.rasi.ori
 rm -fv $I3FILE
 fi
 sudo pycp $WDIR/scripts/blurlock /bin/
