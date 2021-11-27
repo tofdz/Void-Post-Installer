@@ -1,6 +1,21 @@
 # VOID-Post-Installer
 
 Permet la post installation de VoidLinux pour les débutants qui veulent passer de Windows à VoidLinux
+Une installation avec en objectif : 
+- STABILITE (je l'utilise personnellement et RAS)
+- FACILITE (un parfait débutant doit pouvoir l'utiliser et passer de windows a linux en un claquement de doigts)
+- LEGERETE (le moins d'espace possible utilisé, que des applications utile qu'on utilise 100% du temps)
+- GAMING (pouvoir jouer sur linux n'est plus une utopie, votre bibliothèque Steam vous attend !!!)
+- SECURITE (ne pas etre exposé inutiliment sur le net, pas de télémétrie, pas de mouchards, sniffeurs bref : PROPRE)
+
+Cette installation tiens tous ces objectifs.
+
+Démarré, void consomme 300mo de RAM.
+Sur un pc portable qui ne digère pas windows 10, ça permet de lui redonner une jeunesse.
+Sur un pc correct, de liberer de l'espace.
+Sur une machine haut de gamme : d'exploiter la bete !!!
+
+# Au programme : 
 
 - Ajout des repository VoidLinux.
 - Correction du bug du clavier QWERTY au login
@@ -22,12 +37,17 @@ Permet la post installation de VoidLinux pour les débutants qui veulent passer 
 - Gimp		: Retouchez/Editez vos images/photos (équivalent photoshop)
 - Xarchiver	: Compressez/décompressez vos archives (winrar)
 - Zenmap	: Testez votre réseau privé
+- OctoXBPS	: Gestionnaire de paquets & Mise a jour systeme
 
 (Terminal)
-- Gestionnaire de paquet vpm pour une utilisation simplifiée dans le terminal et octoxbps en mode graphique depuis le bureau.
-- ytmdl pour recuper vidéo et musique directement depuis Youtube sur le terminal
-- Gestion des souris steelseries grace à l'ajout du script rivalcfg.
-- Htop & ytop pour monitorer votre systeme
+- vpm 		: Gestionnaire de paquets.
+- vsv 		: Gestionnaire de service.
+- nano 		: Editeur de fichiers
+- mc 		: MidnightCommander le gestionnaire de fichiers en terminal capable de faire aussi du FTP, SFTP et bien d'autres choses.
+- ytmdl 	: pour recuper vidéo et musique directement depuis Youtube sur le terminal
+- rivalcfg 	: Gestion des souris steelseries grace à l'ajout du script rivalcfg.
+- Htop & ytop 	: pour monitorer votre systeme
+- neofetch	: pour afficher le motd !
 - Et pleins d'autres applications sympa sur les dépots de void et de github !
 
 # Interface graphique : 
