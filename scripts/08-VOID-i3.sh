@@ -1,8 +1,10 @@
 #!/bin/bash
 ## VARIABLES
 CONFDIR=$HOME/.config/					# Dossier .config
-I3DIRCONF=$HOME/.config/i3				# Dossier .config/i3/
+I3DIRCONF=$CONFDIR/i3				# Dossier .config/i3/
 I3FILE=$I3DIRCONF/config				# Fichier .config/i3/config
+ROFIDIRCONF=$CONFDIR/rofi/			# Dossier .config/rofi/
+ROFIFILE=$ROFICONFDIR/config.rasi			# Ficher .config/rofi/config
 
 if [ ! -d $HOME/.fonts ];then
 	mkdir $HOME/.fonts
@@ -14,7 +16,11 @@ if [ ! -d $I3DIRCONF ];then
 else
 echo "Dossier i3 déjà présent"
 fi
-
+if [ ! -d $ROFIDIRCONF ];then
+	mkdir $ROFIDIRCONF
+else
+echo "Dossier rofi déjà présent"
+fi
 # INSTALLATION DES FICHIERS DE CONFIGURATION & WALLPAPERS
 sudo vpm i -y i3-gaps i3ipc-glib i3status i3wsr dmenu rofi i3blocks i3blocks-blocklets pasystray font-awesome5 lxappearance feh adwaita-plus compton ImageMagick i3lock-color xautolock 
 
@@ -25,7 +31,10 @@ if [ -f $I3FILE ];then
 sudo pycp $I3FILE $I3DIRCONF/config.ori
 rm -fv $I3FILE
 fi
-
+if [ -f $ROFIFILE ];then
+sudo pycp $ROFIFILE $ROFIDIRCONF/config.rasi
+rm -fv $I3FILE
+fi
 sudo pycp $WDIR/scripts/blurlock /bin/
 sudo pycp $WDIR/config/* $CONFDIR
 
