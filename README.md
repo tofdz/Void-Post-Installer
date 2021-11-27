@@ -3,11 +3,11 @@
 Permet la post installation de VoidLinux pour les débutants qui veulent passer de Windows à VoidLinux
 
 - Ajout des repository VoidLinux.
-- Optimisation divers system (desactivation des services inutiles)
 - Correction du bug du clavier QWERTY au login
 - Gestion de la mise en veille de l'ecran avec verrouillage session sur timer
 - Verrouillage l'ecran avec un effet de floutage en faisant Mod+x.
-
+- Desactivation dhcpcd (conflit avec NetworkManager)
+- Desactivation des TTY inutiles
 
 # Application installées de base :
 (Graphique)
