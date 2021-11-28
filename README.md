@@ -1,12 +1,10 @@
 # VOID-Post-Installer
 
 Compatibilité CPU : AMD & Intel
-
 Compatibilité GPU : (Nvidia & AMD)
-
 OS : VoidLinux
 
-# DESCRIPTION
+# Description
 
 Permet la post installation de VoidLinux pour les débutants qui veulent passer de Windows à VoidLinux
 Une installation avec en objectif : 
@@ -23,7 +21,7 @@ Sur un pc correct, de liberer de l'espace (environ 40G de récuperer vs windows1
 Une fois ce script executé sur votre version fraichement installée de voidlinux,
 Vous serez pret à l'utiliser sans avoir a regler le moindre probleme.
 
-# LISTE DES ACTIONS 
+# Liste des modifications 
 
 - Création des clés SSH (ed pas RSA)
 - Ajout des repository VoidLinux.
@@ -32,6 +30,8 @@ Vous serez pret à l'utiliser sans avoir a regler le moindre probleme.
 - Verrouillage l'ecran avec un effet de floutage en faisant Mod+x.
 - Desactivation dhcpcd (conflit avec NetworkManager)
 - Desactivation des TTY inutiles
+- configuration de nano (highlighting et affichage ligne & co)
+- Installation des drivers graphique
 
 # Application installées de base :
 
@@ -76,7 +76,7 @@ Le choix entre deux bureau :
 Dans un terminal, tapez :
 
         sudo xbps-install -Suyv git-all 
-                
+         
         git clone https://github.com/tofdz/Void-Post-Installer/  
         cd Void-Post-Installer  
         sudo chmod +x install.sh  
@@ -85,14 +85,16 @@ Dans un terminal, tapez :
 Enjoy ^^  
 2021 Tofdz
 
-source github (Merci à eux !) :
-Programme :                     Lien :
-octoxbps			https://github.com/aarnt/octoxbps
-vsv				https://github.com/bahamas10/vsv
-vpm				https://github.com/netzverweigerer/vpm
-protonup			https://github.com/AUNaseef/protonup
-rivalcfg			https://github.com/flozz/rivalcfg  
-Fonts San Francisco		https://github.com/supermarin/YosemiteSanFranciscoFont  
-ytmdl				https://github.com/deepjyoti30/ytmdl
+# source github (Merci à eux !) :
+
+Programme               Lien 
+
+octoxbps		https://github.com/aarnt/octoxbps
+vsv			https://github.com/bahamas10/vsv
+vpm			https://github.com/netzverweigerer/vpm
+protonup		https://github.com/AUNaseef/protonup
+rivalcfg		https://github.com/flozz/rivalcfg  
+Fonts San Francisco	https://github.com/supermarin/YosemiteSanFranciscoFont  
+ytmdl			https://github.com/deepjyoti30/ytmdl
 
 Et toutes celles et ceux qui ont laissé une trace sur le net pour permettre aux autres de faire de meme :)
