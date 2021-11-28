@@ -1,7 +1,7 @@
 # VOID-Post-Installer
 
-Compatibilité CPU : AMD & Intel
-Compatibilité GPU : Nvidia & AMD
+Compatibilité CPU : (AMD & Intel)
+Compatibilité GPU : (Nvidia & AMD)
 OS : VoidLinux
 
 Permet la post installation de VoidLinux pour les débutants qui veulent passer de Windows à VoidLinux
