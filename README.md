@@ -67,20 +67,20 @@ Vous serez pret à l'utiliser sans avoir a regler le moindre probleme.
 
 Le choix entre deux bureau : 
         
-        - xfce4 pour une interface plus typée windows (typé débutant : fait pour se passer du terminal au maximum) 
-        
-        - i3 pour une expérience épurée et intuitive (typé Gamer full patate, pour tirer le max de la machine, 
-                déjà préconfigurée avec toute l'installation de base, n'hésitez pas à l'essayer !)
+   - xfce4 pour une interface plus typée windows (typé débutant : fait pour se passer du terminal au maximum) 
+   - i3 pour une expérience épurée et intuitive (typé Gamer full patate, pour tirer le max de la machine, 
+               déjà préconfigurée avec toute l'installation de base, n'hésitez pas à l'essayer !)
 
 # Installation
 
 Dans un terminal, tapez :
 
-sudo xbps-install -Suyv git-all  
-git clone https://github.com/tofdz/Void-Post-Installer/  
-cd Void-Post-Installer  
-sudo chmod +x install.sh  
-./install.sh
+        sudo xbps-install -Suyv git-all 
+                
+        git clone https://github.com/tofdz/Void-Post-Installer/  
+        cd Void-Post-Installer  
+        sudo chmod +x install.sh  
+        ./install.sh
 
 Enjoy ^^  
 2021 Tofdz
