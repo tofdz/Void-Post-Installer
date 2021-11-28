@@ -34,16 +34,8 @@ exec_always compton
 exec_always feh --bg-center $HOME/Images/Venom_dark.jpeg
 exec_always --no-startup-id octoxbps-notifier
 exec_always --no-startup-id birdtray
-#exec --no-startup-id firefox
-#exec --no-startup-id xfce4-terminal
-#exec --no-startup-id notepadqq
-#exec --no-startup-id flatpak run com.parsecgaming.parsec
-#exec --no-startup-id flatpak run com.discordapp.Discord
-#exec --no-startup-id steam
-#exec --no-startup-id minitube				
-exec --no-startup-id Thunar
-#exec --no-startup-id VirtualBox
-
+exec --no-startup-id flatpak run com.discordapp.Discord
+exec --no-startup-id steam
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -116,12 +108,12 @@ bindsym $mod+q focus parent
 # Workspaces : Icones
 
 set $ws1 " 1 :     "
-set $ws2 " 2 :     "
-set $ws3 " 3 :     "
-set $ws4 " 4 :     "
-set $ws5 " 5 :     "
-set $ws6 " 6 :     "
-set $ws7 " 7 :     "
+set $ws2 " 2 :  "
+set $ws3 " 3 :  "
+set $ws4 " 4 :  "
+set $ws5 " 5 :  "
+set $ws6 " 6 :  "
+set $ws7 " 7 :     "
 set $ws8 " 8 :     "
 set $ws9 " 9 :     "
 set $ws10 " 10 :    "
@@ -133,16 +125,16 @@ set $ws15 "      "
 set $ws16 "       "
 # assigner les apps sur les workspaces  
 #
-assign [class="xfce4-terminal|Xfce4-terminal"] $ws2
-assign [class="notepadqq-bin|Notepadqq"] $ws3
-assign [class="firefox|Navigator|Firefox"] $ws4
-assign [class="thunar|Thunar"] $ws5
-assign [class="gpartedbin|GParted"] $ws5
-assign [class="minitube|Minitube"] $ws6
-assign [class="Parsec|parsec"] $ws7
+#assign [class="xfce4-terminal|Xfce4-terminal"] $ws2
+#assign [class="notepadqq-bin|Notepadqq"] $ws3
+#assign [class="firefox|Navigator|Firefox"] $ws4
+#assign [class="thunar|Thunar"] $ws5
+assign [class="minitube|Minitube"] $ws7
+#assign [class="Parsec|parsec"] $ws7
 assign [class="discord|discord"] $ws8
 assign [class="Steam"] $ws9
 assign [class="SC Controller"] $ws10
+assign [class="gpartedbin|GParted"] $ws10
 assign [class="lxappearance|Lxappearance"] $ws10
 assign [class="nm-connection-editor|Nm-connection-editor"] $ws10
 assign [class="pavucontrol|Pavucontrol"] $ws10
@@ -231,3 +223,4 @@ for_window [class=".*"] border_pixel 5
 gaps inner 15
 smart_gaps on
 smart_borders on
+#border_radius 3
