@@ -1,11 +1,16 @@
 # VOID-Post-Installer
 
-Compatibilité CPU : (AMD & Intel)
+Compatibilité CPU : AMD & Intel
+
 Compatibilité GPU : (Nvidia & AMD)
+
 OS : VoidLinux
+
+# DESCRIPTION
 
 Permet la post installation de VoidLinux pour les débutants qui veulent passer de Windows à VoidLinux
 Une installation avec en objectif : 
+
 - STABILITE (je l'utilise personnellement et RAS)
 - FACILITE (un parfait débutant doit pouvoir l'utiliser et passer de windows a linux en un claquement de doigts)
 - LEGERETE (le moins d'espace possible utilisé, que des applications utile qu'on utilise 100% du temps)
@@ -15,11 +20,10 @@ Une installation avec en objectif :
 Démarré, void consomme 300mo de RAM.
 Sur un pc portable qui ne digère pas windows 10, ça permet de lui redonner une jeunesse.
 Sur un pc correct, de liberer de l'espace (environ 40G de récuperer vs windows10).
-
 Une fois ce script executé sur votre version fraichement installée de voidlinux,
 Vous serez pret à l'utiliser sans avoir a regler le moindre probleme.
 
-# Au programme : 
+# LISTE DES ACTIONS 
 
 - Création des clés SSH (ed pas RSA)
 - Ajout des repository VoidLinux.
@@ -30,7 +34,9 @@ Vous serez pret à l'utiliser sans avoir a regler le moindre probleme.
 - Desactivation des TTY inutiles
 
 # Application installées de base :
+
 (Graphique)
+
 - Steam		: Jouez avec support manette Xbox/Dualshock4 natif
 - ProtonUP	: Pour jouer avec les derniers mise a jour Proton sur Steam
 - Parsec	: Connectez sur vos autres machines à distance
@@ -46,6 +52,7 @@ Vous serez pret à l'utiliser sans avoir a regler le moindre probleme.
 - OctoXBPS	: Gestionnaire de paquets & Mise a jour systeme
 
 (Terminal)
+
 - vpm 		: Gestionnaire de paquets.
 - vsv 		: Gestionnaire de service.
 - nano 		: Editeur de fichiers
@@ -58,8 +65,12 @@ Vous serez pret à l'utiliser sans avoir a regler le moindre probleme.
 
 # Interface graphique : 
 
-Le choix entre deux bureau : xfce4 pour une interface plus typée windows, i3 pour une expérience épurée et intuitive 
-		(déjà préconfigurée avec toute l'installation de base, n'hésitez pas à l'essayer !)
+Le choix entre deux bureau : 
+        
+        - xfce4 pour une interface plus typée windows (typé débutant : fait pour se passer du terminal au maximum) 
+        
+        - i3 pour une expérience épurée et intuitive (typé Gamer full patate, pour tirer le max de la machine, 
+                déjà préconfigurée avec toute l'installation de base, n'hésitez pas à l'essayer !)
 
 # Installation
 
@@ -75,7 +86,7 @@ Enjoy ^^
 2021 Tofdz
 
 source github (Merci à eux !) :
-
+Programme :                     Lien :
 octoxbps			https://github.com/aarnt/octoxbps
 vsv				https://github.com/bahamas10/vsv
 vpm				https://github.com/netzverweigerer/vpm
