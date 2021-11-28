@@ -20,7 +20,13 @@ function OPENSOURCE(){
 #installe les drivers opensource
 sudo vpm i -y mesa-dri-32bit
 }
-
+function PROTONUP(){
+pip3 install protonup
+if [ ! -d ~/.steam/root/compatibilitytools.d ];then
+mkdir ~/.steam/root/compatibitytools.d/ && protonup -d "~/.steam/root/compatibilitytools.d/"
+protonup
+fi
+}
 function CONTROLLER(){
 sudo vpm i -y sc-controller
 }
@@ -29,7 +35,9 @@ function MAIN(){
 BASE
 NVIDIA
 #OPENSOURCE
+PROTONUP
 CONTROLLER
 }
 
 MAIN
+
