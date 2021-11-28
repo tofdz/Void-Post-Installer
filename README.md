@@ -1,5 +1,9 @@
 # VOID-Post-Installer
 
+Compatibilité CPU : AMD & Intel
+Compatibilité GPU : Nvidia & AMD
+OS : VoidLinux
+
 Permet la post installation de VoidLinux pour les débutants qui veulent passer de Windows à VoidLinux
 Une installation avec en objectif : 
 - STABILITE (je l'utilise personnellement et RAS)
@@ -8,15 +12,16 @@ Une installation avec en objectif :
 - GAMING (pouvoir jouer sur linux n'est plus une utopie, votre bibliothèque Steam vous attend !!!)
 - SECURITE (ne pas etre exposé inutiliment sur le net, pas de télémétrie, pas de mouchards, sniffeurs bref : PROPRE)
 
-Cette installation tiens tous ces objectifs.
-
 Démarré, void consomme 300mo de RAM.
 Sur un pc portable qui ne digère pas windows 10, ça permet de lui redonner une jeunesse.
-Sur un pc correct, de liberer de l'espace.
-Sur une machine haut de gamme : d'exploiter la bete !!!
+Sur un pc correct, de liberer de l'espace (environ 40G de récuperer vs windows10).
+
+Une fois ce script executé sur votre version fraichement installée de voidlinux,
+Vous serez pret à l'utiliser sans avoir a regler le moindre probleme.
 
 # Au programme : 
 
+- Création des clés SSH (ed pas RSA)
 - Ajout des repository VoidLinux.
 - Correction du bug du clavier QWERTY au login
 - Gestion de la mise en veille de l'ecran avec verrouillage session sur timer
@@ -27,6 +32,7 @@ Sur une machine haut de gamme : d'exploiter la bete !!!
 # Application installées de base :
 (Graphique)
 - Steam		: Jouez avec support manette Xbox/Dualshock4 natif
+- ProtonUP	: Pour jouer avec les derniers mise a jour Proton sur Steam
 - Parsec	: Connectez sur vos autres machines à distance
 - Discord	: Restez en contacts avec vos amis !
 - VirtualBox	: Créez des machines virtuelles
@@ -70,6 +76,12 @@ Enjoy ^^
 
 source github (Merci à eux !) :
 
+octoxbps			https://github.com/aarnt/octoxbps
+vsv				https://github.com/bahamas10/vsv
+vpm				https://github.com/netzverweigerer/vpm
+protonup			https://github.com/AUNaseef/protonup
 rivalcfg			https://github.com/flozz/rivalcfg  
 Fonts San Francisco		https://github.com/supermarin/YosemiteSanFranciscoFont  
+ytmdl				https://github.com/deepjyoti30/ytmdl
+
 Et toutes celles et ceux qui ont laissé une trace sur le net pour permettre aux autres de faire de meme :)
