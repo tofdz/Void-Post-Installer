@@ -21,22 +21,21 @@ if [ ! -d $ROFIDIRCONF ];then
 else
 echo "Dossier rofi déjà présent"
 fi
-# INSTALLATION DES FICHIERS DE CONFIGURATION & WALLPAPERS
-sudo vpm i -y i3-gaps i3ipc-glib i3status i3wsr dmenu rofi i3blocks i3blocks-blocklets pasystray font-awesome5 lxappearance feh adwaita-plus compton ImageMagick i3lock-color xautolock 
 
-## PREPARATION DES FICHIERS DE CONFIF ET CLEAN POUR L'INSTALL
+# INSTALLATION DES FICHIERS DE CONFIGURATION & WALLPAPERS
+sudo vpm i -y i3-gaps i3ipc-glib i3status i3wsr rofi i3blocks i3blocks-blocklets pasystray font-awesome5 lxappearance feh adwaita-plus compton compton-conf ImageMagick i3lock-color xautolock 
 
 # Verification
 if [ -f $I3FILE ];then
 sudo pycp $I3FILE $I3DIRCONF/config.ori
 rm -fv $I3FILE
 fi
+
 if [ -f $ROFIFILE ];then
 sudo pycp $ROFIFILE $ROFIDIRCONF/config.rasi.ori
 rm -fv $I3FILE
 fi
+
 sudo pycp $WDIR/scripts/blurlock /bin/
 sudo pycp $WDIR/config/* $CONFDIR
-
-
 sudo chmod +x /bin/blurlock
