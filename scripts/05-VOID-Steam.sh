@@ -1,6 +1,13 @@
 #!/bin/bash
 
 # Installation de Steam sur VoidLinux.
+# Variables
+REPERTOIRE="$HOME/.local/share/Steam/compatibilitytools.d/"
+
+
+
+
+
 #Paquets de base
 
 function BASE(){
@@ -19,6 +26,7 @@ function OPENSOURCE(){
 #installe les drivers opensource
 sudo vpm i -y mesa-dri-32bit
 }
+
 function PROTONUP(){
 # INSTALLATION DE PROTONUP
 pip3 install protonup
@@ -30,17 +38,18 @@ touch $HOME/.profile
 echo 'if [ -d "$HOME/.local/bin" ] ; then' > $HOME/.profile
 echo 'PATH="$HOME/.local/bin:$PATH"' >> $HOME/.profile
 echo "fi" >> $HOME/.profile
-echo "Fichier .profile - Terminé !"
+echo 'Fichier .profile - Terminé !'
 source $HOME/.profile
-
-# Création du repertoire pour Steam
-if [ ! -d ~/.local/share/Steam/compatibilitytools.d ];then
-sudo mkdir -R ~/.local/share/compatibitytools.d/
-echo "Protonup - Repertoire pour steam créé"
 fi
+# Création du repertoire pour Steam
+if [ ! -d $REPERTOIRE ];then
+sudo mkdir -R $REPERTOIRE
+echo 'Protonup - $REPERTOIRE pour steam créé'
+fi
+
 # Configuration repertoire steam Proton & install protonGH
-echo "Configuration & Installation ProtonGH pour steam"
-protonup -d "~/.local/share/Steam/compatibilitytools.d/"
+echo 'Configuration & Installation ProtonGH pour steam'
+protonup -d $REPERTOIRE
 protonup -y
 }
 
