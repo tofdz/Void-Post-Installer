@@ -24,7 +24,8 @@ function PROTONUP(){
 pip3 install protonup
 if [ ! -d ~/.steam/root/compatibilitytools.d ];then
 mkdir ~/.steam/root/compatibitytools.d/ && protonup -d "~/.steam/root/compatibilitytools.d/"
-protonup
+protonup -d $HOME/.local/share/Steam/compatibilitytools.d/
+protonup -y
 fi
 }
 function CONTROLLER(){
