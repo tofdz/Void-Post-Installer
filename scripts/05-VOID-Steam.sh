@@ -3,7 +3,6 @@
 # Installation de Steam sur VoidLinux.
 #Paquets de base
 
-
 function BASE(){
 #Installe le necessaire pour faire fonctionner steam & gamepad
 
@@ -21,23 +20,34 @@ function OPENSOURCE(){
 sudo vpm i -y mesa-dri-32bit
 }
 function PROTONUP(){
+# INSTALLATION DE PROTONUP
 pip3 install protonup
+
+# Création du .profile pour prendre en compte le path de protonup
+if [ ! -f $HOME/.profile ];then
+echo "Création du .profile"
 touch $HOME/.profile
 echo 'if [ -d "$HOME/.local/bin" ] ; then' > $HOME/.profile
 echo 'PATH="$HOME/.local/bin:$PATH"' >> $HOME/.profile
 echo "fi" >> $HOME/.profile
+echo "Fichier .profile - Terminé !"
 source $HOME/.profile
-if [ ! -d ~/.steam/root/compatibilitytools.d ];then
-sudo mkdir -R ~/.steam/root/compatibitytools.d/ && protonup -d "~/.local/share/Steam/compatibilitytools.d/"
-protonup -d "$HOME/./local/share/Steam/compatibilitytools.d/"
-protonup -y
+
+# Création du repertoire pour Steam
+if [ ! -d ~/.local/share/Steam/compatibilitytools.d ];then
+sudo mkdir -R ~/.local/share/compatibitytools.d/
+echo "Protonup - Repertoire pour steam créé"
 fi
+# Configuration repertoire steam Proton & install protonGH
+echo "Configuration & Installation ProtonGH pour steam"
+protonup -d "~/.local/share/Steam/compatibilitytools.d/" && protonup -y
 }
+
 function CONTROLLER(){
 sudo vpm i -y sc-controller
 }
-function MAIN(){
 
+function MAIN(){
 BASE
 NVIDIA
 #OPENSOURCE
@@ -46,4 +56,3 @@ CONTROLLER
 }
 
 MAIN
-
