@@ -1,12 +1,9 @@
 #!/bin/bash
 
 # Installation de Steam sur VoidLinux.
+
 # Variables
 REPERTOIRE="$HOME/.local/share/Steam/compatibilitytools.d/"
-
-
-
-
 
 #Paquets de base
 
