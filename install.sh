@@ -212,6 +212,12 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 exit
 }
 
+function WINE(){
+echo "===> WINE INSTALL"
+cd $WDIR/scripts/
+./10-VOID-Wine.sh
+cd $WDIR
+}
 
 function MAIN(){
 
@@ -234,7 +240,8 @@ RTX
 VIRTUALBOX
 STEELSERIES
 STEAM
-#GOG
+WINE
+GOG
 
 #A Declencher en dernier
 OHMYZSH
