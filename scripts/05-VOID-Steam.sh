@@ -40,7 +40,8 @@ echo "Protonup - Repertoire pour steam créé"
 fi
 # Configuration repertoire steam Proton & install protonGH
 echo "Configuration & Installation ProtonGH pour steam"
-protonup -d "~/.local/share/Steam/compatibilitytools.d/" && protonup -y
+protonup -d "~/.local/share/Steam/compatibilitytools.d/"
+protonup -y
 }
 
 function CONTROLLER(){
