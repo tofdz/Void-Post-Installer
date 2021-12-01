@@ -23,7 +23,7 @@ echo "Dossier rofi déjà présent"
 fi
 
 # INSTALLATION DES FICHIERS DE CONFIGURATION & WALLPAPERS
-sudo vpm i -y i3-gaps i3ipc-glib i3status i3wsr rofi i3blocks i3blocks-blocklets pasystray font-awesome5 lxappearance feh adwaita-plus compton compton-conf ImageMagick i3lock-color xautolock 
+sudo vpm i -y i3-gaps i3ipc-glib i3status i3wsr rofi i3blocks i3blocks-blocklets font-awesome5 lxappearance feh adwaita-plus compton compton-conf ImageMagick i3lock-color xautolock 
 
 # Verification
 if [ -f $I3FILE ];then
