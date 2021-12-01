@@ -1,22 +1,22 @@
 #!/bin/bash
+FILPATH="/etc/X11/xorg.conf.d/00-Keyboard.conf"
+DIRPATH="/etc/X11/xorg.conf.d"
 
-
-
-if [ -d /etc/X11/xorg.conf.d ];then
+if [ -d $DIRPATH ];then
 	echo "Dossier xorg.conf.d présent"
 else
-	mkdir /etc/X11/xorg.conf.d/
+	mkdir $DIRPATH
 	echo "Dossier crée"
 fi
 				
-if [ -f /etc/X11/xorg.conf.d/00-Keyboard.conf ];then
+if [ -f $FILPATH ];then
 	echo "Fichier 00-Keyboard.conf présent"
 else
-	echo 'Section "InputClass"' > /etc/X11/xorg.conf/00-Keyboard.conf
-    echo '     Identifier "system-keyboard"' >> /etc/X11/xorg.conf/00-Keyboard.conf
-    echo '     MatchisKeyboard "on"' >> /etc/X11/xorg.conf/00-Keyboard.conf
-	echo '     Option "XkbLayout" "fr"' >> /etc/X11/xorg.conf/00-Keyboard.conf
-    echo '     Option "XkbModel" "pc105"' >> /etc/X11/xorg.conf/00-Keyboard.conf
-	echo 'EndSection' >> /etc/X11/xorg.conf/00-Keyboard.conf
+	echo 'Section "InputClass"' > $FILPATH
+	echo '     Identifier "system-keyboard"' >> $FILPATH
+    	echo '     MatchisKeyboard "on"' >> $FILPATH
+	echo '     Option "XkbLayout" "fr"' >> $FILPATH
+    	echo '     Option "XkbModel" "pc105"' >> $FILPATH
+	echo 'EndSection' >> $FILPATH
 	echo 'Fichier créé'
 fi
