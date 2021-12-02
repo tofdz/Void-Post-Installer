@@ -92,12 +92,12 @@ Enjoy ^^
 
 Programme               Lien 
 
-octoxbps\t\thttps://github.com/aarnt/octoxbps
-vsv\t\thttps://github.com/bahamas10/vsv
-vpm             https://github.com/netzverweigerer/vpm
-protonup        https://github.com/AUNaseef/protonup
-rivalcfg        https://github.com/flozz/rivalcfg  
-San Francisco   https://github.com/supermarin/YosemiteSanFranciscoFont  
-ytmdl           https://github.com/deepjyoti30/ytmdl
+octoxbps :       https://github.com/aarnt/octoxbps
+vsv :https://github.com/bahamas10/vsv
+vpm :            https://github.com/netzverweigerer/vpm
+protonup :       https://github.com/AUNaseef/protonup
+rivalcfg :       https://github.com/flozz/rivalcfg  
+San Francisco : https://github.com/supermarin/YosemiteSanFranciscoFont  
+ytmdl :         https://github.com/deepjyoti30/ytmdl
 
 Et toutes celles et ceux qui ont laissé une trace sur le net pour permettre aux autres de faire de meme :)
