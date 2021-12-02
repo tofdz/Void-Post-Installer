@@ -236,12 +236,12 @@ NANORC
 # Choisir suivant l'installation souhaitée
 # T420
 # X250
-RTX
-VIRTUALBOX
-STEELSERIES
+# RTX
+# VIRTUALBOX
+# STEELSERIES
 STEAM
 WINE
-GOG
+# GOG
 
 #A Declencher en dernier
 OHMYZSH
