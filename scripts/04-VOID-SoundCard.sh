@@ -12,3 +12,4 @@ echo "#Liste toutes les fonctions dispo par la carte son" >> $SOUNDCONF
 echo "amixer -c <card-number>" >> $SOUNDCONF
 
 }
+chmod +x $SOUNDCONF
