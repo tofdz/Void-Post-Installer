@@ -13,3 +13,4 @@ echo "amixer -c <card-number>" >> $SOUNDCONF
 
 }
 chmod +x $SOUNDCONF
+sudo vsv restart acpid
