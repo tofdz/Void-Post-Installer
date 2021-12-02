@@ -92,8 +92,8 @@ Enjoy ^^
 
 Programme               Lien 
 
-octoxbps        https://github.com/aarnt/octoxbps
-vsv             https://github.com/bahamas10/vsv
+octoxbps\t\thttps://github.com/aarnt/octoxbps
+vsv\t\thttps://github.com/bahamas10/vsv
 vpm             https://github.com/netzverweigerer/vpm
 protonup        https://github.com/AUNaseef/protonup
 rivalcfg        https://github.com/flozz/rivalcfg  
