@@ -151,7 +151,7 @@ function T420(){
 
 echo "===> T420 addons"
 sudo vpm i -y tlp tlp-rdw tp_smapi-dkms tpacpi-bat mesa-dri linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel libva-intel-driver;
-# sudo cp lenovo-mutemic.sh /etc/acpi/&&sudo chmod +x /etc/acpi/lenovo-mutemic.sh;
+sudo cp $WDIR/outils/lenovo-mutemic.sh /etc/acpi/&&sudo chmod +x /etc/acpi/lenovo-mutemic.sh;
 sudo vsv restart acpid;
 }
 function X250(){
@@ -166,10 +166,10 @@ if [ -n $(sudo grep 'intel' /etc/default/grub) ];then
 else
 	echo "Fichier déjà modifié"
 fi
-
 sudo vpm i -y linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode mesa-dri mesa-vulkan-intel
 sudo vpm i -y tp_smapi-dkms tpacpi-bat
-
+sudo cp $WDIR/outils/lenovo-mutemic.sh /etc/acpi/&&sudo chmod +x /etc/acpi/lenovo-mutemic.sh;
+sudo vsv restart acpid;
 }
 function RTX(){
 echo "===> nvidia INSTALL"
