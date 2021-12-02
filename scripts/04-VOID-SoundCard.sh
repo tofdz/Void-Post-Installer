@@ -1,46 +1,15 @@
 #!/bin/bash
-# recupere dans lsusb et lspci le peripherique audio (ne respecte pas la casse grace à "-i" )
 
-#VARIABLES
-scan[]
+SOUNDCONF="/etc/acpi/soundconf.sh"
 
+touch $SOUNDCONF
+lsusb | grep -i "audio" > $SOUNDCONF &&lspci | grep -i "audio" > $SOUNDCONF;
 
-
-
-function SCAN(){
-
-# recupere la liste des cartes son présente
-
-
-
-
-
-touch soundcard-list
-lsusb | grep -i "audio" > soundcard-list &&lspci | grep -i "audio" > soundcard-list;
-
-amixer -D pulse set Master toggle
-
-amixer -D pulse set Master playback toggle
-
-#commande super interressante !!!!
-amixer -D pulse set Master 1+ toggle
-
-#Liste toutes les fonctions dispo par la carte son
-amixer -c <card-number>
-
-
-
-
-
-
-
-
-
-
-
-
-
-ping -c1 -q ${tab[$i]};tabR[$i]=${?};
-
+echo "amixer -D pulse set Master toggle" >> $SOUNDCONF
+echo "amixer -D pulse set Master playback toggle" >> $SOUNDCONF
+echo "#commande super interressante !!!!" >> $SOUNDCONF
+echo "amixer -D pulse set Master 1+ toggle" >> $SOUNDCONF
+echo "#Liste toutes les fonctions dispo par la carte son" >> $SOUNDCONF
+echo "amixer -c <card-number>" >> $SOUNDCONF
 
 }
