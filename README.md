@@ -83,7 +83,7 @@ Pour ce faire, rajoutez des # pour commenter les fonctions a desactiver ou retir
 
 Lancer le script en tapant dans le terminal : 
         
-        ./install.sh
+        clear;cd ~/Void-Post-Installer/;./install.sh
 
 Enjoy ^^  
 2021 Tofdz
@@ -92,12 +92,12 @@ Enjoy ^^
 
 Programme               Lien 
 
-octoxbps		https://github.com/aarnt/octoxbps
-vsv			https://github.com/bahamas10/vsv
-vpm			https://github.com/netzverweigerer/vpm
-protonup		https://github.com/AUNaseef/protonup
-rivalcfg		https://github.com/flozz/rivalcfg  
-Fonts San Francisco	https://github.com/supermarin/YosemiteSanFranciscoFont  
-ytmdl			https://github.com/deepjyoti30/ytmdl
+octoxbps	https://github.com/aarnt/octoxbps
+vsv		https://github.com/bahamas10/vsv
+vpm		https://github.com/netzverweigerer/vpm
+protonup	https://github.com/AUNaseef/protonup
+rivalcfg	https://github.com/flozz/rivalcfg  
+San Francisco	https://github.com/supermarin/YosemiteSanFranciscoFont  
+ytmdl		https://github.com/deepjyoti30/ytmdl
 
 Et toutes celles et ceux qui ont laissé une trace sur le net pour permettre aux autres de faire de meme :)
