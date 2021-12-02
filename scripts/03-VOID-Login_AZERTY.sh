@@ -1,7 +1,7 @@
 #!/bin/bash
 FILPATH="/etc/X11/xorg.conf.d/00-Keyboard.conf"
 DIRPATH="/etc/X11/xorg.conf.d"
-
+echo "03-VOID-Login_AZERTY ===>"
 if [ -d $DIRPATH ];then
 	echo "Dossier xorg.conf.d présent"
 else
