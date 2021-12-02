@@ -4,6 +4,7 @@
 # Pour Void-Post-Installer
 
 # ON EFFACE TOUTES LES REGLES IPTABLES
+echo "01-VOID-Firewall ===>"
 sudo iptables -F
 
 sudo iptables -P INPUT DROP
