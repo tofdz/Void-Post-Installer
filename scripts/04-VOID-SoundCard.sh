@@ -3,8 +3,7 @@
 SOUNDCONF="/etc/acpi/soundconf.sh"
 
 touch $SOUNDCONF
-lsusb | grep -i "audio" > $SOUNDCONF &&lspci | grep -i "audio" > $SOUNDCONF;
-
+(lsusb | grep -i "audio" && lspci | grep -i "audio") > $SOUNDCONF;
 echo "amixer -D pulse set Master toggle" >> $SOUNDCONF
 echo "amixer -D pulse set Master playback toggle" >> $SOUNDCONF
 echo "#commande super interressante !!!!" >> $SOUNDCONF
