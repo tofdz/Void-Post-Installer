@@ -220,7 +220,7 @@ sudo vsv enable ckb-next-daemon && sudo vsv start ckb-next-daemon;
 STEAM(){
 echo -e "===> STEAM"
 cd $WDIR/scripts/
-./05-VOID-Steam
+./05-VOID-Steam.sh
 }
 GOG(){
 echo "===> GOG INSTALL"
@@ -278,13 +278,6 @@ sudo vpm i -y mesa mesa-dri nvidia nvidia-libs-32bit
 
 }
 
-# MENU CUSTOM
-MENUCUSTOMSTART(){
-
-MENUCUSTOMBASE					# BASE INSTALL 
-MENUCUSTOMAPPS					# CHOIX APPLIS
-					# INSTALLATION CUSTOM
-}
 MENUCUSTOMBASE(){
 echo -e "===> MENUCUSTOMBASE"
 unset custombase
@@ -371,14 +364,14 @@ customapp=$(zenity --list --checklist --separator=" && " --print-column=2 \
 			  FALSE GOG "Installation de Gog Galaxy (Minigalaxy)" \
 			  FALSE WINE "Pouvoir installer des application windows sur voidlinux" \
 			  FALSE PROTONUP "Version améliorée de Proton pour steam & wine" )
-echo $?
-echo $customapp
+echo "valeur $?"
+echo "liste de customapp $customapp"
 case $? in
    0)
    DEBROUILLETOI
    ;;
    1)
-   MENUSELECTGPU
+   exit
    ;;
    255)
    exit
@@ -386,40 +379,37 @@ esac
 }
 DEBROUILLETOI(){
 
-BASE |  | zenity --progress --auto-close --title "Void-Post-Installer : MODE CUSTOM : BASE" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
-FIREWALL | zenity --progress --auto-close --title "Void-Post-Installer : MODE CUSTOM : FIREWALL" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
-sudo vpm i -y $custombase | zenity --progress --auto-close --title "Void-Post-Installer : MODE CUTOM : CUSTOMBASE" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
-$customapp | zenity --progress --auto-close --title "Void-Post-Installer : MODE CUTOM CUSTOMBASE 2" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
-$GPUCHOIX | zenity --progress --auto-close --title "Void-Post-Installer : MODE CUSTOM : GPU" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+BASE | 
+#FIREWALL 
+echo "===DEBROUILLETOI===> custombase";sudo vpm i -y $custombase 
+echo -e "===DEBROUILLETOI===> customapp\nliste custom app :\n";$customapp
+echo -e "===DEBROUILLETOI===> GPUCHOIX";$GPUCHOIX
 
 
 }
 # MENU AUTO
 MENUAUTOFULL(){
+echo -e "==FULL==> NET";NET
+echo -e "==FULL==> SSHKEYTEST";SSHKEYTEST
+echo -e "==FULL==> ELOGIND";ELOGIND
+echo -e "==FULL==> BASE";BASE
+echo -e "==FULL==> ADD";ADD
+#echo -e "==FULL==> FIREWALL";FIREWALL
+echo -e "==FULL==> NANORC";NANORC
+#echo -e "==FULL==> FLATPAK";FLATPAK
+echo -e "==FULL==> I3INSTALLER";I3INSTALLER
+echo -e "==FULL==> MENUSELECTGPU";MENUSELECTGPU
+#echo -e "==FULL==> T420"; T420
+#echo -e "==FULL==> X250"; X250
+#echo -e "==FULL==> STEELSERIES"; STEELSERIES
+#echo -e "==FULL==> CORSAIR"; CORSAIR
 
-NET
-SSHKEYTEST
-ELOGIND
-BASE
-ADD
-FIREWALL
-NANORC
-FLATPAK
-I3INSTALLER
-MENUSELECTGPU
-
-# T420
-# X250
-
-# STEELSERIES
-# CORSAIR
-
-STEAM
-GOG
-WINE
-PROTONUP
-OHMYZSH
-VIRTUALBOX
+echo -e "==FULL==> STEAM";STEAM
+echo -e "==FULL==> GOG";GOG
+echo -e "==FULL==> WINE";WINE
+echo -e "==FULL==> PROTONUP";PROTONUP
+echo -e "==FULL==> OHMYZSH";OHMYZSH
+echo -e "==FULL==> VIRTUALBOX";VIRTUALBOX
 }
 MENUAUTOLIGHT(){
 echo -e "==> MENUAUTOLIGHT"
@@ -449,13 +439,16 @@ choix=$(zenity --list --title "VOID-ManageUSer" \
 case $? in		
   0)
   if [ $choix == "AUTO-LIGHT" ];then
-  MENUAUTOLIGHT | zenity --progress --auto-close --title "Void-Post-Installer : MODE AUTO-LIGHT" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+  echo -e "==MENU-AUTO-LIGHT==> "
+  MENUAUTOLIGHT
   fi
   if [ $choix == "AUTO-FULL" ];then
-  MENUAUTOFULL  | zenity --progress --auto-close --title "Void-Post-Installer : MODE AUTO-FULL" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+  echo -e "==MENU-AUTO-FULL==> "
+  MENUAUTOFULL
   fi
   if [ $choix == "CUSTOM" ];then 
-  MENUCUSTOMSTART | zenity --progress --auto-close --title "Void-Post-Installer : MODE CUSTOM" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+  echo -e "==MENU-CUSTOM==> "
+  MENUCUSTOMBASE
   fi
   ;;
   1)
@@ -465,6 +458,5 @@ case $? in
   255)
   # QUITTER
   exit
-  echo $choix
 esac
-exit
+
