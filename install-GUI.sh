@@ -4,9 +4,10 @@
 # Ver  : 0.0.4
 # Date : 16/11/2020 maj 01/12/2021
 
-PASS=$(zenity --password)
-echo $PASS|sudo -S clear
 
+
+PASS=$(zenity --password)
+echo $PASS|sudo -S xbps-install -Suyv zenity && clear
 echo -e "####################################"
 echo -e "##                                ##"
 echo -e "##\tVoid-Post-Installer\t  ##"
@@ -276,15 +277,6 @@ echo "===> nvidia INSTALL"
 sudo vpm i -y mesa mesa-dri nvidia nvidia-libs-32bit
 
 }
-DEBROUILLETOI(){
-
-BASE
-FIREWALL
-sudo vpm i -y $custombase | zenity --progress --auto-close --title "Void-Post-Installer : CUTOM INSTALL+" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
-$GPUCHOIX | zenity --progress --auto-close --title "Void-Post-Installer : GPU INSTALL+" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
-$customapp | zenity --progress --auto-close --title "Void-Post-Installer : CUTOM INSTALL+" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
-
-}
 
 # MENU CUSTOM
 MENUCUSTOMSTART(){
@@ -292,9 +284,8 @@ MENUCUSTOMSTART(){
 MENUCUSTOMBASE					# BASE INSTALL 
 MENUSELECTGPU					# CHOIX GPU ( TEAM ROUGE VERT OU BLEU ?)
 MENUCUSTOMAPPS					# CHOIX APPLIS
-DEBROUILLETOI					# INSTALLATION CUSTOM
+					# INSTALLATION CUSTOM
 }
-
 MENUCUSTOMBASE(){
 echo -e "===> MENUCUSTOMBASE"
 unset custombase
@@ -380,21 +371,29 @@ customapp=$(zenity --list --checklist --separator=" && " --print-column=2 \
 			  FALSE STEAM "Installation de Steam" \
 			  FALSE GOG "Installation de Gog Galaxy (Minigalaxy)" \
 			  FALSE WINE "Pouvoir installer des application windows sur voidlinux" \
-			  FALSE PROTONUP "Version améliorée de Proton pour steam & wine" \ )
+			  FALSE PROTONUP "Version améliorée de Proton pour steam & wine" )
 echo $?
 echo $customapp
 case $? in
    0)
-   MENUSELECTGPU
+   DEBROUILLETOI
    ;;
    1)
-   
+   MENUSELECTGPU
    ;;
    255)
-   exit
+   MENUSELECTGPU
 esac
 }
+DEBROUILLETOI(){
 
+BASE
+FIREWALL
+sudo vpm i -y $custombase | zenity --progress --auto-close --title "Void-Post-Installer : CUTOM INSTALL+" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+$GPUCHOIX | zenity --progress --auto-close --title "Void-Post-Installer : GPU INSTALL+" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+$customapp | zenity --progress --auto-close --title "Void-Post-Installer : CUTOM INSTALL+" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+
+}
 # MENU AUTO
 MENUAUTOFULL(){
 
