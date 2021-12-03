@@ -145,6 +145,14 @@ cd $WDIR/scripts/
 #./01-VOID-Firewall.sh
 cd $WDIR
 }
+VPIAPPS(){
+
+echo "===> FIREWALL"
+cd $WDIR/scripts/
+02-VOID-AppsVPI.sh
+cd $WDIR
+}
+
 ADD(){
 echo -e "BASEINSTALLADD"
 sudo vpm i -y cifs-utils smbclient thunderbird birdtray minitube arduino zenmap vlc gimp blender ytmdl filelight
@@ -153,9 +161,10 @@ sudo vpm i -y cifs-utils smbclient thunderbird birdtray minitube arduino zenmap 
 T420(){
 
 echo "===> T420 addons"
-sudo vpm i -y tlp tlp-rdw tp_smapi-dkms tpacpi-bat mesa-dri linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel libva-intel-driver;
+sudo vpm i -y tlp tlp-rdw tp_smapi-dkms tpacpi-bat mesa-dri linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel libva-intel-driver
 # sudo cp lenovo-mutemic.sh /etc/acpi/&&sudo chmod +x /etc/acpi/lenovo-mutemic.sh;
-sudo vsv restart acpid;
+sudo chmod +x $HOME/Void-Post-Installer/outils/lenovo-mutemusic.sh;sudo pycp $HOME/Void-Post-Installer/outils/lenovo-mutemusic.sh /etc/acpi
+sudo vsv restart acpid
 }
 X250(){
 
@@ -169,7 +178,8 @@ if [ -n $(sudo grep 'intel' /etc/default/grub) ];then
 else
 	echo "Fichier déjà modifié"
 fi
-
+sudo chmod +x $HOME/Void-Post-Installer/outils/lenovo-mutemusic.sh;sudo pycp $HOME/Void-Post-Installer/outils/lenovo-mutemusic.sh /etc/acpi
+sudo vsv restart acpid;
 sudo vpm i -y linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode mesa-dri mesa-vulkan-intel
 sudo vpm i -y tp_smapi-dkms tpacpi-bat
 
@@ -353,6 +363,7 @@ echo -e "===> MENUCUSTOMAPPS"
 customapp=$(zenity --list --checklist --separator=" && " --print-column=2 \
 			  --height=500 --width=700 \
 			  --column=" " --column "ID" --column="Description" \
+			  TRUE VPIAPPS "Ensemble d'applis assez utile !" \
 			  FALSE T420 "Optimisation pour lenovo T420 uniquement" \
 			  FALSE X250 "Optimisation pour lenovo X250 uniquement" \
 			  TRUE I3INSTALLER "Installation du gestionnaire de fenetre graphique i3" \
@@ -393,6 +404,7 @@ echo -e "==FULL==> NET";NET
 echo -e "==FULL==> SSHKEYTEST";SSHKEYTEST
 echo -e "==FULL==> ELOGIND";ELOGIND
 echo -e "==FULL==> BASE";BASE
+echo -e "==FULL==> VPIAPPS";VPIAPPS
 echo -e "==FULL==> ADD";ADD
 #echo -e "==FULL==> FIREWALL";FIREWALL
 echo -e "==FULL==> NANORC";NANORC
