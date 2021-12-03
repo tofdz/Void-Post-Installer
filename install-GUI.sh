@@ -284,21 +284,21 @@ unset custombase
 custombase=$(zenity --list --checklist --separator=" " --print-column 2 \
 					--title="Void-Post-Installer : CUSTOM MODE" \
 					--text="Custom install :" \
-					--width=500 --height=600 \
+					--width=620 --height=600 \
 					--column=" " --column="id" --column="Description :" \
-					FALSE "thunderbird" "Le célèbre client de Messagerie Mail" \
-					FALSE "birdtray" "Icone de notifications pour Thunderbird" \
+					TRUE "thunderbird" "Le célèbre client de Messagerie Mail" \
+					TRUE "birdtray" "Icone de notifications pour Thunderbird" \
 					FALSE "vlc" "Lecteur Multimédia" \
 					FALSE "minitube" "Player Youtube sans publicités" \
-					FALSE "gimp" "Logiciel de modifications d'images" \
-					FALSE "gnome-calculator" "Une calculatrice !!!" \
+					TRUE "gimp" "Logiciel de modifications d'images" \
+					TRUE "gnome-calculator" "Une calculatrice !!!" \
 					FALSE "ytmdl" "Outil permettant de télécharger des playlists youtube" \
-					FALSE "filelight" "Pour mieux voir l'espace prix sur vos disques durs" \
-					FALSE "zenmap" "Outil de test de sécurité reseau - Pentest" \
+					TRUE "filelight" "Pour mieux voir l'espace prix sur vos disques durs" \
+					TRUE "zenmap" "Outil de test de sécurité reseau - Pentest" \
 					FALSE "arduino" "IDE de devellopement Arduino" \
 					FALSE "blender" "Outil de conception 3D" \
-					FALSE "cifs-utils" "Outil pour partage reseau microsoft" \
-					FALSE "smbclient" "Outil pour partage reseau microsoft" \
+					TRUE "cifs-utils" "Outil pour partage reseau microsoft" \
+					TRUE "smbclient" "Outil pour partage reseau microsoft" \
 					FALSE "neofetch" "Pour afficher le motd sur voidlinux" \
 					FALSE "sc-controller" "Steam Controller Driver" \
 					)
@@ -355,15 +355,15 @@ customapp=$(zenity --list --checklist --separator=" && " --print-column=2 \
 			  --column=" " --column "ID" --column="Description" \
 			  FALSE T420 "Optimisation pour lenovo T420 uniquement" \
 			  FALSE X250 "Optimisation pour lenovo X250 uniquement" \
-			  FALSE I3INSTALLER "Installation du gestionnaire de fenetre graphique i3" \
-			  FALSE VIRTUALBOX "Gestionnaire de machines virtuelles" \
-			  FALSE FLATPAK "Pour installer des logiciels compatible sur linux comme discord !!!" \
+			  TRUE I3INSTALLER "Installation du gestionnaire de fenetre graphique i3" \
+			  TRUE VIRTUALBOX "Gestionnaire de machines virtuelles" \
+			  TRUE FLATPAK "Pour installer des logiciels compatible sur linux comme discord !!!" \
 			  FALSE STEELSERIES "Reglages periphériques Steel Series (souris)" \
 			  FALSE CORSAIR "Reglages périphériques Corsair (clavier/souris)" \
-			  FALSE STEAM "Installation de Steam" \
-			  FALSE GOG "Installation de Gog Galaxy (Minigalaxy)" \
-			  FALSE WINE "Pouvoir installer des application windows sur voidlinux" \
-			  FALSE PROTONUP "Version améliorée de Proton pour steam & wine" )
+			  TRUE STEAM "Installation de Steam" \
+			  TRUE GOG "Installation de Gog Galaxy (Minigalaxy)" \
+			  TRUE WINE "Pouvoir installer des application windows sur voidlinux" \
+			  TRUE PROTONUP "Version améliorée de Proton pour steam & wine" )
 echo "valeur $?"
 echo "liste de customapp $customapp"
 case $? in
