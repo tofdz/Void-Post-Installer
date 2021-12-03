@@ -21,7 +21,9 @@ if [ ! -e ssmbvars.conf ];then
 		back[3]="$LINK_DOWNLOAD"
 		back[4]="$LINK_MUSIC"
 		back[5]="$LINK_VIDEOS"
-
+		back[6]="/Gaming/"
+		back[7]="/.config/"
+		back[8]="/.steam/"
 		if [ ! -e $CRED ];then
 			osinstall
 		else
@@ -47,13 +49,15 @@ startvars(){
 	#LE FICHIER DE CONFIGURATION
 	source $HOME/.config/user-dirs.dirs
 		
-	tab[1]=$XDG_DESKTOP_DIR
-	tab[2]=$XDG_DOCUMENTS_DIR
-	tab[3]=$XDG_PICTURES_DIR
-	tab[4]=$XDG_DOWNLOAD_DIR
-	tab[5]=$XDG_MUSIC_DIR
-	tab[6]=$XDG_VIDEOS_DIR
-	tab[7]=$HOME/Gaming
+	tab[0]=$XDG_DESKTOP_DIR
+	tab[1]=$XDG_DOCUMENTS_DIR
+	tab[2]=$XDG_PICTURES_DIR
+	tab[3]=$XDG_DOWNLOAD_DIR
+	tab[4]=$XDG_MUSIC_DIR
+	tab[5]=$XDG_VIDEOS_DIR
+	tab[6]="/Gaming/"
+	tab[7]="/.config/"
+	tab[8]="/.steam/"
 	echo "CrÃ©ation ssmbvars.conf"
 	echo LINK_HOME="$HOME" >  $XDG_DOCUMENTS_DIR/ssmbvars.conf
 
@@ -449,12 +453,17 @@ source $CRED
 i=1
 clear
 echo "LANCEMENT DE LA COPIE"
-while ((${#back[*]}!=$i)); do
 
+while ((${#back[*]}!=$i)); do
+	
+	if [ ! -d $HOME/${back[$i]} ];then
+	echo -e $HOME/${back[$i]}
+	sudo mkdir $HOME/${back[$i]} &&chown $USER:$USER $HOME/${back[$i]}
+	fi
 	echo -e "$MP$BACKUP/$LINK_HOST${back[$i]} ===> $LINK_HOME${back[$i]}"
-	#cp -r -v $MP$BACKUP${back[$i]} $LINK_HOME
-	sudo pycp -g $MP$BACKUP/$LINK_HOST${back[$i]} $LINK_HOME
+	sudo pycp $MP$BACKUP/$LINK_HOST${back[$i]} $LINK_HOME
 	i=$((i+1));
+
 done
 #	echo -e "$MP$BACKUP$LINK_HOST ===> $LINK_HOME"
 
