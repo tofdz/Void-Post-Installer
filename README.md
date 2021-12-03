@@ -75,15 +75,9 @@ Le choix entre deux bureau :
 
 Dans un terminal, tapez :
 
-        sudo xbps-install -Suyv git-all && git clone https://github.com/tofdz/Void-Post-Installer/  && cd Void-Post-Installer && sudo chmod +x install.sh
+        sudo xbps-install -Suyv git-all && git clone https://github.com/tofdz/Void-Post-Installer/  && cd Void-Post-Installer && sudo chmod +x install-GUI.sh
 
-Modifiez le fichier install.sh dans le dossier /home/$USER/Void-Post-Installer/ pour coller à votre installation.
-Descendez tout en bas du fichier, et placez vous dans la fonction MAIN ( function MAIN(){ symbolise le début de la fonction)
-Pour ce faire, rajoutez des # pour commenter les fonctions a desactiver ou retirez les pour les activer.
-
-Lancer le script en tapant dans le terminal : 
-        
-        clear;cd ~/Void-Post-Installer/;./install.sh
+Enjoy ^^
 
 Enjoy ^^  
 2021 Tofdz
