@@ -1,7 +1,7 @@
 #!/bin/bash
 # NAME : Void-Post-Installer
 # LAUNCHER : install.sh
-# Ver  : 0.0.4
+# Ver  : 0.0.6
 # Date : 16/11/2020 maj 01/12/2021
 
 
@@ -142,7 +142,7 @@ exit
 FIREWALL(){
 echo "===> FIREWALL"
 cd $WDIR/scripts/
-./01-VOID-Firewall.sh
+#./01-VOID-Firewall.sh
 cd $WDIR
 }
 ADD(){
@@ -386,11 +386,12 @@ esac
 }
 DEBROUILLETOI(){
 
-BASE
-FIREWALL
-sudo vpm i -y $custombase | zenity --progress --auto-close --title "Void-Post-Installer : CUTOM INSTALL+" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
-$GPUCHOIX | zenity --progress --auto-close --title "Void-Post-Installer : GPU INSTALL+" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
-$customapp | zenity --progress --auto-close --title "Void-Post-Installer : CUTOM INSTALL+" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+BASE |  | zenity --progress --auto-close --title "Void-Post-Installer : MODE CUSTOM : BASE" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+FIREWALL | zenity --progress --auto-close --title "Void-Post-Installer : MODE CUSTOM : FIREWALL" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+sudo vpm i -y $custombase | zenity --progress --auto-close --title "Void-Post-Installer : MODE CUTOM : CUSTOMBASE" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+$customapp | zenity --progress --auto-close --title "Void-Post-Installer : MODE CUTOM CUSTOMBASE 2" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+$GPUCHOIX | zenity --progress --auto-close --title "Void-Post-Installer : MODE CUSTOM : GPU" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+
 
 }
 # MENU AUTO
@@ -448,13 +449,13 @@ choix=$(zenity --list --title "VOID-ManageUSer" \
 case $? in		
   0)
   if [ $choix == "AUTO-LIGHT" ];then
-  MENUAUTOLIGHT | zenity --progress --pulsate --auto-close --title "Void-Post-Installer : MODE AUTO-LIGHT" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+  MENUAUTOLIGHT | zenity --progress --auto-close --title "Void-Post-Installer : MODE AUTO-LIGHT" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
   fi
   if [ $choix == "AUTO-FULL" ];then
-  MENUAUTOFULL  | zenity --progress --pulsate --auto-close --title "Void-Post-Installer : MODE AUTO-FULL" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
+  MENUAUTOFULL  | zenity --progress --auto-close --title "Void-Post-Installer : MODE AUTO-FULL" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
   fi
-  if [ $choix == "CUSTOM" ];then
-  MENUCUSTOMSTART
+  if [ $choix == "CUSTOM" ];then 
+  MENUCUSTOMSTART | zenity --progress --auto-close --title "Void-Post-Installer : MODE CUSTOM" --text "Installation Automatique en cours ...\nVeuillez patienter s'il vous plait\nMerci de votre patience !"
   fi
   ;;
   1)
