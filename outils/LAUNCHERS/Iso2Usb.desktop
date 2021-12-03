@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Iso2Usb
+Comment=Iso2Usb
+Exec=/home/toff/.local/share/applications/APPS/VPI-Iso2Usb.sh
+Icon=iso-image-new
+Categories=System;
