@@ -142,7 +142,7 @@ exit
 FIREWALL(){
 echo "===> FIREWALL"
 cd $WDIR/scripts/
-./01-VOID-Firewall.sh
+#./01-VOID-Firewall.sh
 cd $WDIR
 }
 ADD(){
