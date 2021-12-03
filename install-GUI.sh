@@ -142,7 +142,7 @@ exit
 FIREWALL(){
 echo "===> FIREWALL"
 cd $WDIR/scripts/
-#./01-VOID-Firewall.sh
+./01-VOID-Firewall.sh
 cd $WDIR
 }
 ADD(){
@@ -282,7 +282,6 @@ sudo vpm i -y mesa mesa-dri nvidia nvidia-libs-32bit
 MENUCUSTOMSTART(){
 
 MENUCUSTOMBASE					# BASE INSTALL 
-MENUSELECTGPU					# CHOIX GPU ( TEAM ROUGE VERT OU BLEU ?)
 MENUCUSTOMAPPS					# CHOIX APPLIS
 					# INSTALLATION CUSTOM
 }
@@ -382,7 +381,7 @@ case $? in
    MENUSELECTGPU
    ;;
    255)
-   MENUSELECTGPU
+   exit
 esac
 }
 DEBROUILLETOI(){
