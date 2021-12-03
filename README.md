@@ -75,7 +75,7 @@ Le choix entre deux bureau :
 
 Dans un terminal, tapez :
 
-        sudo xbps-install -Suyv git-all && git clone https://github.com/tofdz/Void-Post-Installer/  && cd Void-Post-Installer && sudo chmod +x install-GUI.sh
+        sudo xbps-install -Suyv git-all && git clone https://github.com/tofdz/Void-Post-Installer/  && cd Void-Post-Installer && sudo chmod +x install-GUI.sh;./install-GUI.sh
 
 Enjoy ^^
 
