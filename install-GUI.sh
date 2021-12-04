@@ -1,9 +1,13 @@
 #!/bin/bash
 # NAME : Void-Post-Installer
 # LAUNCHER : install.sh
-# Ver  : 0.0.6
-# Date : 16/11/2020 maj 01/12/2021
+version=0.0.9
+# Date : 16/11/2020 maj 04/12/2021
 
+cmdspan1='<span color=\"$color">'
+cmdspan2='</span>'
+rouge="red\"
+vert="green\"
 
 
 PASS=$(zenity --password)
@@ -11,7 +15,7 @@ echo $PASS|sudo -S xbps-install -Suyv zenity && clear
 echo -e "####################################"
 echo -e "##                                ##"
 echo -e "##\tVoid-Post-Installer\t  ##"
-echo -e "##\t\tV 0.0.4	 	  ##"
+echo -e "##\t\tV 0.0.9	 	  ##"
 echo -e "##                                ##"
 echo -e "####################################"
 WDIR=$(pwd)
@@ -146,11 +150,25 @@ cd $WDIR/scripts/
 cd $WDIR
 }
 VPIAPPS(){
+echo -e "Repertoire actuel : $(pwd)"
+echo -e "===> 02-VOID-AppsVPI.sh"
+source $HOME/.config/user-dirs.dirs		
 
-echo "===> FIREWALL"
-cd $WDIR/scripts/
-02-VOID-AppsVPI.sh
-cd $WDIR
+chmod +x $HOME/Void-Post-Installer/outils/APPS/*
+if [ ! -d $HOME/.local/share/applications/PostInstall/Icons/ ] ; then
+			echo -e "===> AppsVPI : "
+			mkdir $HOME/.local/share/applications/PostInstall
+			mkdir $HOME/.local/share/applications/PostInstall/Icons
+			mkdir $HOME/.local/share/applications/PostInstall/APPS
+			else
+			echo -e"/!\/!\ ERREUR /!\/!\ Création répertoire impossible"
+			
+fi
+echo "===> COPIE DES FICHIERS"
+pycp "$WDIR/outils/APPS/*" "$HOME/.local/share/applications/PostInstall"
+pycp "$WDIR/outils/ICONS/*" "$HOME/.local/share/applications/PostInstall/Icons"
+pycp "$WDIR/LAUNCHERS/*" "$HOME/.local/share/applications"
+pycp "$WDIR/outils/LAUNCHERS/*" "$XDG_DESKTOP_DIR"
 }
 
 ADD(){
@@ -231,6 +249,7 @@ STEAM(){
 echo -e "===> STEAM"
 cd $WDIR/scripts/
 ./05-VOID-Steam.sh
+cd $WDIR
 }
 GOG(){
 echo "===> GOG INSTALL"
@@ -337,13 +356,16 @@ echo -e "===> MENUSELECTGPU"
 echo -e "SUITE: $SUITE"
 echo -e "RETOUR: $BACK"
 unset GPUCHOIX
-GPUCHOIX=$(zenity --list --radiolist --title="Void-Post-Installer : GPU" --text="\n\nChoissisez votre Team : Rouge, Vert ou Bleu ?" \
-	   --width=500 --height=300 \
-	   --column=" " --column="GPU - Marque" \
-	   FALSE "AMD" \
-	   TRUE "NVIDIA" \
-	   FALSE "INTEL" \
-	   )
+GPUCHOIX=$(zenity --list --info \
+				  --title="Void-Post-Installer : GPU" \
+				  --text="\n\nChoissisez votre Team : Rouge, Vert ou Bleu ?" \
+	   			  --width=500 --height=300 \
+	    		  --column=" " --column="GPU - Marque" \
+	   			  --checkbox="Je valide" \
+				  FALSE "AMD" \
+	   			  TRUE "NVIDIA" \
+	              FALSE "INTEL" \
+	   			  )
 echo $?
 echo $GPUCHOIX
 case $? in
@@ -390,12 +412,11 @@ esac
 }
 DEBROUILLETOI(){
 
-BASE | 
+BASE
 #FIREWALL 
 echo "===DEBROUILLETOI===> custombase";sudo vpm i -y $custombase 
 echo -e "===DEBROUILLETOI===> customapp\nliste custom app :\n";$customapp
 echo -e "===DEBROUILLETOI===> GPUCHOIX";$GPUCHOIX
-
 
 }
 # MENU AUTO
@@ -415,7 +436,6 @@ echo -e "==FULL==> MENUSELECTGPU";MENUSELECTGPU
 #echo -e "==FULL==> X250"; X250
 #echo -e "==FULL==> STEELSERIES"; STEELSERIES
 #echo -e "==FULL==> CORSAIR"; CORSAIR
-
 echo -e "==FULL==> STEAM";STEAM
 echo -e "==FULL==> GOG";GOG
 echo -e "==FULL==> WINE";WINE
@@ -441,13 +461,15 @@ sudo echo "Fin de AUTO-LIGHT"
 }
 
 # MENU INTRO
-choix=$(zenity --list --title "VOID-ManageUSer" \
-	   --text "Choix entre :\n\nAUTO-LIGHT\t\tInstallation minimale\n\nAUTO-FULL\t\t Installation complète\n\nCUSTOM\t\tParamètre d'installation personnalisé\n\t\t\t\t(supprime aussi le /HOME/USER !!!!)\n" \
-	   --width 400 --height 350 \
-	   --radiolist --column " " --column "Mode" \
-	   TRUE AUTO-LIGHT \
-	   FALSE AUTO-FULL \
-	   FALSE CUSTOM )
+MAIN(){
+choix=$(zenity --list --radiolist --print-column 2 --title="Void-Post-Installer v$version" \
+	           --column=" " --column="Mode" --column="Description" \
+	   		   --text="\n\nChoississez votre mode d'installation" \
+	   		   --width=1020 --height=240 \
+	    	   FALSE AUTO-LIGHT "Installation minimale : Une configuration de void correcte, parfaite pour tester void en Machine virtuelle (NO GAMING)" \
+	           TRUE AUTO-FULL "Installation complète : Une configuration de void pour ne plus revenir a windows. (GAMING INSIDE BRO)" \
+	   		   FALSE CUSTOM "Custom Mode : Paramètres d'installation personnalisé pour choisir ses paquets"\
+			   )
 case $? in		
   0)
   if [ $choix == "AUTO-LIGHT" ];then
@@ -471,4 +493,5 @@ case $? in
   # QUITTER
   exit
 esac
-
+}
+MAIN
