@@ -19,6 +19,7 @@ vert="green\"
 
 PASS=$(zenity --password --title="Void-Post-Installer v$version")
 echo $PASS|sudo -S xbps-install -Suyv zenity && clear
+
 echo -e "####################################"
 echo -e "##                                ##"
 echo -e "##\tVoid-Post-Installer\t  ##"
@@ -391,7 +392,19 @@ cat $HOME/Void-Post-Installer/GPUCHOIXTEMP
 case $? in
    0)
    echo -e "==> GPU choix : $GPUCHOIX"
+   
+   if [ $SUITE = "AUTOFULLSUITE" ];then
+   echo -e "===> MENUAUTOFULL-INSTALL : GPU"
+   $GPUCHOIX
+   fi
+   if [ $SUITE = "AUTOLIGHTSUITE" ];then
+   echo -e "===> MENUAUTOLIGHT-INSTALL : GPU"
+   $GPUCHOIX
+   fi
+   if [ $SUITE = "MENUCUSTOMAPPS" ];then
+   echo -e "===> MENUCUSTOM-INSTALL : GPU"
    $SUITE
+   fi
    ;;
    1)
    $BACK
@@ -444,25 +457,29 @@ case $? in
 esac
 }
 function DEBROUILLETOI(){
-
-echo -e "===CUSTOM-QUEUE===> BASE :";
+# DEBROUILLE TOI : Organise les listes d'applications à installer en mode Custom
+echo -e "===DEBROUILLETOI===> BASE :";
+# BASE INSTALL
 BASE
+
+# MOULINETTE CUSTOMBASE
+echo -e "===DEBROUILLETOI===> CUSTOMBASE :";
 sudo vpm i -y $CUSTOMBASE
 echo -e "==> GPUCHOIX: $GPUCHOIX choix: $choix" 
+echo -e "===DEBROUILLETOI===> MOULINETTE FLATPAK :";
 if [ $(($(grep -c DISCORD $HOME/Void-Post-Installer/CUSTOMAPP)+$(grep -c PARSEC $HOME/Void-Post-Installer/CUSTOMAPP))) != 0 ]||[ $(grep -c NVIDIA $HOME/Void-Post-Installer/GPUCHOIXTEMP) != 0 ]; then
 				echo -e "===> FLATPAK BASE-INSTALL"
 				FLATPAK
 fi
+# MOULINETTE GPUCHOIX
+echo -e "===DEBROUILLETOI===> MOULINETTE GPU :";
 $GPUCHOIX;
+
 # PARTIE MOULINETTE POUR CUSTOMAPP
 # ET AUTANT DIRE QUE C'EST LA MERDE ...
-touch $HOME/CUSTOMTEMP
-echo -e "NEKONEKONEKO"
-# MOULINETTE UTILITE INSTALLATION FLATPAK
-
-# truc chiant
 echo -e "===> MOULINETTE POUR LANCER LES FONCTIONS\nLES UNES APRES LES AUTRES AVEC UNE LISTE DYNAMIQUE"
 cat $HOME/Void-Post-Installer/CUSTOMAPP
+touch $HOME/CUSTOMTEMP
 sed 's/ /\n/g' $HOME/Void-Post-Installer/CUSTOMAPP > $HOME/CUSTOMTEMP
 cat $HOME/CUSTOMTEMP
 while read -r paquets
@@ -482,7 +499,13 @@ sudo rm $HOME/CUSTOMTEMP $HOME/Void-Post-Installer/CUSTOMAPP;
 MENUFIN
 }
 # MENU AUTO
-MENUAUTOFULL(){
+function MENUAUTOFULL(){
+
+echo -e "==> MENUAUTOFULL"
+
+BACK="MAIN"
+SUITE="AUTOFULLSUITE"
+
 echo -e "==FULL==> NET";NET
 echo -e "==FULL==> SSHKEYTEST";SSHKEYTEST
 echo -e "==FULL==> ELOGIND";ELOGIND
@@ -506,26 +529,29 @@ echo -e "==FULL==> OHMYZSH";OHMYZSH
 echo -e "==FULL==> VIRTUALBOX";VIRTUALBOX
 MENUFIN
 }
-MENUAUTOLIGHT(){
+function MENUAUTOLIGHT(){
+
 echo -e "==> MENUAUTOLIGHT"
-BACK="MENUSELECTGPU"
-SUITE="OHMYZSH"
+
+BACK="MAIN"
+SUITE="AUTOLIGHTSUITE"
 
 SSHKEYTEST
 ELOGIND
 BASE
-FIREWALL
+#FIREWALL
 NANORC
 MENUSELECTGPU
 WINE
 PROTONUP
+
 OHMYZSH
 sudo echo "Fin de AUTO-LIGHT"
 MENUFIN
 }
 
 # MENU INTRO
-MAIN(){
+function MAIN(){
 choix=$(zenity --list --radiolist --print-column 2 --title="Void-Post-Installer v$version" \
 	           --column=" " --column="Mode" --column="Description" \
 	   		   --text="\n\nChoississez votre mode d'installation" \
@@ -557,6 +583,6 @@ case $? in
   # QUITTER
   exit
 esac
-
 }
+
 MAIN
