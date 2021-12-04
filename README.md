@@ -76,6 +76,11 @@ Le choix entre deux bureau :
 Dans un terminal, tapez :
 
         sudo xbps-install -Suyv git-all && git clone https://github.com/tofdz/Void-Post-Installer/  && cd Void-Post-Installer && sudo chmod +x install-GUI.sh;./install-GUI.sh
+Un menu graphique s'ouvrira alors vous permettant de choisir directement la bonne installation :
+
+- Minimal : pas de gaming ici, le mi-ni-mum pour dire d'etre viable.
+- Full : facile : la full install :)
+- custom : pour avoir le choix ;).
 
 Enjoy ^^
 
