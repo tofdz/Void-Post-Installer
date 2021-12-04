@@ -18,15 +18,23 @@ echo -e "##\tVoid-Post-Installer\t  ##"
 echo -e "##\t\tV 0.0.9	 	  ##"
 echo -e "##                                ##"
 echo -e "####################################"
+
+
+
+
+
 WDIR=$(pwd)
 echo $WDIR
 chmod +x $WDIR/scripts/*
 source ~/.config/user-dirs.dirs
+CUSTOMBASE=$(mktemp)
+CUSTOMAPP="$HOME/Void-Post-Installer/CUSTOMAPP"
+touch $CUSTOMAPP
 #===========================#
 #			BON				#
 #===========================#
-NET(){
-echo -e "Fonction NET()"
+function NET(){
+echo -e "===> NET"
 ip[0]=8.8.8.8
 ip[1]=192.168.1.1
 i=0
@@ -46,7 +54,7 @@ while ((${#ip[*]}!=$i)) ; do
 done
 }
 
-SSHKEYTEST(){
+function SSHKEYTEST(){
 
 # Vérification & Création des clés SSH en ed25519
 SSHDIR=/etc/ssh/
@@ -59,7 +67,7 @@ if [ ! -f $SSHDIR$PRIK ] || [ ! -f $SSHDIR$PUBK ];then
         echo -e "fichiers deja present"
 fi
 }
-ELOGIND(){
+function ELOGIND(){
 
 # Configuration clavier azerty pour
 # se connecter à sa session.
@@ -68,7 +76,7 @@ cd $WDIR/scripts/
 sudo -S ./03-VOID-Login_AZERTY.sh
 cd $WDIR
 }
-BASE(){
+function BASE(){
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
 echo -e "===> BASE INSTALL"
 sudo xbps-install -Syuv xbps;sudo xbps-install -Syuv;
@@ -83,7 +91,7 @@ sudo ln -s /etc/sv/socklog-unix /var/services;sudo ln -s /etc/sv/nanoklogd /var/
 sudo vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
 sudo rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
 # INSTALLATION Wallpaper
-pycp $WDIR/wallpapers/* $XDG_PICTURES_DIR
+pycp -g $WDIR/wallpapers/* $XDG_PICTURES_DIR
 # Installation fonts SanFrancisco
 echo -e "===> Fonts SanFrancisco"
 cd $HOME
@@ -92,7 +100,7 @@ if [ ! -d $HOME/.fonts ];then
 	sudo mkdir $HOME/.fonts/
 	echo -e "Repertoire .fonts crée !"
 fi
-sudo pycp $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
+sudo pycp -g $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
 sudo fc-cache -fv
 sudo echo -e "Suppression des Fichiers inutile"
 rm -rfv $HOME/YosemiteSanFranciscoFont
@@ -103,7 +111,7 @@ sudo usermod -a -G input $USER
 echo "$(groups)"
 }
 
-NANORC(){
+function NANORC(){
 # Configuration highlighting pour nano (met le code en couleur)
 echo "===> NANO HIGHLIGHTING"
 touch $HOME/.nanorc
@@ -135,7 +143,7 @@ echo 'include "/usr/share/nano/tex.nanorc"' >> $HOME/.nanorc
 sudo cp $HOME/.nanorc /root/.nanorc
 sudo chown root: /root/.nanorc
 }
-OHMYZSH(){
+function OHMYZSH(){
 
 # Installation de OhmyZsh!
 echo "===> OHMYZSH INSTALL"
@@ -143,16 +151,14 @@ sudo vpm i -y zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 exit
 }
-FIREWALL(){
-echo "===> FIREWALL"
-cd $WDIR/scripts/
-#./01-VOID-Firewall.sh
-cd $WDIR
+function FIREWALL(){
+echo "rien"
 }
-VPIAPPS(){
+function VPIAPPS(){
+
+echo -e "===> VPIAPPS"
 echo -e "Repertoire actuel : $(pwd)"
-echo -e "===> 02-VOID-AppsVPI.sh"
-source $HOME/.config/user-dirs.dirs		
+source $HOME/.config/user-dirs.dirs	
 
 chmod +x $HOME/Void-Post-Installer/outils/APPS/*
 if [ ! -d $HOME/.local/share/applications/PostInstall/Icons/ ] ; then
@@ -165,18 +171,18 @@ if [ ! -d $HOME/.local/share/applications/PostInstall/Icons/ ] ; then
 			
 fi
 echo "===> COPIE DES FICHIERS"
-pycp "$WDIR/outils/APPS/*" "$HOME/.local/share/applications/PostInstall"
-pycp "$WDIR/outils/ICONS/*" "$HOME/.local/share/applications/PostInstall/Icons"
-pycp "$WDIR/LAUNCHERS/*" "$HOME/.local/share/applications"
-pycp "$WDIR/outils/LAUNCHERS/*" "$XDG_DESKTOP_DIR"
+pycp $WDIR/outils/APPS/* $HOME/.local/share/applications/PostInstall
+pycp $WDIR/outils/ICONS/* $HOME/.local/share/applications/PostInstall/Icons
+pycp $WDIR/LAUNCHERS/* $HOME/.local/share/applications
+pycp $WDIR/outils/LAUNCHERS/* $XDG_DESKTOP_DIR
 }
 
-ADD(){
+function ADD(){
 echo -e "BASEINSTALLADD"
 sudo vpm i -y cifs-utils smbclient thunderbird birdtray minitube arduino zenmap vlc gimp blender ytmdl filelight
 }
 
-T420(){
+function T420(){
 
 echo "===> T420 addons"
 sudo vpm i -y tlp tlp-rdw tp_smapi-dkms tpacpi-bat mesa-dri linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel libva-intel-driver
@@ -184,7 +190,7 @@ sudo vpm i -y tlp tlp-rdw tp_smapi-dkms tpacpi-bat mesa-dri linux-firmware-intel
 sudo chmod +x $HOME/Void-Post-Installer/outils/lenovo-mutemusic.sh;sudo pycp $HOME/Void-Post-Installer/outils/lenovo-mutemusic.sh /etc/acpi
 sudo vsv restart acpid
 }
-X250(){
+function X250(){
 
 echo "===> X250 addons"
 if [ -n $(sudo grep 'intel' /etc/default/grub) ];then
@@ -202,21 +208,21 @@ sudo vpm i -y linux-firmware-broadcom linux-firmware-intel linux-firmware-networ
 sudo vpm i -y tp_smapi-dkms tpacpi-bat
 
 }
-I3INSTALLER(){
+function I3INSTALLER(){
 # configuration window manager i3
 echo "===> i3"
 cd $WDIR/scripts/
 ./08-VOID-i3.sh
 cd $WDIR
 }
-VIRTUALBOX(){
+function VIRTUALBOX(){
 echo "===> VIRTUALBOX INSTALL"
 
 cd $WDIR/scripts/
 ./09-VOID-VirtualBox.sh
 cd $WDIR
 }
-FLATPAK(){
+function FLATPAK(){
 echo "===> FLATPAK"
 # installation via flatpak de Discord & Parsec
 sudo vpm i -y flatpak 
@@ -232,38 +238,38 @@ flatpak install Discord Parsec org.freedesktop.Platform.GL.nvidia-470-74
 }
 
 # SOURIS & CLAVIER 
-STEELSERIES(){
+function STEELSERIES(){
 echo "===> STEELSERIES INSTALL"
 cd $WDIR/scripts/
 ./07-VOID-rivalcfg.sh
 cd $WDIR
 }
-CORSAIR(){
+function CORSAIR(){
 sudo vpm i -y ckb-next;
 sudo ln -s /etc/sv/ckb-next-daemon /var/service;
 sudo vsv enable ckb-next-daemon && sudo vsv start ckb-next-daemon;
 
 }
 # APPS GAMING
-STEAM(){
+function STEAM(){
 echo -e "===> STEAM"
 cd $WDIR/scripts/
 ./05-VOID-Steam.sh
 cd $WDIR
 }
-GOG(){
+function GOG(){
 echo "===> GOG INSTALL"
 cd $WDIR/scripts/
 ./06-VOID-GOG.sh
 cd $WDIR
 }
-WINE(){
+function WINE(){
 echo "===> WINE INSTALL"
 cd $WDIR/scripts/
 ./10-VOID-Wine.sh
 cd $WDIR
 }
-PROTONUP(){
+function PROTONUP(){
 # INSTALLATION DE PROTONUP
 pip3 install protonup
 REPERTOIRE="$HOME/.local/share/Steam/compatibilitytools.d/"
@@ -290,27 +296,29 @@ protonup -y
 }
 
 # INSTALLATION GPU
-INTEL(){
+function INTEL(){
 echo -e "==> INTELINSTALL"
 sudo vpm i -y mesa mesa-dri mesa-vulkan-intel linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode
 }
-AMD(){
+function AMD(){
 
 echo "hey"
 sudo vpm i -y mesa mesa-dri
 
 }
-NVIDIA(){
+function NVIDIA(){
 
 echo "===> nvidia INSTALL"
 sudo vpm i -y mesa mesa-dri nvidia nvidia-libs-32bit
 
 }
 
-MENUCUSTOMBASE(){
+function MENUCUSTOMBASE(){
+BACK="MENUSELECTGPU"
+SUITE="MENUCUSTOMAPPS"
 echo -e "===> MENUCUSTOMBASE"
-unset custombase
-custombase=$(zenity --list --checklist --separator=" " --print-column 2 \
+
+CUSTOMBASE=$(zenity --list --checklist --separator="\n" --print-column 2 \
 					--title="Void-Post-Installer : CUSTOM MODE" \
 					--text="Custom install :" \
 					--width=620 --height=600 \
@@ -331,13 +339,12 @@ custombase=$(zenity --list --checklist --separator=" " --print-column 2 \
 					FALSE "neofetch" "Pour afficher le motd sur voidlinux" \
 					FALSE "sc-controller" "Steam Controller Driver" \
 					)
-choix=$?
-echo $choix
-echo $custombase
-case $choix in
+
+echo $CUSTOMBASE
+case $? in
   0)
   if [ ! -z $choix ];then
-  BACK="MENUCUSTOMBASE" && SUITE="MENUCUSTOMAPPS";MENUSELECTGPU
+  MENUSELECTGPU
   else
   zenity --warning "ERREUR" --text "Une erreur est survenue\n = $choix";
   MENUCUSTOMBASE
@@ -351,18 +358,17 @@ case $choix in
   #REVENIR AU MENU PRINCIPAL
 esac
 }
-MENUSELECTGPU(){
+function MENUSELECTGPU(){
 echo -e "===> MENUSELECTGPU"
 echo -e "SUITE: $SUITE"
 echo -e "RETOUR: $BACK"
 unset GPUCHOIX
-GPUCHOIX=$(zenity --list --info \
+GPUCHOIX=$(zenity --list --radiolist\
 				  --title="Void-Post-Installer : GPU" \
 				  --text="\n\nChoissisez votre Team : Rouge, Vert ou Bleu ?" \
 	   			  --width=500 --height=300 \
 	    		  --column=" " --column="GPU - Marque" \
-	   			  --checkbox="Je valide" \
-				  FALSE "AMD" \
+	   			  FALSE "AMD" \
 	   			  TRUE "NVIDIA" \
 	              FALSE "INTEL" \
 	   			  )
@@ -370,6 +376,7 @@ echo $?
 echo $GPUCHOIX
 case $? in
    0)
+   echo -e "==> GPU choix : $GPUCHOIX"
    $SUITE
    ;;
    1)
@@ -379,12 +386,12 @@ case $? in
    exit
 esac
 }	
-MENUCUSTOMAPPS(){
+function MENUCUSTOMAPPS(){
 echo -e "===> MENUCUSTOMAPPS"
-
-customapp=$(zenity --list --checklist --separator=" && " --print-column=2 \
+unset choix
+choix=$(zenity --list --checklist --separator=" " --print-column=2 \
 			  --height=500 --width=700 \
-			  --column=" " --column "ID" --column="Description" \
+			  --column=" " --column="ID" --column="Description" \
 			  TRUE VPIAPPS "Ensemble d'applis assez utile !" \
 			  FALSE T420 "Optimisation pour lenovo T420 uniquement" \
 			  FALSE X250 "Optimisation pour lenovo X250 uniquement" \
@@ -396,9 +403,12 @@ customapp=$(zenity --list --checklist --separator=" && " --print-column=2 \
 			  TRUE STEAM "Installation de Steam" \
 			  TRUE GOG "Installation de Gog Galaxy (Minigalaxy)" \
 			  TRUE WINE "Pouvoir installer des application windows sur voidlinux" \
-			  TRUE PROTONUP "Version améliorée de Proton pour steam & wine" )
-echo "valeur $?"
-echo "liste de customapp $customapp"
+			  TRUE PROTONUP "Version améliorée de Proton pour steam & wine" \
+			  TRUE OHMYZSH "Shell bien plus avancé que le terminal de base ;) à essayer !" \
+			   )
+echo $choix > $HOME/Void-Post-Installer/CUSTOMAPP
+echo -e "valeur $?"
+echo -e "liste de CUSTOMAPP $CUSTOMAPPLIST"
 case $? in
    0)
    DEBROUILLETOI
@@ -410,13 +420,38 @@ case $? in
    exit
 esac
 }
-DEBROUILLETOI(){
+function DEBROUILLETOI(){
 
+echo -e "===CUSTOM-QUEUE===> BASE :";
 BASE
-#FIREWALL 
-echo "===DEBROUILLETOI===> custombase";sudo vpm i -y $custombase 
-echo -e "===DEBROUILLETOI===> customapp\nliste custom app :\n";$customapp
-echo -e "===DEBROUILLETOI===> GPUCHOIX";$GPUCHOIX
+sudo vpm i -y $CUSTOMBASE
+$GPUCHOIX;
+# PARTIE MOULINETTE POUR CUSTOMAPP
+# ET AUTANT DIRE QUE C'EST LA MERDE ...
+touch $HOME/CUSTOMTEMP
+echo -e "NEKONEKONEKO";
+
+
+
+
+
+echo -e "===> !!!! Trick !!!!"
+cat $HOME/Void-Post-Installer/CUSTOMAPP
+sed 's/ /\n/g' $HOME/Void-Post-Installer/CUSTOMAPP > $HOME/CUSTOMTEMP
+cat $HOME/CUSTOMTEMP
+while read -r paquets
+do
+custombaselist+=("$paquets")
+done < $HOME/CUSTOMTEMP
+echo -e ${#custombaselist[@]}
+
+i=0 
+compteur=$(${#custombaselist[@]}-1)
+
+while (($c!=$i)); do
+${custombaselist[$i]}
+i=$((i+1));
+done
 
 }
 # MENU AUTO
