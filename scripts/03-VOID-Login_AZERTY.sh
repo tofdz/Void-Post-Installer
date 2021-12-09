@@ -1,23 +1,20 @@
 #!/bin/bash
-
-
-
 if [ -d /etc/X11/xorg.conf.d ];then
-	echo "Dossier xorg.conf.d présent"
+	echo -e "Dossier xorg.conf.d présent"
 else
 	mkdir /etc/X11/xorg.conf.d/
-	echo "Dossier crée"
+	echo -e "Dossier crée"
 fi
 				
 if [ -f /etc/X11/xorg.conf.d/00-Keyboard.conf ];then
-	echo "Fichier 00-Keyboard.conf présent"
+	echo -e "Fichier 00-Keyboard.conf présent"
 else
-	touch /etc/X11/xorg.conf.d/00-Keyboard.conf
-	echo 'Section "InputClass"' > /etc/X11/xorg.conf/00-Keyboard.conf
-    echo '     Identifier "system-keyboard"' >> /etc/X11/xorg.conf/00-Keyboard.conf
-    echo '     MatchisKeyboard "on"' >> /etc/X11/xorg.conf/00-Keyboard.conf
-	echo '     Option "XkbLayout" "fr"' >> /etc/X11/xorg.conf/00-Keyboard.conf
-    echo '     Option "XkbModel" "pc105"' >> /etc/X11/xorg.conf/00-Keyboard.conf
-	echo 'EndSection' >> /etc/X11/xorg.conf/00-Keyboard.conf
-	echo 'Fichier créé'
+sudo -S	touch /etc/X11/xorg.conf.d/00-Keyboard.conf
+	sudo -S	echo 'Section "InputClass"' > /etc/X11/xorg.conf/00-Keyboard.conf
+    sudo -S	echo '     Identifier "system-keyboard"' >> /etc/X11/xorg.conf/00-Keyboard.conf
+    sudo -S	echo '     MatchisKeyboard "on"' >> /etc/X11/xorg.conf/00-Keyboard.conf
+	sudo -S	echo '     Option "XkbLayout" "fr"' >> /etc/X11/xorg.conf/00-Keyboard.conf
+    sudo -S	echo '     Option "XkbModel" "pc105"' >> /etc/X11/xorg.conf/00-Keyboard.conf
+	sudo -S	echo 'EndSection' >> /etc/X11/xorg.conf/00-Keyboard.conf
+	sudo -S	echo 'Fichier créé'
 fi
