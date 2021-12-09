@@ -489,7 +489,7 @@ if [ $(echo $cputemp | grep -c INTEL) != 0 ]; then
 fi
 # DETECTION GPU
 if [ $(lspci | grep -c VGA) != 0 ]; then
-		lspci | grep VGA > gpuTMP01
+		gputemp=$(lspci | grep VGA)
 	if	[ $(cat gpuTMP01 | grep -c NVIDIA) != 0 ]; then
 		gpuDETECT="NVIDIA"
 	fi
