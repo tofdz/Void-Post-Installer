@@ -9,10 +9,9 @@ version="0.1.5"
 # DrNeKoSan : crash test !
 # Odile     : Les cafés !
 # Celine    : Les petits pains !!
-PASS=$(yad --entry --title="Void-Post-Installer v$version" --text="Entrez votre mot de passe :" --hide-text \
-			--width=270 --height=150 )
+PASS=$(zenity --password)
 echo $PASS|sudo -S clear
-sudo -S xbps-install -Suyv yad
+sudo -S xbps-install -Suyv zenity
 WDIR=$(pwd)
 chmod +x $WDIR/scripts/*
 source ~/.config/user-dirs.dirs
@@ -162,19 +161,19 @@ fi
 
 }
 function VPIAPPS(){
-echo "MUCHACHOS GRINGOS"
+
 chmod +x $WDIR/outils/*
 pycp $WDIR/outils/ZenIso $HOME/.local/bin/
 
-echo '[Desktop Entry]' > $XDG_DEKTOP_DIR/ZenIso.desktop
-echo 'Version=1.0' >> $XDG_DEKTOP_DIR/ZenIso.desktop
-echo 'Type=Application' >> $XDG_DEKTOP_DIR/ZenIso.desktop
-echo 'Name=ZenIso' >> $XDG_DEKTOP_DIR/ZenIso.desktop
-echo 'Exec=/home/toff/.local/share/applications/APPS/ZenIso-1.0.3.sh' >> $XDG_DEKTOP_DIR/ZenIso.desktop
-echo 'Icon=tools-media-optical-burn-image' >> $XDG_DEKTOP_DIR/ZenIso.desktop
-echo 'Terminal=true' >> $XDG_DEKTOP_DIR/ZenIso.desktop
-echo 'StartupNotify=false' >> $XDG_DEKTOP_DIR/ZenIso.desktop
-echo 'Categories=System;' >> $XDG_DEKTOP_DIR/ZenIso.desktop
+echo '[Desktop Entry]' > $XDG_DESKTOP_DIR/ZenIso.desktop
+echo 'Version=1.0' >> $XDG_DESKTOP_DIR/ZenIso.desktop
+echo 'Type=Application' >> $XDG_DESKTOP_DIR/ZenIso.desktop
+echo 'Name=ZenIso' >> $XDG_DESKTOP_DIR/ZenIso.desktop
+echo 'Exec=/home/toff/.local/share/applications/APPS/ZenIso-1.0.3.sh' >> $XDG_DESKTOP_DIR/ZenIso.desktop
+echo 'Icon=tools-media-optical-burn-image' >> $XDG_DESKTOP_DIR/ZenIso.desktop
+echo 'Terminal=true' >> $XDG_DESKTOP_DIR/ZenIso.desktop
+echo 'StartupNotify=false' >> $XDG_DESKTOP_DIR/ZenIso.desktop
+echo 'Categories=System;' >> $XDG_DESKTOP_DIR/ZenIso.desktop
 
 }
 function INTELGPU(){
@@ -309,7 +308,6 @@ function AUTOINSTALL(){
 
 echo -e "==>   AUTOINSTALL"
 SSHKEYTEST
-ELOGIND
 BASE
 GUFW
 NANORC
@@ -326,7 +324,6 @@ function CUSTOMINSTALL(){
 echo -e "==>   CUSTOMINSTALL"
 MENUPARSER
 SSHKEYTEST
-ELOGIND
 BASE
 CHECKFLATPAK
 $gpuDETECT
@@ -445,6 +442,7 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 			true "XBPS" "xfce4-screenshooter" "Description" \
 			true "XBPS" "xfce4-whiskermenu-plugin" "Description" \
 			true "XBPS" "deluge" "Description" \
+			true "APPS" "ELOGIND" "Fix AZERTY au login " \
 			true "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
 			false "APPS" "T420" "Optimisation pour lenovo T420 uniquement" \
 			false "APPS" "X250" "Optimisation pour lenovo X250 uniquement" \
@@ -464,6 +462,8 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 valret=$?
 verif=$(echo $menuCHECK | grep -c "TRUE")
 case $valret in
+zenity --progress --pulsate --auto-close
+
 	0)
 	CUSTOMINSTALL
 	;;
@@ -476,6 +476,7 @@ esac
 echo -e "Retour ??? : $valret"
 echo -e "menuCHECK : $menuCHECK"
 echo -e menuCHECK
+
 }
 
 function DETECT(){
@@ -497,7 +498,7 @@ if [ $(lspci | grep -c VGA) != 0 ]; then
 	if	[ $(cat gpuTMP01 | grep -c AMD) != 0 ]; then
 		gpuDETECT="AMDGPU"
 	fi
-	if	[ $(cat gpuTMP01 | grep -c INTEL) != 0 ]; then
+	if	[ $(cat gpuTMP01 | grep -c Intel) != 0 ]; then
 		gpuDETECT="INTELGPU"
 	fi
 fi
