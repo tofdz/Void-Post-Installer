@@ -3,7 +3,7 @@ BASEDIR=$(pwd)
 cd $HOME
 git clone https://github.com/flozz/rivalcfg.git
 cd rivalcfg
-sudo pip3 install .
+pip3 install .
 sudo rivalcfg --update-udev
 sudo rivalcfg -p 125
 cd $BASEDIR
