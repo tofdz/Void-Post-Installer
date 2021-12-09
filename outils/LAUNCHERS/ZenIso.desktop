@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=ZenIso
-Exec=/home/toff/.local/share/applications/APPS/ZenIso-1.0.3.sh
-Icon=tools-media-optical-burn-image
-Terminal=true
-StartupNotify=false
-Categories=System;

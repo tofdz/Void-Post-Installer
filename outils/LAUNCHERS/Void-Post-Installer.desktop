@@ -1,8 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=Void-Post-Installer
-Exec=/home/toff/Void-Post-Installer/install-GUI.sh
-Icon=org.xfce.settings.accessibility
-Path=/home/toff/Void-Post-Installer
-Categories=System;

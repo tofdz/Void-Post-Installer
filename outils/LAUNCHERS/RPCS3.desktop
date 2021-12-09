@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=RPCS3
-Comment=Emulateur PS3
-Exec=/home/toff/Gaming/Emulation/PS3/rpcs3.AppImage
-Terminal=false
-Icon=/home/toff/Images/ICON-PS3.png
-Categories=Game;
