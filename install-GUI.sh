@@ -425,35 +425,35 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 			--text="Bienvenue dans la post installation de VoidLinux" \
 			--list --checklist --column=" " --column="TYPE" --column=" Nom " --column="Description : " \
 			--separator="|" --hide-column=2 \
-			true "XBPS" "cifs-utils" "Description" \
-			true "XBPS" "smbclient" "Description" \
-			true "XBPS" "thunderbird" "Description" \
-			true "XBPS" "birdtray" "Description" \
-			true "XBPS" "minitube" "Description" \
-			true "XBPS" "arduino" "Description" \
-			true "XBPS" "gufw" "Description" \
-			true "XBPS" "zenmap" "Description" \
-			true "XBPS" "vlc" "Description" \
-			true "XBPS" "gimp" "Description" \
-			true "XBPS" "blender" "Description" \
-			true "XBPS" "ytmdl" "Description" \
-			true "XBPS" "filelight" "Description" \
-			true "XBPS" "xfce4-plugins" "Description" \
-			true "XBPS" "xfce4-screenshooter" "Description" \
-			true "XBPS" "xfce4-whiskermenu-plugin" "Description" \
-			true "XBPS" "deluge" "Description" \
-			true "APPS" "ELOGIND" "Fix AZERTY au login " \
-			true "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
+			false "XBPS" "cifs-utils" "Outil pour connexion SMB" \
+			false "XBPS" "smbclient" "Outil pour connexion SMB (suite)" \
+			true "XBPS" "thunderbird" "Client pour les Mails" \
+			true "XBPS" "birdtray" "Garder Thunderbird en icone dans la barre des taches" \
+			true "XBPS" "minitube" "Youtube player sans pub" \
+			false "XBPS" "arduino" "IDE de programmation pour arduino" \
+			true "XBPS" "gufw" "GUI pour le firewall" \
+			false "XBPS" "zenmap" "Testeur de réseau" \
+			true "XBPS" "vlc" "lecteur multimedia vlc" \
+			true "XBPS" "gimp" "logiciel d'edition d'image" \
+			false "XBPS" "blender" "logiciel de conception 3D" \
+			true "XBPS" "ytmdl" "telechargez vos playlists youtube" \
+			true "XBPS" "filelight" "Affichez les données de vos disques durs !" \
+			true "XBPS" "xfce4-plugins" "Suite de plugin pour personnaliser votre interface xfce" \
+			true "XBPS" "xfce4-screenshooter" "Prendre des captures d'ecran" \
+			false "XBPS" "xfce4-whiskermenu-plugin" "Barre de menu personnalisable" \
+			true "XBPS" "deluge" "Telechargez vos torrent et magnet link" \
+			false "APPS" "ELOGIND" "Fix AZERTY au login " \
+			false "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
 			false "APPS" "T420" "Optimisation pour lenovo T420 uniquement" \
 			false "APPS" "X250" "Optimisation pour lenovo X250 uniquement" \
-			true "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
-			true "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
+			false "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
+			false "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
 			true "APPS" "DISCORD" "Célèbre plateforme de chat vocale" \
 			false "APPS" "PARSEC" "Gaming en streaming remote" \
 			false "APPS" "STEELSERIES" "Reglages periphériques Steel Series (souris)" \
 			false "APPS" "CORSAIR" "Reglages périphériques Corsair (clavier/souris)" \
 			true "APPS" "STEAM" "Installation de Steam" \
-			true "APPS" "GOG" "Installation de Gog Galaxy (Minigalaxy)" \
+			false "APPS" "GOG" "Installation de Gog Galaxy (Minigalaxy)" \
 			true "APPS" "WINE" "Pouvoir installer des application windows sur voidlinux" \
 			true "APPS" "PROTONUP" "Version améliorée de Proton pour steam & wine" \
 			true "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" \
@@ -462,8 +462,6 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 valret=$?
 verif=$(echo $menuCHECK | grep -c "TRUE")
 case $valret in
-zenity --progress --pulsate --auto-close
-
 	0)
 	CUSTOMINSTALL
 	;;
