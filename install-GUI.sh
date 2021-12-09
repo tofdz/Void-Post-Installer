@@ -497,7 +497,7 @@ if [ $(lspci | grep -c VGA) != 0 ]; then
 	if	[ $(cat gpuTMP01 | grep -c AMD) != 0 ]; then
 		gpuDETECT="AMDGPU"
 	fi
-	if	[ $(cat gpuTMP01 | grep -c INTEL) != 0 ]; then
+	if	[ $(cat gpuTMP01 | grep -c Intel) != 0 ]; then
 		gpuDETECT="INTELGPU"
 	fi
 fi
