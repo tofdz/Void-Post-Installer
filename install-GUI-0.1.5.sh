@@ -9,9 +9,10 @@ version="0.1.5"
 # DrNeKoSan : crash test !
 # Odile     : Les cafés !
 # Celine    : Les petits pains !!
-PASS=$(zenity --password)
+PASS=$(yad --entry --title="Void-Post-Installer v$version" --text="Entrez votre mot de passe :" --hide-text \
+			--width=270 --height=150 )
 echo $PASS|sudo -S clear
-sudo -S xbps-install -Suyv zenity
+sudo -S xbps-install -Suyv yad
 WDIR=$(pwd)
 chmod +x $WDIR/scripts/*
 source ~/.config/user-dirs.dirs
