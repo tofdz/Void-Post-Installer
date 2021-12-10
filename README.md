@@ -82,8 +82,8 @@ Ouvrez un terminal et copîez collez la commande suivante :
                 
 Un menu graphique s'ouvrira alors vous permettant de choisir directement la bonne installation :
 
-- Minimal : pas de gaming ici, le mi-ni-mum pour dire d'etre viable.
-- Custom : pour avoir le choix (la selection de base est deja très bien, j'ai laissé le choix pour la prise en compte du clavier AZERTY au login pour les amoureux du QWERTY ;).
+- Minimal : pas de gaming ici, le mi-ni-mum pour dire d'etre viable (la selection est figée et ne tiens pas compte de la checklist).
+- Install : pour avoir le choix (la selection dans la liste est fonctionnelle, j'ai laissé le choix pour la prise en compte du clavier AZERTY au login pour les amoureux du QWERTY ;).
 
 Enjoy ^^
 
