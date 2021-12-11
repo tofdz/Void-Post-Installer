@@ -169,9 +169,9 @@ echo '[Desktop Entry]' > $XDG_DESKTOP_DIR/ZenIso.desktop
 echo 'Version=1.0' >> $XDG_DESKTOP_DIR/ZenIso.desktop
 echo 'Type=Application' >> $XDG_DESKTOP_DIR/ZenIso.desktop
 echo 'Name=ZenIso' >> $XDG_DESKTOP_DIR/ZenIso.desktop
-echo 'Exec=/home/toff/.local/share/applications/APPS/ZenIso-1.0.3.sh' >> $XDG_DESKTOP_DIR/ZenIso.desktop
+echo 'Exec=ZenIso' >> $XDG_DESKTOP_DIR/ZenIso.desktop
 echo 'Icon=tools-media-optical-burn-image' >> $XDG_DESKTOP_DIR/ZenIso.desktop
-echo 'Terminal=true' >> $XDG_DESKTOP_DIR/ZenIso.desktop
+echo 'Terminal=false' >> $XDG_DESKTOP_DIR/ZenIso.desktop
 echo 'StartupNotify=false' >> $XDG_DESKTOP_DIR/ZenIso.desktop
 echo 'Categories=System;' >> $XDG_DESKTOP_DIR/ZenIso.desktop
 
