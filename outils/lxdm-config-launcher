@@ -1,0 +1,3 @@
+#!/bin/bash
+PASS=$(yad --entry --title="lxdm Custom" --hide-text )
+echo $PASS|sudo -S lxdm-config

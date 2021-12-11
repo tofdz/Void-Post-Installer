@@ -1,0 +1,3 @@
+#!/bin/bash
+PASS=$(yad --entry --hide-text --title="nvidia-settings")
+echo $PASS|sudo -S nvidia-settings
