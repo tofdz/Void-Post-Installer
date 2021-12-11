@@ -7,21 +7,7 @@ OS : VoidLinux
 
 
 # Description
-
-Permet la post installation de VoidLinux pour les débutants qui veulent passer de Windows à VoidLinux
-Une installation avec en objectif : 
-
-- STABILITE (je l'utilise personnellement et RAS)
-- FACILITE (un parfait débutant doit pouvoir l'utiliser et passer de windows a linux en un claquement de doigts)
-- LEGERETE (le moins d'espace possible utilisé, que des applications utile qu'on utilise 100% du temps)
-- GAMING (pouvoir jouer sur linux n'est plus une utopie, votre bibliothèque Steam vous attend !!!)
-- SECURITE (ne pas etre exposé inutiliment sur le net, pas de télémétrie, pas de mouchards, sniffeurs bref : PROPRE)
-
-Démarré, void consomme 300mo de RAM.
-Sur un pc portable qui ne digère pas windows 10, ça permet de lui redonner une jeunesse.
-Sur un pc correct, de liberer de l'espace (environ 40G de récuperer vs windows10).
-Une fois ce script executé sur votre version fraichement installée de voidlinux,
-Vous serez pret à l'utiliser sans avoir a regler le moindre probleme.
+Une post installation de void linux qui permet de jouer clé en main.
 
 # Liste des modifications 
 
