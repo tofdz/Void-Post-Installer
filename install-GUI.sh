@@ -1,6 +1,7 @@
 #!/bin/bash
 # NAME : Void-Post-Installer
 # LAUNCHER : install.sh
+TITLE="Void Post Installer"
 version="0.1.5"
 # Date : 16/11/2020 maj 04/12/2021
 # by Tofdz
@@ -9,7 +10,7 @@ version="0.1.5"
 # DrNeKoSan : crash test !
 # Odile     : Les cafés !
 # Celine    : Les petits pains !!
-PASS=$(zenity --password)
+PASS=$(yad --entry --hide-text --text="$TITLE $version")
 echo $PASS|sudo -S clear
 sudo -S xbps-install -Suyv zenity
 WDIR=$(pwd)
