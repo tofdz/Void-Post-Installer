@@ -66,7 +66,7 @@ sudo xbps-install -Syuv xbps;sudo xbps-install -Syuv;
 # INSTALLATION VPM
 sudo xbps-install -Syuv vpm vsv;
 sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
-sudo vpm i -y git-all nano zsh curl wget python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver unzip p7zip-unrar xfburn gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
+sudo vpm i -y git-all nano zsh curl wget python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
 
 sudo ln -s /etc/sv/socklog-unix /var/service;sudo ln -s /etc/sv/nanoklogd /var/service;
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
@@ -250,7 +250,7 @@ flatpak install -y Parsec
 }
 function FLATNVID(){
 echo "Flatpak : Installation Discord & Parsec"
-flatpak install -y org.freedesktop.Platform.GL.nvidia-470-74
+#flatpak install -y org.freedesktop.Platform.GL.nvidia-470-74
 }
 function STEELSERIES(){
 echo "===> STEELSERIES INSTALL"
@@ -307,12 +307,13 @@ exit
 function AUTOINSTALL(){
 
 echo -e "==>   AUTOINSTALL"
+MENUGPU
 SSHKEYTEST
 BASE
 GUFW
 NANORC
 CHECKFLATPAK
-$gpuDETECT
+$gpu
 WINE
 PROTONUP
 OHMYZSH
@@ -322,16 +323,28 @@ MENUFIN
 function CUSTOMINSTALL(){
 
 echo -e "==>   CUSTOMINSTALL"
+MENUGPU
 MENUPARSER
 SSHKEYTEST
 BASE
 CHECKFLATPAK
-$gpuDETECT
+$gpu
 XBPSLOADER
 APPSLOADER
 MENUFIN
 
 }
+function MENUGPU(){
+gpu=$(yad --title="Void-Post-Installer" \
+			--width=400 --height=500 \
+			--list --radiolist --separator="" \
+			--column="CHECK" --column="GPU" \
+			true "NVIDIA" \
+			false "AMDGPU" \
+			false "INTELGPU" \
+			)
+}
+
 
 function MENUPARSER(){
 echo -e "===> START : MENU-PARSER"
@@ -383,7 +396,7 @@ if [ $(echo $menuCHECK | grep -c PARSEC) != 0 ]; then
 	FLATPAK
 fi
 
-if [ $(echo $gpuDETECT | grep -c NVIDIA) != 0 ]; then
+if [ $(echo $gpu | grep -c NVIDIA) != 0 ]; then
 	echo -e "====> Installation Flatpak pour nvidia"
 	FLATPAK
 	FLATNVID
@@ -490,13 +503,13 @@ fi
 # DETECTION GPU
 if [ $(lspci | grep -c VGA) != 0 ]; then
 		gputemp=$(lspci | grep VGA)
-	if	[ $(cat gpuTMP01 | grep -c NVIDIA) != 0 ]; then
+	if	[ $(echo $gputemp | grep -c  NVIDIA) != 0 ]; then
 		gpuDETECT="NVIDIA"
 	fi
-	if	[ $(cat gpuTMP01 | grep -c AMD) != 0 ]; then
+	if	[ $(echo $gputemp | grep -c AMD) != 0 ]; then
 		gpuDETECT="AMDGPU"
 	fi
-	if	[ $(cat gpuTMP01 | grep -c Intel) != 0 ]; then
+	if	[ $(echo $gputemp | grep -c Intel) != 0 ]; then
 		gpuDETECT="INTELGPU"
 	fi
 fi
