@@ -65,8 +65,8 @@ echo -e "===> BASE INSTALL"
 sudo xbps-install -Syuv xbps;sudo xbps-install -Syuv;
 # INSTALLATION VPM
 sudo xbps-install -Syuv vpm vsv;
-sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
-sudo vpm i -y git-all nano zsh curl wget python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
+sudo vpm i -y void-repo-nonfree;
+sudo vpm i -y git-all nano zsh curl wget python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver unzip xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
 
 sudo ln -s /etc/sv/socklog-unix /var/service;sudo ln -s /etc/sv/nanoklogd /var/service;
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
