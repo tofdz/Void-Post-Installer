@@ -251,6 +251,7 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 }
 function DISCORD(){
 echo "Discord : Installation"
+cd $HOME
 git clone https://github.com/void-linux/void-packages;
 cd void-packages;
 ./xbps-src binary-bootstrap
@@ -258,6 +259,7 @@ echo XBPS_ALLOW_RESTRICTED=yes >> etc/conf
 ./xbps-src pkg discord
 cd hostdir/binpkgs/nonfree
 xbps-install --repository=. discord
+cd $WDIR
 }
 function PARSEC(){
 echo "Flatpak : Installation Discord & Parsec"
