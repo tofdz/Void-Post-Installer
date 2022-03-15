@@ -66,6 +66,16 @@ sudo xbps-install -Syuv xbps;sudo xbps-install -Syuv;
 # INSTALLATION VPM
 sudo xbps-install -Syuv vpm vsv;
 sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
+
+# Kernel 
+echo "==> Kernel : Update"
+sudo vpm i -y linux-mainline linux-mainline-headers
+echo "==> Kernel : Purge"
+sudo -S vkpurge rm all
+echo "==> Update Grub"
+sudo -s update-grub
+
+# Base Apps
 sudo vpm i -y git-all nano zsh curl wget python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
 
 sudo ln -s /etc/sv/socklog-unix /var/service;sudo ln -s /etc/sv/nanoklogd /var/service;
@@ -190,9 +200,9 @@ sudo vpm i -y mesa mesa-dri
 function NVIDIA(){
 
 echo "===> nvidia INSTALL"
-sudo vpm i -y mesa mesa-dri nvidia nvidia-libs-32bit
-FLATNVID
+sudo vpm i -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl
 }
+
 function T420(){
 
 echo "===> T420 addons"
@@ -240,18 +250,20 @@ echo "Flatpak : Création des repos si non existant"
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
 function DISCORD(){
-echo "Flatpak : Installation Discord & Parsec"
-#flatpak install Discord Parsec org.freedesktop.Platform.GL.nvidia-470-74
-flatpak install -y Discord
+echo "Discord : Installation"
+git clone https://github.com/void-linux/void-packages;
+cd void-packages;
+./xbps-src binary-bootstrap
+echo XBPS_ALLOW_RESTRICTED=yes >> etc/conf
+./xbps-src pkg discord
+cd hostdir/binpkgs/nonfree
+xbps-install --repository=. discord
 }
 function PARSEC(){
 echo "Flatpak : Installation Discord & Parsec"
 flatpak install -y Parsec
 }
-function FLATNVID(){
-echo "Flatpak : Installation Discord & Parsec"
-#flatpak install -y org.freedesktop.Platform.GL.nvidia-470-74
-}
+
 function STEELSERIES(){
 echo "===> STEELSERIES INSTALL"
 cd $WDIR/scripts/
@@ -280,6 +292,10 @@ echo "===> WINE INSTALL"
 cd $WDIR/scripts/
 ./10-VOID-Wine.sh
 cd $WDIR
+}
+function PROTONFLAT(){
+echo "==> Install Proton via Flatpak"
+flatpak install com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 }
 function PROTONUP(){
 # INSTALLATION DE PROTONUP
@@ -340,7 +356,7 @@ MENUFIN
 function MENUGPU(){
 gpu=$(yad --title="Void-Post-Installer" \
 			--width=400 --height=500 \
-			--list --radiolist --separator="" \
+			--list --radiolist --separator="" --print-column="2" \
 			--column="CHECK" --column="GPU" \
 			true "NVIDIA" \
 			false "AMDGPU" \
@@ -387,23 +403,7 @@ echo -e "customAPPS : ${customAPP[@]}"
 rm TMP01 TMP02 TMP03 TMP04
 }
 function CHECKFLATPAK(){
-echo -e "===> CHECKFLATPAK"
-
-if [ $(echo $menuCHECK | grep -c DISCORD) ]; then
-   echo -e "====> Installation Flatpak pour Discord"
-   FLATPAK;
-fi
-
-if [ $(echo $menuCHECK | grep -c PARSEC) != 0 ]; then
-	echo -e "====> Installation Flatpak pour Parsec"
-	FLATPAK
-fi
-
-if [ $(echo $gpu | grep -c NVIDIA) != 0 ]; then
-	echo -e "====> Installation Flatpak pour nvidia"
-	FLATPAK
-	FLATNVID
-fi
+FLATPAK
 
 }
 function XBPSLOADER(){
@@ -432,7 +432,6 @@ yad--info --title="Void-Post-Installer v$version : Installation terminée" \
 function MAIN(){
 DETECT
 BANNER
-
 echo -e "GPU : $gpuDETECT"
 echo -e "==> MAIN MENU START"
 menuCHECK=$(yad --title="Void-Post-Installer" \
