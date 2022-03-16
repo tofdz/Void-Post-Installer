@@ -7,7 +7,7 @@ OS : VoidLinux
 
 
 # Description
-Une post installation de void linux qui permet de jouer clé en main.
+Une post installation de void linux qui permet de jouer clé en main à Elden Ring.
 
 # Liste des modifications 
 
@@ -70,8 +70,6 @@ Un menu graphique s'ouvrira alors vous permettant de choisir directement la bonn
 
 - Minimal : pas de gaming ici, le mi-ni-mum pour dire d'etre viable (la selection est figée et ne tiens pas compte de la checklist).
 - Install : pour avoir le choix (la selection dans la liste est fonctionnelle, j'ai laissé le choix pour la prise en compte du clavier AZERTY au login pour les amoureux du QWERTY ;).
-
-Enjoy ^^
 
 Enjoy ^^  
 2021 Tofdz
