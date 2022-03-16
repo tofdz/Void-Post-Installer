@@ -202,7 +202,15 @@ function NVIDIA(){
 echo "===> nvidia INSTALL"
 sudo vpm i -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl
 }
-
+function VIRTIONET(){
+echo "==> Virtio-net : Install"
+if [ ! -f /etc/modules-load.d/virtio.conf ];then
+sudo -S touch /etc/modules-load.d/virtio.conf
+sudo echo -S "# load virtio-net" > /etc/modules-load.d/virtio.conf
+sudo echo -S "virtio-net" >> /etc/modules-load.d/virtio.conf
+echo "==> Virtio-net : Fichier crée"
+fi
+}
 function T420(){
 
 echo "===> T420 addons"
@@ -251,7 +259,6 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 }
 function DISCORD(){
 echo "Discord : Installation"
-cd $HOME
 git clone https://github.com/void-linux/void-packages;
 cd void-packages;
 ./xbps-src binary-bootstrap
@@ -259,7 +266,6 @@ echo XBPS_ALLOW_RESTRICTED=yes >> etc/conf
 ./xbps-src pkg discord
 cd hostdir/binpkgs/nonfree
 xbps-install --repository=. discord
-cd $WDIR
 }
 function PARSEC(){
 echo "Flatpak : Installation Discord & Parsec"
@@ -330,7 +336,7 @@ SSHKEYTEST
 BASE
 GUFW
 NANORC
-CHECKFLATPAK
+FLATPAK
 $gpu
 WINE
 PROTONUP
@@ -347,7 +353,7 @@ SSHKEYTEST
 GUFW
 BASE
 NANORC
-CHECKFLATPAK
+FLATPAK
 $gpu
 XBPSLOADER
 APPSLOADER
@@ -459,8 +465,9 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 			true "XBPS" "xfce4-screenshooter" "Prendre des captures d'ecran" \
 			false "XBPS" "xfce4-whiskermenu-plugin" "Barre de menu personnalisable" \
 			true "XBPS" "deluge" "Telechargez vos torrent et magnet link" \
-			false "APPS" "ELOGIND" "Fix AZERTY au login " \
+			true "APPS" "ELOGIND" "Fix AZERTY au login " \
 			false "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
+			false "APPS" "VIRTIONET" "Modules kernel Virtio-net activé" \
 			false "APPS" "T420" "Optimisation pour lenovo T420 uniquement" \
 			false "APPS" "X250" "Optimisation pour lenovo X250 uniquement" \
 			false "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
@@ -472,6 +479,7 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 			true "APPS" "STEAM" "Installation de Steam" \
 			false "APPS" "GOG" "Installation de Gog Galaxy (Minigalaxy)" \
 			true "APPS" "WINE" "Pouvoir installer des application windows sur voidlinux" \
+			true "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
 			true "APPS" "PROTONUP" "Version améliorée de Proton pour steam & wine" \
 			true "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" \
 			--button="Install Minimale:1" --button="Install:0" \
