@@ -2,8 +2,8 @@
 # NAME : Void-Post-Installer
 # LAUNCHER : install.sh
 TITLE="Void Post Installer"
-version="0.1.5"
-# Date : 16/11/2020 maj 04/12/2021
+version="0.1.6"
+# Date : 16/11/2020 maj 17/03/2022
 # by Tofdz
 # assisted by :
 #
@@ -12,7 +12,6 @@ version="0.1.5"
 # Celine    : Les petits pains !!
 PASS=$(yad --entry --hide-text --text="$TITLE $version")
 echo $PASS|sudo -S clear
-sudo -S xbps-install -Suyv zenity
 WDIR=$(pwd)
 chmod +x $WDIR/scripts/*
 source ~/.config/user-dirs.dirs
@@ -152,7 +151,7 @@ sudo vpm i -y gufw
 if [ ! -f $HOME/.local/bin/gufw-launcher ]; then
 	touch $HOME/.local/bin/gufw-launcher
 	echo '#!/bin/bash' > $HOME/.local/bin/gufw-launcher
-	echo 'PASS=$(zenity --password --title="VPI - gufw Launcher")' >> $HOME/.local/bin/gufw-launcher
+	echo 'PASS=$(yad --entry --hide-text --text="VPI - gufw Launcher")' >> $HOME/.local/bin/gufw-launcher
 	echo '$PASS|sudo -S gufw-pkexec clear' >> $HOME/.local/bin/gufw-launcher
 	chmod +x $HOME/.local/bin/gufw-launcher
 
@@ -259,13 +258,15 @@ flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flath
 }
 function DISCORD(){
 echo "Discord : Installation"
+
+cd $HOME
 git clone https://github.com/void-linux/void-packages;
 cd void-packages;
 ./xbps-src binary-bootstrap
 echo XBPS_ALLOW_RESTRICTED=yes >> etc/conf
 ./xbps-src pkg discord
 cd hostdir/binpkgs/nonfree
-xbps-install --repository=. discord
+sudo -S xbps-install --repository=. discord
 }
 function PARSEC(){
 echo "Flatpak : Installation Discord & Parsec"
@@ -372,7 +373,6 @@ gpu=$(yad --title="Void-Post-Installer" \
 			)
 }
 
-
 function MENUPARSER(){
 echo -e "===> START : MENU-PARSER"
 # ALIMENTE LES TABLEAU POUR INSTALL DE XBPS ET APPS
@@ -430,6 +430,41 @@ echo -e "==> APPS LOADER BOUCLE WHILE "
 ${customAPP[$i]};
 i=$(($i+1))
 done
+}
+
+function DETECT(){
+# DETECTION CPU
+cpuDETECT="Default"
+cputemp=$(lscpu |grep Proc)
+if [ $(echo $cputemp | grep -c AMD) != 0 ]; then
+		cpuDETECT="AMD"
+fi
+if [ $(echo $cputemp | grep -c INTEL) != 0 ]; then
+		cpuDETECT="INTEL"
+fi
+# DETECTION GPU
+if [ $(lspci | grep -c VGA) != 0 ]; then
+		gputemp=$(lspci | grep VGA)
+	if	[ $(echo $gputemp | grep -c  NVIDIA) != 0 ]; then
+		gpuDETECT="NVIDIA"
+	fi
+	if	[ $(echo $gputemp | grep -c AMD) != 0 ]; then
+		gpuDETECT="AMDGPU"
+	fi
+	if	[ $(echo $gputemp | grep -c Intel) != 0 ]; then
+		gpuDETECT="INTELGPU"
+	fi
+fi
+}
+function BANNER(){
+softNAME="Void-Post-Installer"
+clear
+echo -e "####################################"
+echo -e "##"
+echo -e "##\t\t$softNAME"
+echo -e "##\t\tV $version"
+echo -e "##"
+echo -e "######"
 }
 
 function MENUFIN(){
@@ -500,41 +535,6 @@ echo -e "Retour ??? : $valret"
 echo -e "menuCHECK : $menuCHECK"
 echo -e menuCHECK
 
-}
-
-function DETECT(){
-# DETECTION CPU
-cpuDETECT="Default"
-cputemp=$(lscpu |grep Proc)
-if [ $(echo $cputemp | grep -c AMD) != 0 ]; then
-		cpuDETECT="AMD"
-fi
-if [ $(echo $cputemp | grep -c INTEL) != 0 ]; then
-		cpuDETECT="INTEL"
-fi
-# DETECTION GPU
-if [ $(lspci | grep -c VGA) != 0 ]; then
-		gputemp=$(lspci | grep VGA)
-	if	[ $(echo $gputemp | grep -c  NVIDIA) != 0 ]; then
-		gpuDETECT="NVIDIA"
-	fi
-	if	[ $(echo $gputemp | grep -c AMD) != 0 ]; then
-		gpuDETECT="AMDGPU"
-	fi
-	if	[ $(echo $gputemp | grep -c Intel) != 0 ]; then
-		gpuDETECT="INTELGPU"
-	fi
-fi
-}
-function BANNER(){
-softNAME="Void-Post-Installer"
-clear
-echo -e "####################################"
-echo -e "##"
-echo -e "##\t\t$softNAME"
-echo -e "##\t\tV $version"
-echo -e "##"
-echo -e "######"
 }
 
 MAIN
