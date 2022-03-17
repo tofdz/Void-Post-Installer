@@ -255,7 +255,7 @@ echo "===> FLATPAK"
 # installation via flatpak de Discord & Parsec
 sudo vpm i -y flatpak
 echo "Flatpak : Création des repos si non existant"
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
 function DISCORD(){
 echo "Discord : Installation"
@@ -269,7 +269,7 @@ xbps-install --repository=. discord
 }
 function PARSEC(){
 echo "Flatpak : Installation Discord & Parsec"
-flatpak install -y Parsec
+flatpak --user install -y Parsec
 }
 
 function STEELSERIES(){
@@ -303,7 +303,7 @@ cd $WDIR
 }
 function PROTONFLAT(){
 echo "==> Install Proton via Flatpak"
-flatpak install com.valvesoftware.Steam.CompatibilityTool.Proton-GE
+flatpak --user install com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 }
 function PROTONUP(){
 # INSTALLATION DE PROTONUP
