@@ -5,5 +5,5 @@ sudo usermod -a -G input $USER
 sudo vpm i -y steam libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit mono
 
 # Installation de Steam via flatpak (EldenRing EAC actif)
-flatpak install com.valvesoftware.Steam org.freedesktop.Platform.VulkanLayer.MangoHud
+flatpak --user install com.valvesoftware.Steam org.freedesktop.Platform.VulkanLayer.MangoHud
 sudo -S echo "vm.max_map_count=1048576" >> etc/sysctl.conf
