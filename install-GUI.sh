@@ -38,34 +38,16 @@ done
 function SSHKEYTEST(){
 
 # Vérification & Création des clés SSH en ed25519
-SSHDIR="$HOME/.ssh/"
+SSHDIR=/etc/ssh/
 PRIK=id_ed25519
 PUBK=id_ed15519.pub
 echo -e "===> CHECK CLES SSH"
-	if [ ! -f $SSHDIR$PRIK ] || [ ! -f $SSHDIR$PUBK ];then
-			# On ouvre une fenetre pour saisir la passphrase		
-			PASSPHRASE=$(yad --entry --width=600 --height=100 \
-							--title="$TITLE $version" \
-							--entry-label="Entrez votre passphrase : " \
-							--entry-text="$KEY")
-			valret=$?
-			case $valret in
-				0)
-				# On génère la clé avec la passphrase
-				echo "Passphrase : $PASSPHRASE"
-				ssh-keygen -t ed25519 -P $PASSPHRASE -f $SSHDIR$PRIK
-				;;
-				1)
-				echo "EXIT"
-				exit
-				;;
-				255)
-				exit
-				;;
-			esac
-	else
-			echo -e "fichiers deja present"
-	fi
+if [ ! -f $SSHDIR$PRIK ] || [ ! -f $SSHDIR$PUBK ];then
+
+		yes 'Y' | ssh-keygen -t ed25519 -N 'id_ed25519'
+        else
+        echo -e "fichiers deja present"
+fi
 }
 function ELOGIND(){
 
@@ -114,13 +96,14 @@ sudo fc-cache -fv
 sudo echo -e "Suppression des Fichiers inutile"
 rm -rfv $HOME/YosemiteSanFranciscoFont
 # Prendre en compte le $HOME/$USER/.local/bin en compte dans le $PATH
-if [ -z $(cat /etc/profile | grep '$HOME/.local/bin') ];then
+if [ ! -f $HOME/.profile ];then
 echo "Création du .profile"
-sudo -S echo 'if [ -d "$HOME/.local/bin" ] ; then' >> /etc/profile
-sudo -S echo 'PATH="$HOME/.local/bin:$PATH"' >> /etc/profile
-sudo -S echo "fi" >> /etc/profile
-echo 'Fichier profile - Terminé !'
-source /etc/profile
+touch $HOME/.profile
+echo 'if [ -d "$HOME/.local/bin" ] ; then' > $HOME/.profile
+echo 'PATH="$HOME/.local/bin:$PATH"' >> $HOME/.profile
+echo "fi" >> $HOME/.profile
+echo 'Fichier .profile - Terminé !'
+source $HOME/.profile
 fi
 #sudo echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment
 # Attribue à l'utilisateur le group input (pour les manettes de jeu)
@@ -294,19 +277,18 @@ if [ ! -d /etc/init.d/ ];then
 sudo mkdir /etc/init.d/
 fi
 sudo -S ./VMware-Player-16.0.0-16894299.x86_64.bundle
-sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr/share/applications/vmware-player.desktop
-touch $HOME/.local/bin/vmware-launcher-player
-echo "#!/bin/bash" > $HOME/.local/bin/vmware-launcher-player
-echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> $HOME/.local/bin/vmware-launcher-player
-echo "vmplayer" >> $HOME/.local/bin/vmware-launcher-player
+touch $HOME/.local/bin/vmware-launcher
+echo "#!/bin/bash" > $HOME/.local/bin/vmware-launcher
+echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> $HOME/.local/bin/vmware-launcher
+echo "vmplayer" >> $HOME/.local/bin/vmware-launcher
 touch $HOME/.local/bin/vmware-registration
 echo "#!/bin/bash" > $HOME/.local/bin/vmware-registration
-pycp $WDIR/outils/vmware-registration $HOME/.local/bin
-chmod +x $HOME.local/bin/vmware-registration
-
+echo "" >> $HOME/.local/bin/vmware-registration
+echo "" >> $HOME/.local/bin/vmware-registration
+echo "" >> $HOME/.local/bin/vmware-registration
+echo "" >> $HOME/.local/bin/vmware-registration
 }
 function VMWAREWSPRO(){
-
 echo "==> APPS : VMWare Workstation Pro 16"
 sudo -S vpm i -y libpcsclite pcsclite
 cd $HOME
@@ -318,34 +300,7 @@ if [ ! -d /etc/init.d/ ];then
 sudo mkdir /etc/init.d/
 fi
 sudo -S ././VMware-Workstation-Full-16.2.3-19376536.x86_64.bundle
-# EDITION DES RACCOURCIS DESKTOP
-sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher/' /usr/share/applications/vmware-workstation.desktop
-sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr/share/applications/vmware-player.desktop
-# CREATION DES LAUNCHERS DANS $HOME/.local/bin (path)
-# Pour VMPlayer
-touch $HOME/.local/bin/vmware-launcher-player
-echo "#!/bin/bash" > $HOME/.local/bin/vmware-launcher-player
-echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> $HOME/.local/bin/vmware-launcher-player
-echo "vmplayer" >> $HOME/.local/bin/vmware-launcher-player
-# Pour Workstation
-touch $HOME/.local/bin/vmware-launcher
-echo "#!/bin/bash" > $HOME/.local/bin/vmware-launcher
-echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> $HOME/.local/bin/vmware-launcher
-echo "vmware" >> $HOME/.local/bin/vmware-launcher
-# Outil d'enregistrement de license
-pycp $WDIR/outils/vmware-registration $HOME/.local/bin
-chmod +x $HOME.local/bin/vmware-registration
 
-}
-function MENUVMWAREWS(){
-vmwareSELECT=$(yad --title="VMWare WorkStation installation" \
-			--width=400 --height=500 \
-			--list --radiolist --separator="" --print-column="2" \
-			--column="CHECK" --column="Version" --column="Description"\
-			true "VMWAREWSPLY" "Install VMWare WorkStation Player 16"\
-			false "VMWAREWSPRO" "Install VMWare WorkStation Pro FULL 16"\
-			)
-$vmwareSELECT
 }
 function VIRTUALBOX(){
 echo "===> VIRTUALBOX INSTALL"
@@ -605,7 +560,8 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 			false "APPS" "X250" "Optimisation pour lenovo X250 uniquement" \
 			false "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
 			false "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
-			false "APPS" "MENUVMWAREWS" "VMWARE Workstation Pro / Player 16" \
+			false "APPS" "VMWAREWSPLY" "VMWare Workstation Player 16" \
+			false "APPS" "VMWAREWSPRO" "VMWARE Workstation Pro 16" \
 			true "APPS" "DISCORD" "Célèbre plateforme de chat vocale" \
 			false "APPS" "PARSEC" "Gaming en streaming remote" \
 			false "APPS" "STEELSERIES" "Reglages periphériques Steel Series (souris)" \
