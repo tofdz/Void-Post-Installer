@@ -294,18 +294,19 @@ if [ ! -d /etc/init.d/ ];then
 sudo mkdir /etc/init.d/
 fi
 sudo -S ./VMware-Player-16.0.0-16894299.x86_64.bundle
-touch $HOME/.local/bin/vmware-launcher
-echo "#!/bin/bash" > $HOME/.local/bin/vmware-launcher
-echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> $HOME/.local/bin/vmware-launcher
-echo "vmplayer" >> $HOME/.local/bin/vmware-launcher
+sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr/share/applications/vmware-player.desktop
+touch $HOME/.local/bin/vmware-launcher-player
+echo "#!/bin/bash" > $HOME/.local/bin/vmware-launcher-player
+echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> $HOME/.local/bin/vmware-launcher-player
+echo "vmplayer" >> $HOME/.local/bin/vmware-launcher-player
 touch $HOME/.local/bin/vmware-registration
 echo "#!/bin/bash" > $HOME/.local/bin/vmware-registration
-echo "" >> $HOME/.local/bin/vmware-registration
-echo "" >> $HOME/.local/bin/vmware-registration
-echo "" >> $HOME/.local/bin/vmware-registration
-echo "" >> $HOME/.local/bin/vmware-registration
+pycp $WDIR/outils/vmware-registration $HOME/.local/bin
+chmod +x $HOME.local/bin/vmware-registration
+
 }
 function VMWAREWSPRO(){
+
 echo "==> APPS : VMWare Workstation Pro 16"
 sudo -S vpm i -y libpcsclite pcsclite
 cd $HOME
@@ -317,8 +318,24 @@ if [ ! -d /etc/init.d/ ];then
 sudo mkdir /etc/init.d/
 fi
 sudo -S ././VMware-Workstation-Full-16.2.3-19376536.x86_64.bundle
-sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher/' /usr/share/applications/vmware-workstation.desktop
-sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr/share/applications/vmware-player.desktop
+# EDITION DES RACCOURCIS DESKTOP
+sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher/' /usr/share/applications/vmware-workstation.desktop
+sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr/share/applications/vmware-player.desktop
+# CREATION DES LAUNCHERS DANS $HOME/.local/bin (path)
+# Pour VMPlayer
+touch $HOME/.local/bin/vmware-launcher-player
+echo "#!/bin/bash" > $HOME/.local/bin/vmware-launcher-player
+echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> $HOME/.local/bin/vmware-launcher-player
+echo "vmplayer" >> $HOME/.local/bin/vmware-launcher-player
+# Pour Workstation
+touch $HOME/.local/bin/vmware-launcher
+echo "#!/bin/bash" > $HOME/.local/bin/vmware-launcher
+echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> $HOME/.local/bin/vmware-launcher
+echo "vmware" >> $HOME/.local/bin/vmware-launcher
+# Outil d'enregistrement de license
+pycp $WDIR/outils/vmware-registration $HOME/.local/bin
+chmod +x $HOME.local/bin/vmware-registration
+
 }
 function MENUVMWAREWS(){
 vmwareSELECT=$(yad --title="VMWare WorkStation installation" \
