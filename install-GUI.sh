@@ -2,7 +2,7 @@
 # NAME : Void-Post-Installer
 # LAUNCHER : install.sh
 TITLE="Void Post Installer"
-version="0.1.6"
+version="0.1.7"
 # Date : 16/11/2020 maj 17/03/2022
 # by Tofdz
 # assisted by :
@@ -38,16 +38,34 @@ done
 function SSHKEYTEST(){
 
 # Vérification & Création des clés SSH en ed25519
-SSHDIR=/etc/ssh/
+SSHDIR="$HOME/.ssh/"
 PRIK=id_ed25519
 PUBK=id_ed15519.pub
 echo -e "===> CHECK CLES SSH"
-if [ ! -f $SSHDIR$PRIK ] || [ ! -f $SSHDIR$PUBK ];then
-
-		yes 'Y' | ssh-keygen -t ed25519 -N 'id_ed25519'
-        else
-        echo -e "fichiers deja present"
-fi
+	if [ ! -f $SSHDIR$PRIK ] || [ ! -f $SSHDIR$PUBK ];then
+			# On ouvre une fenetre pour saisir la passphrase		
+			PASSPHRASE=$(yad --entry --width=600 --height=100 \
+							--title="$TITLE $version" \
+							--entry-label="Entrez votre passphrase : " \
+							--entry-text="$KEY")
+			valret=$?
+			case $valret in
+				0)
+				# On génère la clé avec la passphrase
+				echo "Passphrase : $PASSPHRASE"
+				ssh-keygen -t ed25519 -P $PASSPHRASE -f $SSHDIR$PRIK
+				;;
+				1)
+				echo "EXIT"
+				exit
+				;;
+				255)
+				exit
+				;;
+			esac
+	else
+			echo -e "fichiers deja present"
+	fi
 }
 function ELOGIND(){
 
@@ -68,14 +86,14 @@ sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
 
 # Kernel 
 echo "==> Kernel : Update"
-sudo vpm i -y linux-mainline linux-mainline-headers
+sudo vpm i -y linux linux-headers
 echo "==> Kernel : Purge"
 sudo -S vkpurge rm all
 echo "==> Update Grub"
 sudo -s update-grub
 
 # Base Apps
-sudo vpm i -y git-all nano zsh curl wget python3-pip octoxbps notepadqq mc htop ytop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
+sudo vpm i -y git-all nano zsh curl wget python3-pip testdisk octoxbps notepadqq mc htop ytop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
 
 sudo ln -s /etc/sv/socklog-unix /var/service;sudo ln -s /etc/sv/nanoklogd /var/service;
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
@@ -96,14 +114,13 @@ sudo fc-cache -fv
 sudo echo -e "Suppression des Fichiers inutile"
 rm -rfv $HOME/YosemiteSanFranciscoFont
 # Prendre en compte le $HOME/$USER/.local/bin en compte dans le $PATH
-if [ ! -f $HOME/.profile ];then
+if [ -z $(cat /etc/profile | grep '$HOME/.local/bin') ];then
 echo "Création du .profile"
-touch $HOME/.profile
-echo 'if [ -d "$HOME/.local/bin" ] ; then' > $HOME/.profile
-echo 'PATH="$HOME/.local/bin:$PATH"' >> $HOME/.profile
-echo "fi" >> $HOME/.profile
-echo 'Fichier .profile - Terminé !'
-source $HOME/.profile
+sudo -S echo 'if [ -d "$HOME/.local/bin" ] ; then' >> /etc/profile
+sudo -S echo 'PATH="$HOME/.local/bin:$PATH"' >> /etc/profile
+sudo -S echo "fi" >> /etc/profile
+echo 'Fichier profile - Terminé !'
+source /etc/profile
 fi
 #sudo echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment
 # Attribue à l'utilisateur le group input (pour les manettes de jeu)
@@ -186,9 +203,22 @@ echo 'StartupNotify=false' >> $XDG_DESKTOP_DIR/ZenIso.desktop
 echo 'Categories=System;' >> $XDG_DESKTOP_DIR/ZenIso.desktop
 
 }
-function INTELGPU(){
-echo -e "==> INTELINSTALL"
-sudo vpm i -y mesa mesa-dri mesa-vulkan-intel linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode
+function I3INSTALLER(){
+# configuration window manager i3
+echo "===> i3"
+cd $WDIR/scripts/
+./08-VOID-i3.sh
+cd $WDIR
+}
+
+function INTELCPU(){
+
+sudo vpm i -y intel-ucode
+sudo xbps-reconfigure --force linux-5.15
+}
+function AMDCPU(){
+sudo vpm i -y linux-firmware-amd
+sudo xbps-reconfigure --force linux-5.15
 }
 function AMDGPU(){
 
@@ -201,6 +231,11 @@ function NVIDIA(){
 echo "===> nvidia INSTALL"
 sudo vpm i -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl
 }
+function INTELGPU(){
+echo -e "==> INTELINSTALL"
+sudo vpm i -y mesa mesa-dri mesa-vulkan-intel linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode
+}
+
 function VIRTIONET(){
 echo "==> Virtio-net : Install"
 if [ ! -f /etc/modules-load.d/virtio.conf ];then
@@ -209,6 +244,17 @@ sudo echo -S "# load virtio-net" > /etc/modules-load.d/virtio.conf
 sudo echo -S "virtio-net" >> /etc/modules-load.d/virtio.conf
 echo "==> Virtio-net : Fichier crée"
 fi
+}
+function STEELSERIES(){
+echo "===> STEELSERIES INSTALL"
+cd $WDIR/scripts/
+./07-VOID-rivalcfg.sh
+cd $WDIR
+}
+function CORSAIR(){
+sudo vpm i -y ckb-next;
+sudo ln -s /etc/sv/ckb-next-daemon /var/service;
+sudo vsv enable ckb-next-daemon && sudo vsv start ckb-next-daemon;
 }
 function T420(){
 
@@ -235,12 +281,54 @@ sudo vpm i -y linux-firmware-broadcom linux-firmware-intel linux-firmware-networ
 sudo vpm i -y tp_smapi-dkms tpacpi-bat
 
 }
-function I3INSTALLER(){
-# configuration window manager i3
-echo "===> i3"
-cd $WDIR/scripts/
-./08-VOID-i3.sh
-cd $WDIR
+
+function VMWAREWSPLY(){
+echo "==> APPS : VMWare Workstation Player 16"
+sudo -S vpm i -y libpcsclite pcsclite
+cd $HOME
+mkdir VMWareInstall
+cd VMWareInstall
+wget https://download3.vmware.com/software/player/file/VMware-Player-16.0.0-16894299.x86_64.bundle?HashKey=d0d1117816424e5e5d9d2b1adb78361f&params=%7B%22sourcefilesize%22%3A%22160.60+MB%22%2C%22dlgcode%22%3A%22b1acfc7b4cdc5c976601b26eec4384a2%22%2C%22languagecode%22%3A%22fr%22%2C%22source%22%3A%22DOWNLOADS%22%2C%22downloadtype%22%3A%22manual%22%2C%22downloaduuid%22%3A%22601eda45-6233-4fbb-acbe-68b3f3eb841e%22%2C%22dlgtype%22%3A%22Product+Binaries%22%2C%22productversion%22%3A%2216.0.0%22%2C%22productfamily%22%3A%22VMware+Workstation+Player%22%7D&AuthKey=1648578131_4251ce7b8b701b45089c37195873cde6
+chmod +x *
+if [ ! -d /etc/init.d/ ];then
+sudo mkdir /etc/init.d/
+fi
+sudo -S ./VMware-Player-16.0.0-16894299.x86_64.bundle
+touch $HOME/.local/bin/vmware-launcher
+echo "#!/bin/bash" > $HOME/.local/bin/vmware-launcher
+echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> $HOME/.local/bin/vmware-launcher
+echo "vmplayer" >> $HOME/.local/bin/vmware-launcher
+touch $HOME/.local/bin/vmware-registration
+echo "#!/bin/bash" > $HOME/.local/bin/vmware-registration
+echo "" >> $HOME/.local/bin/vmware-registration
+echo "" >> $HOME/.local/bin/vmware-registration
+echo "" >> $HOME/.local/bin/vmware-registration
+echo "" >> $HOME/.local/bin/vmware-registration
+}
+function VMWAREWSPRO(){
+echo "==> APPS : VMWare Workstation Pro 16"
+sudo -S vpm i -y libpcsclite pcsclite
+cd $HOME
+mkdir VMWareInstall
+cd VMWareInstall
+wget https://download3.vmware.com/software/WKST-1623-LX-New/VMware-Workstation-Full-16.2.3-19376536.x86_64.bundle
+chmod +x *
+if [ ! -d /etc/init.d/ ];then
+sudo mkdir /etc/init.d/
+fi
+sudo -S ././VMware-Workstation-Full-16.2.3-19376536.x86_64.bundle
+sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher/' /usr/share/applications/vmware-workstation.desktop
+sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr/share/applications/vmware-player.desktop
+}
+function MENUVMWAREWS(){
+vmwareSELECT=$(yad --title="VMWare WorkStation installation" \
+			--width=400 --height=500 \
+			--list --radiolist --separator="" --print-column="2" \
+			--column="CHECK" --column="Version" --column="Description"\
+			true "VMWAREWSPLY" "Install VMWare WorkStation Player 16"\
+			false "VMWAREWSPRO" "Install VMWare WorkStation Pro FULL 16"\
+			)
+$vmwareSELECT
 }
 function VIRTUALBOX(){
 echo "===> VIRTUALBOX INSTALL"
@@ -273,17 +361,6 @@ echo "Flatpak : Installation Discord & Parsec"
 flatpak --user install -y Parsec
 }
 
-function STEELSERIES(){
-echo "===> STEELSERIES INSTALL"
-cd $WDIR/scripts/
-./07-VOID-rivalcfg.sh
-cd $WDIR
-}
-function CORSAIR(){
-sudo vpm i -y ckb-next;
-sudo ln -s /etc/sv/ckb-next-daemon /var/service;
-sudo vsv enable ckb-next-daemon && sudo vsv start ckb-next-daemon;
-}
 function STEAM(){
 echo -e "===> STEAM"
 cd $WDIR/scripts/
@@ -338,6 +415,7 @@ BASE
 GUFW
 NANORC
 FLATPAK
+$cpuDETECT
 $gpu
 WINE
 PROTONUP
@@ -355,6 +433,7 @@ GUFW
 BASE
 NANORC
 FLATPAK
+$cpuDETECT
 $gpu
 XBPSLOADER
 APPSLOADER
@@ -437,10 +516,12 @@ function DETECT(){
 cpuDETECT="Default"
 cputemp=$(lscpu |grep Proc)
 if [ $(echo $cputemp | grep -c AMD) != 0 ]; then
-		cpuDETECT="AMD"
+		cpuDETECT="AMDCPU"
+		echo "CPU DETECT : AMDCPU"
 fi
 if [ $(echo $cputemp | grep -c INTEL) != 0 ]; then
-		cpuDETECT="INTEL"
+		cpuDETECT="INTELCPU"
+		echo "CPU DETECT : INTELCPU"
 fi
 # DETECTION GPU
 if [ $(lspci | grep -c VGA) != 0 ]; then
@@ -475,6 +556,7 @@ yad--info --title="Void-Post-Installer v$version : Installation terminée" \
 function MAIN(){
 DETECT
 BANNER
+echo -e "CPU : $cpuDETECT"
 echo -e "GPU : $gpuDETECT"
 echo -e "==> MAIN MENU START"
 menuCHECK=$(yad --title="Void-Post-Installer" \
@@ -498,7 +580,6 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 			true "XBPS" "filelight" "Affichez les données de vos disques durs !" \
 			true "XBPS" "xfce4-plugins" "Suite de plugin pour personnaliser votre interface xfce" \
 			true "XBPS" "xfce4-screenshooter" "Prendre des captures d'ecran" \
-			false "XBPS" "xfce4-whiskermenu-plugin" "Barre de menu personnalisable" \
 			true "XBPS" "deluge" "Telechargez vos torrent et magnet link" \
 			true "APPS" "ELOGIND" "Fix AZERTY au login " \
 			false "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
@@ -507,6 +588,7 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 			false "APPS" "X250" "Optimisation pour lenovo X250 uniquement" \
 			false "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
 			false "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
+			false "APPS" "MENUVMWAREWS" "VMWARE Workstation Pro / Player 16" \
 			true "APPS" "DISCORD" "Célèbre plateforme de chat vocale" \
 			false "APPS" "PARSEC" "Gaming en streaming remote" \
 			false "APPS" "STEELSERIES" "Reglages periphériques Steel Series (souris)" \
