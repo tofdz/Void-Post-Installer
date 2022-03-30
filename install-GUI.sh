@@ -38,16 +38,34 @@ done
 function SSHKEYTEST(){
 
 # Vérification & Création des clés SSH en ed25519
-SSHDIR=/etc/ssh/
+SSHDIR="$HOME/.ssh/"
 PRIK=id_ed25519
 PUBK=id_ed15519.pub
 echo -e "===> CHECK CLES SSH"
-if [ ! -f $SSHDIR$PRIK ] || [ ! -f $SSHDIR$PUBK ];then
-
-		yes 'Y' | ssh-keygen -t ed25519 -N 'id_ed25519'
-        else
-        echo -e "fichiers deja present"
-fi
+	if [ ! -f $SSHDIR$PRIK ] || [ ! -f $SSHDIR$PUBK ];then
+			# On ouvre une fenetre pour saisir la passphrase		
+			PASSPHRASE=$(yad --entry --width=600 --height=100 \
+							--title="$TITLE $version" \
+							--entry-label="Entrez votre passphrase : " \
+							--entry-text="$KEY")
+			valret=$?
+			case $valret in
+				0)
+				# On génère la clé avec la passphrase
+				echo "Passphrase : $PASSPHRASE"
+				ssh-keygen -t ed25519 -f $SSHDIR$PRIK
+				;;
+				1)
+				echo "EXIT"
+				exit
+				;;
+				255)
+				exit
+				;;
+			esac
+	else
+			echo -e "fichiers deja present"
+	fi
 }
 function ELOGIND(){
 
@@ -88,7 +106,7 @@ echo -e "===> Fonts SanFrancisco"
 cd $HOME
 git clone https://github.com/supermarin/YosemiteSanFranciscoFont
 if [ ! -d $HOME/.fonts ];then
-	sudo mkdir $HOME/.fonts/
+	sudo mkdir -R $HOME/.fonts/
 	echo -e "Repertoire .fonts crée !"
 fi
 sudo pycp -g $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
@@ -96,14 +114,17 @@ sudo fc-cache -fv
 sudo echo -e "Suppression des Fichiers inutile"
 rm -rfv $HOME/YosemiteSanFranciscoFont
 # Prendre en compte le $HOME/$USER/.local/bin en compte dans le $PATH
-if [ ! -f $HOME/.profile ];then
-echo "Création du .profile"
-touch $HOME/.profile
-echo 'if [ -d "$HOME/.local/bin" ] ; then' > $HOME/.profile
-echo 'PATH="$HOME/.local/bin:$PATH"' >> $HOME/.profile
-echo "fi" >> $HOME/.profile
-echo 'Fichier .profile - Terminé !'
-source $HOME/.profile
+if [ -z $(cat /etc/profile|grep '/.local/bin') ];then
+echo "==> /etc/profile : Modification en cours ..."
+sudo -S sh -c "echo 'if [ -d "$HOME/.local/bin" ] ; then' >> /etc/profile"
+sudo -S sh -c "echo 'PATH="$HOME/.local/bin:$PATH"' >> /etc/profile"
+sudo -S sh -c "echo "fi" >> /etc/profile"
+echo 'Fichier profile - Terminé !'
+source /etc/profile
+else
+echo -e "==> /etc/profile : Fichier /etc/profile déjà modifié : "
+cat /etc/profile
+echo -e "==> /etc/profile : TERMINE"
 fi
 #sudo echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment
 # Attribue à l'utilisateur le group input (pour les manettes de jeu)
@@ -195,11 +216,12 @@ cd $WDIR
 }
 
 function INTELCPU(){
-
+echo "===> CPU : INTEL INSTALL"
 sudo vpm i -y intel-ucode
 sudo xbps-reconfigure --force linux-5.15
 }
 function AMDCPU(){
+echo "===> CPU : AMD INSTALL"
 sudo vpm i -y linux-firmware-amd
 sudo xbps-reconfigure --force linux-5.15
 }
@@ -268,6 +290,8 @@ sudo vpm i -y tp_smapi-dkms tpacpi-bat
 function VMWAREWSPLY(){
 echo "==> APPS : VMWare Workstation Player 16"
 sudo -S vpm i -y libpcsclite pcsclite
+sudo -S ln -s /etc/sv/pcscd /var/service
+sudo vsv start pcscd
 cd $HOME
 mkdir VMWareInstall
 cd VMWareInstall
@@ -277,20 +301,21 @@ if [ ! -d /etc/init.d/ ];then
 sudo mkdir /etc/init.d/
 fi
 sudo -S ./VMware-Player-16.0.0-16894299.x86_64.bundle
-touch $HOME/.local/bin/vmware-launcher
-echo "#!/bin/bash" > $HOME/.local/bin/vmware-launcher
-echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> $HOME/.local/bin/vmware-launcher
-echo "vmplayer" >> $HOME/.local/bin/vmware-launcher
-touch $HOME/.local/bin/vmware-registration
-echo "#!/bin/bash" > $HOME/.local/bin/vmware-registration
-echo "" >> $HOME/.local/bin/vmware-registration
-echo "" >> $HOME/.local/bin/vmware-registration
-echo "" >> $HOME/.local/bin/vmware-registration
-echo "" >> $HOME/.local/bin/vmware-registration
+sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr/share/applications/vmware-player.desktop
+cd $HOME/.local/bin/
+touch vmware-launcher-player
+echo "#!/bin/bash" > vmware-launcher-player
+echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> vmware-launcher-player
+echo "vmplayer" >> vmware-launcher-player
+pycp $WDIR/outils/vmware-registration $HOME/.local/bin
+chmod +x $HOME/.local/bin/vmware-registration
+
 }
 function VMWAREWSPRO(){
 echo "==> APPS : VMWare Workstation Pro 16"
 sudo -S vpm i -y libpcsclite pcsclite
+sudo -S ln -s /etc/sv/pcscd /var/service
+sudo vsv start pcscd
 cd $HOME
 mkdir VMWareInstall
 cd VMWareInstall
@@ -300,7 +325,34 @@ if [ ! -d /etc/init.d/ ];then
 sudo mkdir /etc/init.d/
 fi
 sudo -S ././VMware-Workstation-Full-16.2.3-19376536.x86_64.bundle
-
+# EDITION DES RACCOURCIS DESKTOP
+sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher/' /usr/share/applications/vmware-workstation.desktop
+sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr/share/applications/vmware-player.desktop
+# CREATION DES LAUNCHERS DANS $HOME/.local/bin (path)
+# Pour VMPlayer
+cd $HOME/.local/bin/
+touch vmware-launcher vmware-launcher-player
+echo "#!/bin/bash" > vmware-launcher-player
+echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> vmware-launcher-player
+echo "vmplayer" >> vmware-launcher-player
+# Pour Workstation
+echo "#!/bin/bash" > vmware-launcher
+echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> vmware-launcher
+echo "vmware" >> vmware-launcher
+# Outil d'enregistrement de license
+pycp $WDIR/outils/vmware-registration $HOME/.local/bin
+chmod +x $HOME/.local/bin/vmware-registration
+cd $HOME && sudo -S rm -Rf VMWareInstall
+}
+function MENUVMWAREWS(){
+vmwareSELECT=$(yad --title="VMWare WorkStation installation" \
+			--width=400 --height=500 \
+			--list --radiolist --separator="" --print-column="2" \
+			--column="CHECK" --column="Version" --column="Description"\
+			true "VMWAREWSPLY" "Install VMWare WorkStation Player 16"\
+			false "VMWAREWSPRO" "Install VMWare WorkStation Pro FULL 16"\
+			)
+$vmwareSELECT
 }
 function VIRTUALBOX(){
 echo "===> VIRTUALBOX INSTALL"
@@ -355,20 +407,7 @@ function PROTONFLAT(){
 echo "==> Install Proton via Flatpak"
 flatpak --user install com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 }
-function PROTONUP(){
-# INSTALLATION DE PROTONUP
-pip3 install protonup
-REPERTOIRE="$HOME/.local/share/Steam/compatibilitytools.d/"
-# Création du repertoire pour Steam
-if [ ! -d $REPERTOIRE ];then
-sudo mkdir -R $REPERTOIRE
-echo 'Protonup - $REPERTOIRE pour steam créé'
-fi
-# Configuration repertoire steam Proton & install protonGH
-echo 'Configuration & Installation ProtonGH pour steam'
-protonup -d $REPERTOIRE
-protonup -y
-}
+
 function OHMYZSH(){
 
 # Installation de OhmyZsh!
@@ -389,8 +428,9 @@ NANORC
 FLATPAK
 $cpuDETECT
 $gpu
+STEAM
 WINE
-PROTONUP
+PROTONFLAT
 OHMYZSH
 sudo echo "Fin de AUTO-LIGHT"
 MENUFIN
@@ -409,7 +449,7 @@ $cpuDETECT
 $gpu
 XBPSLOADER
 APPSLOADER
-OHMYZSH
+
 MENUFIN
 
 }
@@ -486,14 +526,12 @@ done
 function DETECT(){
 # DETECTION CPU
 cpuDETECT="Default"
-cputemp=$(lscpu |grep Proc)
+cputemp=$(cat /proc/cpuinfo|grep CPU)
 if [ $(echo $cputemp | grep -c AMD) != 0 ]; then
 		cpuDETECT="AMDCPU"
-		echo "CPU DETECT : AMDCPU"
 fi
-if [ $(echo $cputemp | grep -c INTEL) != 0 ]; then
+if [ $(echo $cputemp | grep -c Intel) != 0 ]; then
 		cpuDETECT="INTELCPU"
-		echo "CPU DETECT : INTELCPU"
 fi
 # DETECTION GPU
 if [ $(lspci | grep -c VGA) != 0 ]; then
@@ -526,8 +564,10 @@ yad--info --title="Void-Post-Installer v$version : Installation terminée" \
 				--text="Installée terminée !\nBonne journée !\nTofdz" 
 }
 function MAIN(){
-DETECT
+
 BANNER
+
+DETECT
 echo -e "CPU : $cpuDETECT"
 echo -e "GPU : $gpuDETECT"
 echo -e "==> MAIN MENU START"
@@ -560,8 +600,7 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 			false "APPS" "X250" "Optimisation pour lenovo X250 uniquement" \
 			false "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
 			false "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
-			false "APPS" "VMWAREWSPLY" "VMWare Workstation Player 16" \
-			false "APPS" "VMWAREWSPRO" "VMWARE Workstation Pro 16" \
+			false "APPS" "MENUVMWAREWS" "VMWARE Workstation Pro / Player 16" \
 			true "APPS" "DISCORD" "Célèbre plateforme de chat vocale" \
 			false "APPS" "PARSEC" "Gaming en streaming remote" \
 			false "APPS" "STEELSERIES" "Reglages periphériques Steel Series (souris)" \
@@ -570,7 +609,6 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 			false "APPS" "GOG" "Installation de Gog Galaxy (Minigalaxy)" \
 			true "APPS" "WINE" "Pouvoir installer des application windows sur voidlinux" \
 			true "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
-			true "APPS" "PROTONUP" "Version améliorée de Proton pour steam & wine" \
 			true "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" \
 			--button="Install Minimale:1" --button="Install:0" \
 			)
