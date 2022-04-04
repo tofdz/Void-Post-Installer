@@ -3,7 +3,7 @@
 # LAUNCHER : install.sh
 TITLE="Void Post Installer"
 version="0.1.8"
-# Date : 16/11/2020 maj 04/04/2022
+# Date : 16/11/2020 maj 05/04/2022
 # by Tofdz
 # assisted by :
 #
@@ -198,8 +198,8 @@ function VIRTIONET(){
 echo "==> Virtio-net : Install"
 if [ ! -f /etc/modules-load.d/virtio.conf ];then
 sudo -S touch /etc/modules-load.d/virtio.conf
-sudo echo -S "# load virtio-net" > /etc/modules-load.d/virtio.conf
-sudo echo -S "virtio-net" >> /etc/modules-load.d/virtio.conf
+sudo -S sh -c 'echo "# load virtio-net" > /etc/modules-load.d/virtio.conf'
+sudo -S sh -c 'echo "virtio-net" >> /etc/modules-load.d/virtio.conf'
 echo "==> Virtio-net : Fichier crée"
 fi
 }
@@ -567,8 +567,9 @@ done
 
 function DETECT(){
 # DETECTION CPU
-cpuDETECT="Default"
+cpuDETECT="No Detect"
 cputemp=$(cat /proc/cpuinfo)
+vmDETECT="No Detect"
 if [ $(echo $cputemp | grep -c AMD) != 0 ]; then
 		cpuDETECT="AMDCPU"
 fi
@@ -588,6 +589,12 @@ if [ $(lspci | grep -c VGA) != 0 ]; then
 		gpuDETECT="INTELGPU"
 	fi
 fi
+# DETECTION VM
+
+if [ $(lspci | grep -c QEMU) != 0 ]; then
+	echo "==> VM detectée : install VIRTIONET"
+	VIRTIONET
+fi 
 }
 function BANNER(){
 softNAME="Void-Post-Installer"
@@ -636,7 +643,6 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 			true "XBPS" "deluge" "Telechargez vos torrent et magnet link" \
 			false "APPS" "ELOGIND" "Fix AZERTY au login " \
 			false "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
-			false "APPS" "VIRTIONET" "Modules kernel Virtio-net activé" \
 			false "APPS" "T420" "Optimisation pour lenovo T420 uniquement" \
 			false "APPS" "X250" "Optimisation pour lenovo X250 uniquement" \
 			false "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
@@ -673,3 +679,4 @@ echo -e menuCHECK
 }
 
 MAIN
+
