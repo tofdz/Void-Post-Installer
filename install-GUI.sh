@@ -163,6 +163,7 @@ echo "==> Modification /etc/environment QT_QPA_PLATEFORMTHEME=qt5ct"
 sudo -S sh -c "echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment"
 else
 echo "PASS ==> /etc/environment déjà modifié"
+fi
 # Attribue à l'utilisateur le group input (pour les manettes de jeu)
 sudo usermod -a -G input $USER
 echo "$(groups)"
