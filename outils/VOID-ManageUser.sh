@@ -8,8 +8,9 @@ echo "#  VOID-ManageUser  #"
 echo "#===================#"
 # MODE ADMIN
 # VARIABLES
-
-PASS=$(zenity --password)				# MOT DE PASSE SESSION SUDO AU DEMARRAGE
+PASS=$(yad --entry --hide-text --text="$TITLE $version")
+echo $PASS|sudo -S clear
+										# MOT DE PASSE SESSION SUDO AU DEMARRAGE
 WDIR=$(pwd)								# SOURCE REPERTOIRE DE TRAVAIL ACTUEL 
 source $HOME/.config/user-dirs.dirs		# SOURCE LOCAL FILES
 LISTUSER=$(mktemp)						# FICHIER TEMPORAIRE
@@ -28,16 +29,28 @@ tab[4]=/Musique
 tab[5]=/Public
 tab[6]=/Téléchargements
 tab[7]=/Vidéos
+tab[8]=/GAMING
 i=0
 
 echo "==> CREATEUSER"
-sudo useradd -m -s /bin/zsh -G wheel,floppy,audio,video,cdrom,optical,kvm,input,xbuilder -c $SESSION $UTILISATEUR
-echo "$UTILISATEUR:$PASSWORD1" | sudo chpasswd -e
+sudo -S useradd -m -s /bin/zsh -G wheel,floppy,audio,video,cdrom,optical,kvm,input,xbuilder -c $SESSION $UTILISATEUR 
+
+sudo -S passwd $UTILISATEUR << _EOT_
+$PASSWORD1
+$PASSWORD2
+_EOT_
+
+
+#sh -c "echo "$UTILISATEUR:$PASSWORD1" | chpasswd -e"
+#sudo -S echo $PASSWORD1 | passwd --stdin $UTILISATEUR
+
+
 while ((${#tab[*]}!=i)) ; do
 	sudo mkdir /home/$UTILISATEUR${tab[$i]}
 	echo -e "Création de /home/$UTILISATEUR${tab[$i]}"
 	i=$((i+1))
 done
+sudo -S chown -R $UTILISATEUR:$UTILISATEUR /home/$UTILISATEUR
 MENUCHOIX
 }					# CREATION NOUVEL UTILISATEUR + HOME/DIR
 function DELETEUSER(){
@@ -56,15 +69,16 @@ function WARNINGCREATION(){
 echo "==> WARNINGCREATION"
 echo "Utilisateur : $UTILISATEUR Nom Complet : $SESSION" 
 
-zenity --question --title="Création utilisateur" \
-	   --width 400 --height 100 \
-	   --text="Attention !\nVous etes sur le point de créer l'utilisateur $UTILISATEUR ,\nAinsi que son home directory : /home/$UTILISATEUR\n\nVoulez vous continuer ?"
+yad --title="Création utilisateur" --width 400 --height 100 \
+	--text="Attention !\nVous etes sur le point de créer l'utilisateur $UTILISATEUR ,\nAinsi que son home directory : /home/$UTILISATEUR\n\nVoulez vous continuer ?" \
+	--button="ANNULATION:1" --button="CREATION:0" \
+
 case $? in
 		0)
 		CREATEUSER
 		;;
 		1)
-		MENUCREATION
+		exit
 		;;
 		255)
 		exit
@@ -72,24 +86,19 @@ esac
 }
 function WARNINGDELETE(){
 echo "==> WARNINGDELETE"
-zenity --question\
-				 --title="Suppression utilisateur" \
-	   			 --width 400 --height 280 \
-				 --text "Vous allez procéder à la suppression définitive de(s) utilisateur(s)\n$choix\n\n \
-				 ainsi que de toutes les données contenues dans \n\n \
-				 														\
-				 CETTE SUPPRESSION EST DEFINITIVE !\n \
-				 Voulez vous continuer ?"
 
+valret=$(yad --title="Suppression utilisateur" --width 400 --height 100 \
+	--text="Vous allez procéder à la suppression définitive de(s) utilisateur(s)\n$choix\n\nainsi que de toutes les données contenues dans \n\nCETTE SUPPRESSION EST DEFINITIVE !\nVoulez vous continuer ?" \
+	--button="ANNULATION:1" --button="CREATION:0")
 case $? in
-		0)
-		DELETEUSER
-		;;
-		1)
-		MENUEFFACER
-		;;
-		255)
-		exit
+   0)
+   DELETEUSER
+   ;;
+   1)
+   exit
+   ;;
+   255)
+   exit
 esac
 
 
@@ -99,14 +108,13 @@ esac
 function MENUCREATION(){
 echo "==> MENUCREATION"
 
-output=$(zenity --forms --separator="|" --title="Creation utilisateur" \
+output=$(yad --form --separator="|" --title="Creation utilisateur" \
 	   --width 400 --height 160 \
 	   --text="Ajout nouvel utilisateur :" \
-   	   --add-entry="Utilisateur (ex : voiduser)"\
-   	   --add-entry="Nom de session affiché (ex : Void User)" \
-	   --add-password="Mot de passe" \
-	   --add-password="Confirmation Mot de passe" )
-	   
+   	   --field="Utilisateur (ex : voiduser):CE" \
+   	   --field="Nom de session affiché (ex : Void User):CE" \
+	   --field="Mot de passe:H" \
+	   --field="Confirmation Mot de passe:H")
 UTILISATEUR=$(echo "$output" | cut -d "|" -f1 )
 SESSION=$(echo "$output" | cut -d "|" -f2 )
 PASSWORD1=$(echo "$output" | cut -d "|" -f3 )
@@ -116,7 +124,7 @@ echo "==> Utilisateur $UTILISATEUR Nom Complet : $SESSION"
 case $? in
   0)
   if [ $PASSWORD1 != $PASSWORD2 ];then
-  zenity --warning --text="Mot de passe différents, veuillez entrer les memes mots de passe"
+  yad --text="Mot de passe différents, veuillez entrer les memes mots de passe"
   echo "=> PASSWORD1 $PASSWORD1"
   echo "=> PASSWORD2 $PASSWORD2"
   echo "==> ANNULATION CREATION DU COMPTE $SESSION"
@@ -154,7 +162,7 @@ cat $LISTUSER
 echo "===="
 
 # MENU LISTE UTILISATEURS
-choix=$(zenity --list\
+choix=$(yad --list --separator="" \
 			 --title "VOID-ManageUser" \
 			 --text "Choisissez l'utilisateur à supprimer :" \
 			 --width 500 --height 300 \
@@ -176,22 +184,23 @@ esac
 function MENUCHOIX(){
 
 echo "==> MENU CHOIX"
-choix=$(zenity --list --title "VOID-ManageUSer" \
+choix=$(yad --list --title "VOID-ManageUSer" \
 	   --text "Choix entre :\n\nCREATION\t\tCreation Facile d'un utilisateur\n\nEFFACER\t\tSuppression d'un compte utilisateur \n\t\t\t\t(supprime aussi le /HOME/USER !!!!)\n" \
-	   --width 400 --height 300 \
-	   --column "Mode" --column "Description" \
+	   --width="400" --height="300" --print-column="1" --separator="" \
+	   --column="Mode" --column="Description" \
 	   CREATION "Création compte utilisateur" \
-	   EFFACER "Suppression compte utilisateur" )
-
-case $? in
-  0)
-  if [ $choix = "CREATION" ];then
+	   EFFACER "Suppression compte utilisateur")
+echo "Choix : $choix"
+echo "valeur retourné : $?"
+case $choix in
+  CREATION|0)
+  echo "CREA"
   MENUCREATION
   #VERIFICATION
-  fi
-  if [ $choix = "EFFACER" ];then
+  ;;  
+  EFFACER|0)
+  echo "EFFA"
   MENUEFFACER
-  fi
   ;;
   1)
   # QUITTER
@@ -203,7 +212,16 @@ case $? in
 esac
 }					# MENU DE SELECTION CREATION / EFFACER
 
-echo $PASS|sudo -S echo "==> Start"
-zenity --info --title "VOID-ManageUser" --width 350 --height 100 \
-		--text "Bonjour $USER !\n\nCet utilitaire permet l'administration\ndes comptes utilisateurs\nATTENTION MODIFICATION DEFINITIVE !!!!"
-MENUCHOIX
+
+valret=$(yad --title "VOID-ManageUser" --width 350 --height 100 \
+		--text "Bonjour $USER !\n\nCet utilitaire permet l'administration\ndes comptes utilisateurs\nATTENTION MODIFICATION DEFINITIVE !!!!")
+case $? in
+   0)
+   MENUCHOIX
+   ;;
+   1)
+   exit
+   ;;
+   255)
+   exit
+esac

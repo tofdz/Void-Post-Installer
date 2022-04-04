@@ -10,7 +10,7 @@ echo "==> ACTIVATION"
 # On active la license directement depuis vmware
 echo "ACTIVATION DE LA LICENSE"
 echo "License : $LICENSE"
-#sudo -S /usr/lib/vmware/bin/vmware-vmx-debug --new-sn $LICENSE
+sudo -S /usr/lib/vmware/bin/vmware-vmx-debug --new-sn $LICENSE
 echo "LICENSE ACTIVEE"
 FINISH
 }
