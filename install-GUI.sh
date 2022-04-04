@@ -85,21 +85,29 @@ sudo xbps-install -Syuv vpm vsv;
 sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
 
 # Kernel 
-echo "==> Kernel : Update"
+echo -e "===> BASE INSTALL : Kernel : Update"
 sudo vpm i -y linux linux-headers
 echo "==> Kernel : Purge"
 sudo -S vkpurge rm all
 echo "==> Update Grub"
 sudo -s update-grub
 
+# DRIVERS CPU/GPU
+echo -e "===> BASE INSTALL : CPU/GPU"
+$cpuDETECT
+$gpuDETECT
+
 # Base Apps
 sudo vpm i -y git-all nano zsh curl wget python3-pip testdisk octoxbps cpufrequtils notepadqq mc htop ytop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
 sudo ln -s /etc/sv/socklog-unix /var/service;sudo ln -s /etc/sv/nanoklogd /var/service;
+
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
 sudo vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
 sudo rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
+
 # INSTALLATION Wallpaper
 pycp -g $WDIR/wallpapers/* $XDG_PICTURES_DIR
+
 # Installation fonts SanFrancisco
 echo -e "===> Fonts SanFrancisco"
 cd $HOME
@@ -112,6 +120,7 @@ sudo pycp -g $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
 sudo fc-cache -fv
 sudo echo -e "Suppression des Fichiers inutile"
 rm -rfv $HOME/YosemiteSanFranciscoFont
+
 # Vérification & création du repertoire .local/bin dans le $HOME
 if [ ! -d $HOME/.local/bin ]; then
 	mkdir -R $HOME/.local/bin
@@ -119,6 +128,7 @@ if [ ! -d $HOME/.local/bin ]; then
 	else
 	echo "Repertoire $HOME/.local/bin déjà présent"
 fi
+
 # Prendre en compte le $HOME/$USER/.local/bin en compte dans le $PATH
 if [ -z $(cat /etc/profile|grep '/.local/bin') ]; then
 	echo "==> /etc/profile : Modification en cours ..."
@@ -139,12 +149,97 @@ else
 	echo -e "==> /etc/profile : TERMINE"
 fi
 
+# VERIFICATION /etc/security/limits.conf
+if [ -z $(cat /etc/security/limits.conf '1048576') ]; then
+	echo "==> Modification /etc/security/limits.conf"
+	sudo -S sh -c "echo '*               hard    nofile          1048576' >> /etc/security/limits.conf"
+else
+	echo "==> /etc/security/limits.conf déjà modifié"
+fi
+
 # Modification /etc/environment
+if [ -z $(cat /etc/environment 'qt5ct')]; then
+echo "==> Modification /etc/environment QT_QPA_PLATEFORMTHEME=qt5ct"
 sudo -S sh -c "echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment"
+else
+echo "PASS ==> /etc/environment déjà modifié"
 # Attribue à l'utilisateur le group input (pour les manettes de jeu)
 sudo usermod -a -G input $USER
 echo "$(groups)"
 }
+
+function INTELCPU(){
+echo "===> CPU : INTEL INSTALL"
+sudo vpm i -y intel-ucode
+sudo xbps-reconfigure --force linux-5.15
+}
+function AMDCPU(){
+echo "===> CPU : AMD INSTALL"
+sudo vpm i -y linux-firmware-amd
+sudo xbps-reconfigure --force linux-5.15
+}
+function AMDGPU(){
+
+echo "===> AMD INSTALL"
+sudo vpm i -y mesa mesa-dri
+
+}
+function NVIDIA(){
+
+echo "===> nvidia INSTALL"
+sudo vpm i -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl
+}
+function INTELGPU(){
+echo -e "==> INTELINSTALL"
+sudo vpm i -y mesa mesa-dri mesa-vulkan-intel linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode
+}
+
+function VIRTIONET(){
+echo "==> Virtio-net : Install"
+if [ ! -f /etc/modules-load.d/virtio.conf ];then
+sudo -S touch /etc/modules-load.d/virtio.conf
+sudo echo -S "# load virtio-net" > /etc/modules-load.d/virtio.conf
+sudo echo -S "virtio-net" >> /etc/modules-load.d/virtio.conf
+echo "==> Virtio-net : Fichier crée"
+fi
+}
+function STEELSERIES(){
+echo "===> STEELSERIES INSTALL"
+cd $WDIR/scripts/
+./07-VOID-rivalcfg.sh
+cd $WDIR
+}
+function CORSAIR(){
+sudo vpm i -y ckb-next;
+sudo ln -s /etc/sv/ckb-next-daemon /var/service;
+sudo vsv enable ckb-next-daemon && sudo vsv start ckb-next-daemon;
+}
+function T420(){
+
+echo "===> T420 addons"
+sudo vpm i -y tlp tlp-rdw tp_smapi-dkms tpacpi-bat mesa-dri linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel libva-intel-driver
+sudo chmod +x $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh;sudo pycp $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh /etc/acpi
+sudo vsv restart acpid
+}
+function X250(){
+
+echo "===> X250 addons"
+if [ -n $(sudo grep 'intel' /etc/default/grub) ];then
+	echo "Modification du fichier /etc/default/grub"
+	sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4" intel_iommu=igfx_off/' /etc/default/grub
+	cat /etc/default/grub
+	echo "Mise à jour de Grub"
+	sudo update-grub
+else
+	echo "Fichier déjà modifié"
+fi
+sudo chmod +x $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh;sudo pycp $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh /etc/acpi
+sudo vsv restart acpid;
+sudo vpm i -y linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode mesa-dri mesa-vulkan-intel
+sudo vpm i -y tp_smapi-dkms tpacpi-bat
+
+}
+
 function NANORC(){
 # Configuration highlighting pour nano (met le code en couleur)
 echo "===> NANO HIGHLIGHTING"
@@ -228,77 +323,13 @@ cd $WDIR/scripts/
 ./08-VOID-i3.sh
 cd $WDIR
 }
+function OHMYZSH(){
 
-function INTELCPU(){
-echo "===> CPU : INTEL INSTALL"
-sudo vpm i -y intel-ucode
-sudo xbps-reconfigure --force linux-5.15
-}
-function AMDCPU(){
-echo "===> CPU : AMD INSTALL"
-sudo vpm i -y linux-firmware-amd
-sudo xbps-reconfigure --force linux-5.15
-}
-function AMDGPU(){
-
-echo "===> AMD INSTALL"
-sudo vpm i -y mesa mesa-dri
-
-}
-function NVIDIA(){
-
-echo "===> nvidia INSTALL"
-sudo vpm i -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl
-}
-function INTELGPU(){
-echo -e "==> INTELINSTALL"
-sudo vpm i -y mesa mesa-dri mesa-vulkan-intel linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode
-}
-
-function VIRTIONET(){
-echo "==> Virtio-net : Install"
-if [ ! -f /etc/modules-load.d/virtio.conf ];then
-sudo -S touch /etc/modules-load.d/virtio.conf
-sudo echo -S "# load virtio-net" > /etc/modules-load.d/virtio.conf
-sudo echo -S "virtio-net" >> /etc/modules-load.d/virtio.conf
-echo "==> Virtio-net : Fichier crée"
-fi
-}
-function STEELSERIES(){
-echo "===> STEELSERIES INSTALL"
-cd $WDIR/scripts/
-./07-VOID-rivalcfg.sh
-cd $WDIR
-}
-function CORSAIR(){
-sudo vpm i -y ckb-next;
-sudo ln -s /etc/sv/ckb-next-daemon /var/service;
-sudo vsv enable ckb-next-daemon && sudo vsv start ckb-next-daemon;
-}
-function T420(){
-
-echo "===> T420 addons"
-sudo vpm i -y tlp tlp-rdw tp_smapi-dkms tpacpi-bat mesa-dri linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel libva-intel-driver
-sudo chmod +x $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh;sudo pycp $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh /etc/acpi
-sudo vsv restart acpid
-}
-function X250(){
-
-echo "===> X250 addons"
-if [ -n $(sudo grep 'intel' /etc/default/grub) ];then
-	echo "Modification du fichier /etc/default/grub"
-	sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4" intel_iommu=igfx_off/' /etc/default/grub
-	cat /etc/default/grub
-	echo "Mise à jour de Grub"
-	sudo update-grub
-else
-	echo "Fichier déjà modifié"
-fi
-sudo chmod +x $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh;sudo pycp $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh /etc/acpi
-sudo vsv restart acpid;
-sudo vpm i -y linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode mesa-dri mesa-vulkan-intel
-sudo vpm i -y tp_smapi-dkms tpacpi-bat
-
+# Installation de OhmyZsh!
+echo "===> OHMYZSH INSTALL"
+sudo vpm i -y zsh
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+exit
 }
 
 function VMWAREWSPLY(){
@@ -396,9 +427,8 @@ sudo -S xbps-install --repository=. discord
 }
 function PARSEC(){
 echo "Flatpak : Installation Parsec"
-flatpak install -y Parsec
+flatpak install --user -y Parsec
 }
-
 function STEAM(){
 echo -e "===> STEAM"
 cd $WDIR/scripts/
@@ -418,17 +448,29 @@ cd $WDIR/scripts/
 cd $WDIR
 }
 function PROTONFLAT(){
+# Installation ProtonGE pour Steam (steam flatpak version)
+
 echo "==> Install Proton via Flatpak"
-flatpak install com.valvesoftware.Steam.CompatibilityTool.Proton-GE
+flatpak install --user com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 }
+function PROTONUP(){
+# Installation ProtonUp : ProtonGE pour Steam (steam xbps version)
+protondir="$HOME/.local/share/Steam/Compatibilitytools.d"
+cd $HOME
+pip3 install protonup
+if [ ! -d $protondir ]; then
+	mkdir -R $protondir
+	echo "PROTONUP - REPERTOIRE $protondir créé"
+fi
 
-function OHMYZSH(){
+if [ -d $protondir ]; then
+	protonup -d $protondir
+	protonup -o $XDG_DOWNLOAD_DIR
+	protonup -y
+else
+	echo "PROTONUP - ERREUR : REPERTOIRE $HOME/.local/share/Steam/Compatibilitytools.d"
+fi
 
-# Installation de OhmyZsh!
-echo "===> OHMYZSH INSTALL"
-sudo vpm i -y zsh
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-exit
 }
 
 function AUTOINSTALL(){
@@ -440,8 +482,6 @@ BASE
 GUFW
 NANORC
 FLATPAK
-$cpuDETECT
-$gpu
 STEAM
 WINE
 PROTONFLAT
@@ -452,30 +492,18 @@ MENUFIN
 function CUSTOMINSTALL(){
 
 echo -e "==>   CUSTOMINSTALL"
-MENUGPU
+
 MENUPARSER
 SSHKEYTEST
 GUFW
 BASE
 NANORC
 FLATPAK
-$cpuDETECT
-$gpu
 XBPSLOADER
 APPSLOADER
 
 MENUFIN
 
-}
-function MENUGPU(){
-gpu=$(yad --title="Void-Post-Installer" \
-			--width=400 --height=500 \
-			--list --radiolist --separator="" --print-column="2" \
-			--column="CHECK" --column="GPU" \
-			true "NVIDIA" \
-			false "AMDGPU" \
-			false "INTELGPU" \
-			)
 }
 
 function MENUPARSER(){
@@ -540,7 +568,7 @@ done
 function DETECT(){
 # DETECTION CPU
 cpuDETECT="Default"
-cputemp=$(cat /proc/cpuinfo|grep CPU)
+cputemp=$(cat /proc/cpuinfo)
 if [ $(echo $cputemp | grep -c AMD) != 0 ]; then
 		cpuDETECT="AMDCPU"
 fi
@@ -580,10 +608,11 @@ yad --info --title="Void-Post-Installer v$version : Installation terminée" \
 function MAIN(){
 
 BANNER
-
 DETECT
+
 echo -e "CPU : $cpuDETECT"
 echo -e "GPU : $gpuDETECT"
+
 echo -e "==> MAIN MENU START"
 menuCHECK=$(yad --title="Void-Post-Installer" \
 			--width=750 --height=940 \
@@ -591,23 +620,21 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 			--text="Bienvenue dans la post installation de VoidLinux" \
 			--list --checklist --column=" " --column="TYPE" --column=" Nom " --column="Description : " \
 			--separator="|" --hide-column=2 \
-			false "XBPS" "cifs-utils" "Outil pour connexion SMB" \
-			false "XBPS" "smbclient" "Outil pour connexion SMB (suite)" \
-			true "XBPS" "thunderbird" "Client pour les Mails" \
-			true "XBPS" "birdtray" "Garder Thunderbird en icone dans la barre des taches" \
-			true "XBPS" "minitube" "Youtube player sans pub" \
-			false "XBPS" "arduino" "IDE de programmation pour arduino" \
+			true "XBPS" "cifs-utils" "Outil pour connexion SMB" \
+			true "XBPS" "smbclient" "Outil pour connexion SMB (suite)" \
+			false "XBPS" "thunderbird" "Client pour les Mails" \
+			false "XBPS" "birdtray" "Garder Thunderbird en icone dans la barre des taches" \
 			true "XBPS" "gufw" "GUI pour le firewall" \
 			false "XBPS" "zenmap" "Testeur de réseau" \
-			true "XBPS" "vlc" "lecteur multimedia vlc" \
-			true "XBPS" "gimp" "logiciel d'edition d'image" \
+			false "XBPS" "vlc" "lecteur multimedia vlc" \
+			false "XBPS" "gimp" "logiciel d'edition d'image" \
 			false "XBPS" "blender" "logiciel de conception 3D" \
-			true "XBPS" "ytmdl" "telechargez vos playlists youtube" \
+			false "XBPS" "ytmdl" "telechargez vos playlists youtube" \
 			true "XBPS" "filelight" "Affichez les données de vos disques durs !" \
 			true "XBPS" "xfce4-plugins" "Suite de plugin pour personnaliser votre interface xfce" \
 			true "XBPS" "xfce4-screenshooter" "Prendre des captures d'ecran" \
 			true "XBPS" "deluge" "Telechargez vos torrent et magnet link" \
-			true "APPS" "ELOGIND" "Fix AZERTY au login " \
+			false "APPS" "ELOGIND" "Fix AZERTY au login " \
 			false "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
 			false "APPS" "VIRTIONET" "Modules kernel Virtio-net activé" \
 			false "APPS" "T420" "Optimisation pour lenovo T420 uniquement" \
@@ -623,6 +650,7 @@ menuCHECK=$(yad --title="Void-Post-Installer" \
 			false "APPS" "GOG" "Installation de Gog Galaxy (Minigalaxy)" \
 			true "APPS" "WINE" "Pouvoir installer des application windows sur voidlinux" \
 			true "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
+			true "APPS" "PROTONUP" "Version de Proton-GE pour steam xbps" \
 			true "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" \
 			--button="Install Minimale:1" --button="Install:0" \
 			)
