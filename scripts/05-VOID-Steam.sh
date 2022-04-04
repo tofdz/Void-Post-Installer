@@ -4,7 +4,7 @@ echo "==> Install Steam"
 sudo vpm i -y libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit
 
 # Installation de Steam via flatpak (EldenRing EAC actif)
-flatpak install com.valvesoftware.Steam org.freedesktop.Platform.VulkanLayer.MangoHud
+flatpak install --user com.valvesoftware.Steam org.freedesktop.Platform.VulkanLayer.MangoHud
 
 # Verification modification sur sysctl.conf
 
