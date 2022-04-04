@@ -2,8 +2,8 @@
 # NAME : Void-Post-Installer
 # LAUNCHER : install.sh
 TITLE="Void Post Installer"
-version="0.1.7"
-# Date : 16/11/2020 maj 17/03/2022
+version="0.1.8"
+# Date : 16/11/2020 maj 04/04/2022
 # by Tofdz
 # assisted by :
 #
@@ -53,7 +53,7 @@ echo -e "===> CHECK CLES SSH"
 				0)
 				# On génère la clé avec la passphrase
 				echo "Passphrase : $PASSPHRASE"
-				ssh-keygen -t ed25519 -f $SSHDIR$PRIK
+				ssh-keygen -t ed25519 -f $SSHDIR$PRIK -P $PASSPHRASE
 				;;
 				1)
 				echo "EXIT"
@@ -93,8 +93,7 @@ echo "==> Update Grub"
 sudo -s update-grub
 
 # Base Apps
-sudo vpm i -y git-all nano zsh curl wget python3-pip testdisk octoxbps notepadqq mc htop ytop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
-
+sudo vpm i -y git-all nano zsh curl wget python3-pip testdisk octoxbps cpufrequtils notepadqq mc htop ytop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
 sudo ln -s /etc/sv/socklog-unix /var/service;sudo ln -s /etc/sv/nanoklogd /var/service;
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
 sudo vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
@@ -113,20 +112,35 @@ sudo pycp -g $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
 sudo fc-cache -fv
 sudo echo -e "Suppression des Fichiers inutile"
 rm -rfv $HOME/YosemiteSanFranciscoFont
-# Prendre en compte le $HOME/$USER/.local/bin en compte dans le $PATH
-if [ -z $(cat /etc/profile|grep '/.local/bin') ];then
-echo "==> /etc/profile : Modification en cours ..."
-sudo -S sh -c "echo 'if [ -d "$HOME/.local/bin" ] ; then' >> /etc/profile"
-sudo -S sh -c "echo 'PATH="$HOME/.local/bin:$PATH"' >> /etc/profile"
-sudo -S sh -c "echo "fi" >> /etc/profile"
-echo 'Fichier profile - Terminé !'
-source /etc/profile
-else
-echo -e "==> /etc/profile : Fichier /etc/profile déjà modifié : "
-cat /etc/profile
-echo -e "==> /etc/profile : TERMINE"
+# Vérification & création du repertoire .local/bin dans le $HOME
+if [ ! -d $HOME/.local/bin ]; then
+	mkdir -R $HOME/.local/bin
+	echo "Repertoire $HOME/.local/bin crée"
+	else
+	echo "Repertoire $HOME/.local/bin déjà présent"
 fi
-#sudo echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment
+# Prendre en compte le $HOME/$USER/.local/bin en compte dans le $PATH
+if [ -z $(cat /etc/profile|grep '/.local/bin') ]; then
+	echo "==> /etc/profile : Modification en cours ..."
+	sudo -S sh -c "echo 'if [ -d "$HOME/.local/bin" ] ; then' >> /etc/profile"
+	sudo -S sh -c "echo 'PATH=$HOME/.local/bin:$PATH' >> /etc/profile"
+	sudo -S sh -c "echo 'fi' >> /etc/profile"
+	sudo -S sh -c "echo 'if [ -d /var/lib/flatpak/exports/share ];then' >> /etc/profile"
+	sudo -S sh -c "echo 'PATH=/var/lib/flatpak/exports/share:$PATH' >> /etc/profile"
+	sudo -S sh -c "echo 'fi' >> /etc/profile"
+	sudo -S sh -c "echo 'if [ -d $HOME/.local/share/flatpak/exports/share ];then'  >> /etc/profile"
+	sudo -S sh -c "echo 'PATH=$HOME/.local/share/flatpak/exports/share:$PATH' >> /etc/profile"
+	sudo -S sh -c "echo 'fi' >> /etc/profile"
+	echo 'Fichier profile - Terminé !'
+	source /etc/profile
+else
+	echo -e "==> /etc/profile : Fichier /etc/profile déjà modifié : "
+	cat /etc/profile
+	echo -e "==> /etc/profile : TERMINE"
+fi
+
+# Modification /etc/environment
+sudo -S sh -c "echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment"
 # Attribue à l'utilisateur le group input (pour les manettes de jeu)
 sudo usermod -a -G input $USER
 echo "$(groups)"
@@ -381,8 +395,8 @@ cd hostdir/binpkgs/nonfree
 sudo -S xbps-install --repository=. discord
 }
 function PARSEC(){
-echo "Flatpak : Installation Discord & Parsec"
-flatpak --user install -y Parsec
+echo "Flatpak : Installation Parsec"
+flatpak install -y Parsec
 }
 
 function STEAM(){
@@ -405,7 +419,7 @@ cd $WDIR
 }
 function PROTONFLAT(){
 echo "==> Install Proton via Flatpak"
-flatpak --user install com.valvesoftware.Steam.CompatibilityTool.Proton-GE
+flatpak install com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 }
 
 function OHMYZSH(){
@@ -499,7 +513,7 @@ done < TMP01
 echo -e "customXBPS : ${customXBPS[@]}"
 echo -e "customAPPS : ${customAPP[@]}"
 
-rm TMP01 TMP02 TMP03 TMP04
+rm TMP0*
 }
 function CHECKFLATPAK(){
 FLATPAK
@@ -560,7 +574,7 @@ echo -e "######"
 
 function MENUFIN(){
 
-yad--info --title="Void-Post-Installer v$version : Installation terminée" \
+yad --info --title="Void-Post-Installer v$version : Installation terminée" \
 				--text="Installée terminée !\nBonne journée !\nTofdz" 
 }
 function MAIN(){
