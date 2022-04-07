@@ -2,19 +2,27 @@
 # NAME : Void-Post-Installer
 # LAUNCHER : install.sh
 TITLE="Void Post Installer"
-version="0.1.8"
-# Date : 16/11/2020 maj 05/04/2022
+version="0.2.1"
+# Date : 16/11/2020 maj 07/04/2022
 # by Tofdz
 # assisted by :
 #
 # DrNeKoSan : crash test !
 # Odile     : Les cafés !
 # Celine    : Les petits pains !!
-PASS=$(yad --entry --hide-text --text="$TITLE $version")
-echo $PASS|sudo -S clear
+
 WDIR=$(pwd)
 chmod +x $WDIR/scripts/*
 source ~/.config/user-dirs.dirs
+KEY="12345"
+
+res1=$(mktemp --tmpdir iface1.XXXXXXXX)
+res2=$(mktemp --tmpdir iface1.XXXXXXXX)
+res3=$(mktemp --tmpdir iface1.XXXXXXXX)
+TMP01=$(mktemp --tmpdir iface1.XXXXXXXX)
+TMP02=$(mktemp --tmpdir iface1.XXXXXXXX)
+TMP03=$(mktemp --tmpdir iface1.XXXXXXXX)
+TMP04=$(mktemp --tmpdir iface1.XXXXXXXX)
 
 function NET(){
 echo -e "===> NET"
@@ -36,24 +44,27 @@ while ((${#ip[*]}!=$i)) ; do
 done
 }
 function SSHKEYTEST(){
-
-# Vérification & Création des clés SSH en ed25519
 SSHDIR="$HOME/.ssh/"
-PRIK=id_ed25519
-PUBK=id_ed15519.pub
-echo -e "===> CHECK CLES SSH"
-	if [ ! -f $SSHDIR$PRIK ] || [ ! -f $SSHDIR$PUBK ];then
+PRIK="id_ed25519"
+echo -e "[ SSH ] ==> CHECK CLES SSH"
+if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
 			# On ouvre une fenetre pour saisir la passphrase		
-			PASSPHRASE=$(yad --entry --width=600 --height=100 \
-							--title="$TITLE $version" \
-							--entry-label="Entrez votre passphrase : " \
-							--entry-text="$KEY")
+			PASSPHRASE=$(yad --entry --width="800" --height="100" \
+							--title="$TITLE $version" --text="Vous n'avez pas généré de clés SSH. Un mot de passe (passphrase) est demandé (sans = connexion auto)" \
+							--entry-label="Votre passphrase SSH : " \
+							--entry-text="")
+			echo $PASSPHRASE
 			valret=$?
 			case $valret in
 				0)
 				# On génère la clé avec la passphrase
 				echo "Passphrase : $PASSPHRASE"
-				ssh-keygen -t ed25519 -f $SSHDIR$PRIK -P $PASSPHRASE
+				if [[ -z "$PASSPHRASE" ]]; then
+						ssh-keygen -f $SSHDIR$PRIK -t ed25519 -N ""
+				else
+				ssh-keygen -f $SSHDIR$PRIK -t ed25519  -P $PASSPHRASE
+				
+				fi
 				;;
 				1)
 				echo "EXIT"
@@ -64,17 +75,8 @@ echo -e "===> CHECK CLES SSH"
 				;;
 			esac
 	else
-			echo -e "fichiers deja present"
+			echo -e "[ SSH ] ==> fichiers ssh deja present"
 	fi
-}
-function ELOGIND(){
-
-# Configuration clavier azerty pour
-# se connecter à sa session.
-echo -e "===> CONFIGURATION AZERTY AU LOGIN"
-cd $WDIR/scripts/
-sudo -S ./03-VOID-Login_AZERTY.sh
-cd $WDIR
 }
 function BASE(){
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
@@ -92,10 +94,12 @@ sudo -S vkpurge rm all
 echo "==> Update Grub"
 sudo -s update-grub
 
-# DRIVERS CPU/GPU
+# DRIVERS CPU/GPU/BLUETOOTH/VIRTIO
 echo -e "===> BASE INSTALL : CPU/GPU"
 $cpuDETECT
 $gpuDETECT
+BLUETOOTH
+VIRTIONET
 
 # Base Apps
 sudo vpm i -y git-all nano zsh curl wget python3-pip testdisk octoxbps cpufrequtils notepadqq mc htop ytop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
@@ -130,7 +134,7 @@ if [ ! -d $HOME/.local/bin ]; then
 fi
 
 # Prendre en compte le $HOME/$USER/.local/bin en compte dans le $PATH
-if [ -z $(cat /etc/profile|grep '/.local/bin') ]; then
+if [ -z $(sudo -S cat /etc/profile|grep -c '/.local/bin') ]; then
 	echo "==> /etc/profile : Modification en cours ..."
 	sudo -S sh -c "echo 'if [ -d "$HOME/.local/bin" ] ; then' >> /etc/profile"
 	sudo -S sh -c "echo 'PATH=$HOME/.local/bin:$PATH' >> /etc/profile"
@@ -142,15 +146,14 @@ if [ -z $(cat /etc/profile|grep '/.local/bin') ]; then
 	sudo -S sh -c "echo 'PATH=$HOME/.local/share/flatpak/exports/share:$PATH' >> /etc/profile"
 	sudo -S sh -c "echo 'fi' >> /etc/profile"
 	echo 'Fichier profile - Terminé !'
-	source /etc/profile
+	sudo -S source /etc/profile
 else
 	echo -e "==> /etc/profile : Fichier /etc/profile déjà modifié : "
-	cat /etc/profile
 	echo -e "==> /etc/profile : TERMINE"
 fi
 
 # VERIFICATION /etc/security/limits.conf
-if [ -z $(cat /etc/security/limits.conf '1048576') ]; then
+if [ -z $(cat /etc/security/limits.conf|grep -c '1048576') ]; then
 	echo "==> Modification /etc/security/limits.conf"
 	sudo -S sh -c "echo '*               hard    nofile          1048576' >> /etc/security/limits.conf"
 else
@@ -158,7 +161,7 @@ else
 fi
 
 # Modification /etc/environment
-if [ -z $(cat /etc/environment 'qt5ct')]; then
+if [ -z $(sudo -S cat /etc/environment|grep -c 'qt5ct') ]; then
 echo "==> Modification /etc/environment QT_QPA_PLATEFORMTHEME=qt5ct"
 sudo -S sh -c "echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment"
 else
@@ -168,7 +171,35 @@ fi
 sudo usermod -a -G input $USER
 echo "$(groups)"
 }
+# SUPPORT BLUETOOTH & VIRTIONET
+function BLUETOOTH(){
+echo "==> BLUETOOTH CHECK INSTALL"
+if [ $(echo $blueDETECT | grep -c "Present") != 0 ]; then
+	echo "==> BLUETOOTH DETECTED"
+	sudo -S vpm i -y bluez bluez-qt5
+	blueDETECT=$(sudo -S lsusb | grep "Bluetooth")
+else
+	echo "==> BLUETOOTH NOT DETECTED : SKIP PROCESS"
+fi
+}
+function VIRTIONET(){
 
+if [ $(echo $vmDETECT | grep -c "Present") != 0 ]; then
+	echo "==> VM detectée : install VIRTIONET"
+	echo "==> Virtio-net : Install"
+		if [ ! -f /etc/modules-load.d/virtio.conf ];then
+			sudo -S touch /etc/modules-load.d/virtio.conf
+			sudo -S sh -c 'echo "# load virtio-net" > /etc/modules-load.d/virtio.conf'
+			sudo -S sh -c 'echo "virtio-net" >> /etc/modules-load.d/virtio.conf'
+			echo "==> Virtio-net : Fichier crée"
+		else
+			echo "==> Virtio-net : fichier déjà présent"
+		fi
+else
+	echo "==> VIRTIO NOT DETECTED : SKIP PROCESS"
+fi
+}
+# SUPPORT CPU & GPU
 function INTELCPU(){
 echo "===> CPU : INTEL INSTALL"
 sudo vpm i -y intel-ucode
@@ -194,16 +225,7 @@ function INTELGPU(){
 echo -e "==> INTELINSTALL"
 sudo vpm i -y mesa mesa-dri mesa-vulkan-intel linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode
 }
-
-function VIRTIONET(){
-echo "==> Virtio-net : Install"
-if [ ! -f /etc/modules-load.d/virtio.conf ];then
-sudo -S touch /etc/modules-load.d/virtio.conf
-sudo -S sh -c 'echo "# load virtio-net" > /etc/modules-load.d/virtio.conf'
-sudo -S sh -c 'echo "virtio-net" >> /etc/modules-load.d/virtio.conf'
-echo "==> Virtio-net : Fichier crée"
-fi
-}
+# UTILITAIRES SOURIS/CLAVIER CORSAIR & SOURIS STEELSERIES
 function STEELSERIES(){
 echo "===> STEELSERIES INSTALL"
 cd $WDIR/scripts/
@@ -215,6 +237,7 @@ sudo vpm i -y ckb-next;
 sudo ln -s /etc/sv/ckb-next-daemon /var/service;
 sudo vsv enable ckb-next-daemon && sudo vsv start ckb-next-daemon;
 }
+# OPTIMISATION FOR LENOVO LAPTOP
 function T420(){
 
 echo "===> T420 addons"
@@ -241,6 +264,13 @@ sudo vpm i -y tp_smapi-dkms tpacpi-bat
 
 }
 
+function FLATPAK(){
+echo "===> FLATPAK"
+# installation via flatpak de Discord & Parsec
+sudo vpm i -y flatpak
+echo "Flatpak : Création des repos si non existant"
+flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+}
 function NANORC(){
 # Configuration highlighting pour nano (met le code en couleur)
 echo "===> NANO HIGHLIGHTING"
@@ -330,7 +360,15 @@ function OHMYZSH(){
 echo "===> OHMYZSH INSTALL"
 sudo vpm i -y zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-exit
+}
+function ELOGIND(){
+
+# Configuration clavier azerty pour
+# se connecter à sa session.
+echo -e "===> CONFIGURATION AZERTY AU LOGIN"
+cd $WDIR/scripts/
+sudo -S ./03-VOID-Login_AZERTY.sh
+cd $WDIR
 }
 
 function VMWAREWSPLY(){
@@ -407,16 +445,8 @@ cd $WDIR/scripts/
 ./09-VOID-VirtualBox.sh
 cd $WDIR
 }
-function FLATPAK(){
-echo "===> FLATPAK"
-# installation via flatpak de Discord & Parsec
-sudo vpm i -y flatpak
-echo "Flatpak : Création des repos si non existant"
-flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-}
 function DISCORD(){
 echo "Discord : Installation"
-
 cd $HOME
 git clone https://github.com/void-linux/void-packages;
 cd void-packages;
@@ -425,6 +455,8 @@ echo XBPS_ALLOW_RESTRICTED=yes >> etc/conf
 ./xbps-src pkg discord
 cd hostdir/binpkgs/nonfree
 sudo -S xbps-install --repository=. discord
+cd $HOME
+rm -Rf void-packages
 }
 function PARSEC(){
 echo "Flatpak : Installation Parsec"
@@ -463,107 +495,70 @@ if [ ! -d $protondir ]; then
 	mkdir -R $protondir
 	echo "PROTONUP - REPERTOIRE $protondir créé"
 fi
-
-if [ -d $protondir ]; then
-	protonup -d $protondir
-	protonup -o $XDG_DOWNLOAD_DIR
-	protonup -y
-else
-	echo "PROTONUP - ERREUR : REPERTOIRE $HOME/.local/share/Steam/Compatibilitytools.d"
-fi
-
+protonup -d $protondir
+protonup -o $XDG_DOWNLOAD_DIR
+protonup -y
 }
 
 function AUTOINSTALL(){
-
-echo -e "==>   AUTOINSTALL"
-MENUGPU
+echo -e "\033[33,40m==>   AUTOINSTALL\033[0m"
+echo "01"
 SSHKEYTEST
+echo "02"
 BASE
+echo "10"
 GUFW
+echo "20"
 NANORC
+echo "30"
 FLATPAK
+echo "50"
 STEAM
+echo "60"
 WINE
+echo "70"
 PROTONFLAT
+echo "80"
 OHMYZSH
 sudo echo "Fin de AUTO-LIGHT"
+echo "100"
 MENUFIN
 }
 function CUSTOMINSTALL(){
-
-echo -e "==>   CUSTOMINSTALL"
-
+echo -e "\033[33,40m==>   CUSTOMINSTALL\033[0m"
+echo "00"
 MENUPARSER
+echo "15"
 SSHKEYTEST
+echo "25"
 GUFW
+echo "35"
 BASE
+echo "50"
 NANORC
+echo "65"
 FLATPAK
+echo "75"
 XBPSLOADER
+echo "85"
 APPSLOADER
-
+echo "100"
 MENUFIN
-
 }
 
-function MENUPARSER(){
-echo -e "===> START : MENU-PARSER"
-# ALIMENTE LES TABLEAU POUR INSTALL DE XBPS ET APPS
-touch TMP01
-touch TMP02
-touch TMP03
-touch TMP04
+function BANNER(){
+ipcrm -M $KEY
+softNAME="Void-Post-Installer"
 
-echo -e "===> MENU PARSER - Fichiers TEMP créé"
-echo -e $menuCHECK
-echo $menuCHECK > TMP01
+PASS=$(yad --entry --hide-text --title="$TITLE $version" --text="Enter User Password")
+echo $PASS|sudo -S clear;
 
-sed 's/| /|\n/g' TMP01 > TMP02
-cat TMP02 | grep XBPS > TMP03
-cat TMP03 | cut -d "|" -f3 > TMP04
-sed ':a;N;$!ba;s/\n/ /g' TMP04 > TMP03
-unset customXBPS
-while read -r dataXBPS
-do
-customXBPS+=$dataXBPS
-done < TMP03
-
-cat TMP02 | grep APPS > TMP01
-cat TMP01 | cut -d "|" -f3 > TMP02
-sed 's/.*/& /' TMP02 > TMP01
-
-unset customAPP
-while read -r dataAPP
-do
-customAPP+=("$dataAPP")
-done < TMP01
-
-echo -e "customXBPS : ${customXBPS[@]}"
-echo -e "customAPPS : ${customAPP[@]}"
-
-rm TMP0*
-}
-function CHECKFLATPAK(){
-FLATPAK
-
-}
-function XBPSLOADER(){
-# MOULINETTE XBPSLOADER
-echo -e "===XBPSLOADER===> XBPSLOADER :"
-sudo vpm i -y ${customXBPS[@]}
-}
-function APPSLOADER(){
-echo -e "==> APPS LOADER START"
-compteur=${#customAPP[@]}
-echo -e "Compteur = $compteur"
-i=0
-while (($compteur!=$i));
-do
-echo -e "==> APPS LOADER BOUCLE WHILE "
-${customAPP[$i]};
-i=$(($i+1))
-done
+echo -e "####################################"
+echo -e "##"
+echo -e "##\t\t$softNAME"
+echo -e "##\t\tV $version"
+echo -e "##"
+echo -e "######"
 }
 
 function DETECT(){
@@ -593,91 +588,198 @@ fi
 # DETECTION VM
 
 if [ $(lspci | grep -c QEMU) != 0 ]; then
-	echo "==> VM detectée : install VIRTIONET"
-	VIRTIONET
-fi 
+	vmDETECT="Present"
+fi
+# DETECTION BLUETOOTH
+blueDETECT="No detect"
+if [ $(lsusb | grep -c "Bluetooth") != 0 ]; then
+	blueDETECT="Present"
+fi
+
+
 }
-function BANNER(){
-softNAME="Void-Post-Installer"
-clear
-echo -e "####################################"
-echo -e "##"
-echo -e "##\t\t$softNAME"
-echo -e "##\t\tV $version"
-echo -e "##"
-echo -e "######"
+function MENUPARSER(){
+echo -e "===> START : MENU-PARSER"
+# ALIMENTE LES TABLEAU POUR INSTALL DE XBPS ET APPS
+cat $res1 > $TMP01
+cat $TMP01 | grep XBPS > $TMP02
+cat $TMP02 | cut -d "|" -f3 > $TMP03
+sed ':a;N;$!ba;s/\n/ /g' $TMP03 > $TMP04
+unset customXBPS
+while read -r dataXBPS
+do
+customXBPS+=$dataXBPS
+done < $TMP04
+cat $res3 | grep APPS > $TMP01
+cat $TMP01 | cut -d "|" -f4 > $TMP02
+sed 's/.*/& /' $TMP02 > $TMP03
+cat $res2 > $TMP01
+# BESOIN DE SUPPRIMER LES LIGNES VIDES SUR TMP01
+sed '/^$/d' $TMP01 > $TMP02
+# ON RAJOUTE LES FIX A LA LISTE DES APPS POUR LA CHARGER DANS LE TABLEAU EN MEME TEMPS
+cat $TMP02 >> $TMP03
+unset customAPP
+while read -r dataAPP
+do
+customAPP+=("$dataAPP")
+done < $TMP03
+
+echo -e "customXBPS : ${customXBPS[@]}"
+echo -e "customAPPS : ${customAPP[@]}"
+rm $res1 $res2 $res3 $TMP01 $TMP02 $TMP03 $TMP04
 }
 
-function MENUFIN(){
-
-yad --info --title="Void-Post-Installer v$version : Installation terminée" \
-				--text="Installée terminée !\nBonne journée !\nTofdz" 
+function XBPSLOADER(){
+# MOULINETTE XBPSLOADER
+echo -e "===XBPSLOADER===> XBPSLOADER :"
+sudo vpm i -y ${customXBPS[@]}
 }
-function MAIN(){
+function APPSLOADER(){
+echo -e "==> APPS LOADER START"
+compteur=${#customAPP[@]}
+echo -e "Compteur = $compteur"
+i=0
+while (($compteur!=$i));
+do
+echo -e "==> APPS LOADER BOUCLE WHILE "
+${customAPP[$i]};
+i=$(($i+1))
+done
+}
+
+function MENULANG(){
 
 BANNER
-DETECT
+echo -e "\033[33,40m==>   MENULANG START\033[0m"
 
-echo -e "CPU : $cpuDETECT"
-echo -e "GPU : $gpuDETECT"
-
-echo -e "==> MAIN MENU START"
-menuCHECK=$(yad --title="Void-Post-Installer" \
-			--width=750 --height=940 \
-			--image=tools-media-optical-burn-image \
-			--text="Bienvenue dans la post installation de VoidLinux" \
-			--list --checklist --column=" " --column="TYPE" --column=" Nom " --column="Description : " \
-			--separator="|" --hide-column=2 \
-			true "XBPS" "cifs-utils" "Outil pour connexion SMB" \
-			true "XBPS" "smbclient" "Outil pour connexion SMB (suite)" \
-			false "XBPS" "thunderbird" "Client pour les Mails" \
-			false "XBPS" "birdtray" "Garder Thunderbird en icone dans la barre des taches" \
-			true "XBPS" "gufw" "GUI pour le firewall" \
-			false "XBPS" "zenmap" "Testeur de réseau" \
-			false "XBPS" "vlc" "lecteur multimedia vlc" \
-			false "XBPS" "gimp" "logiciel d'edition d'image" \
-			false "XBPS" "blender" "logiciel de conception 3D" \
-			false "XBPS" "ytmdl" "telechargez vos playlists youtube" \
-			true "XBPS" "filelight" "Affichez les données de vos disques durs !" \
-			true "XBPS" "xfce4-plugins" "Suite de plugin pour personnaliser votre interface xfce" \
-			true "XBPS" "xfce4-screenshooter" "Prendre des captures d'ecran" \
-			true "XBPS" "deluge" "Telechargez vos torrent et magnet link" \
-			false "APPS" "ELOGIND" "Fix AZERTY au login " \
-			false "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
-			false "APPS" "T420" "Optimisation pour lenovo T420 uniquement" \
-			false "APPS" "X250" "Optimisation pour lenovo X250 uniquement" \
-			false "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
-			false "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
-			false "APPS" "MENUVMWAREWS" "VMWARE Workstation Pro / Player 16" \
-			true "APPS" "DISCORD" "Célèbre plateforme de chat vocale" \
-			false "APPS" "PARSEC" "Gaming en streaming remote" \
-			false "APPS" "STEELSERIES" "Reglages periphériques Steel Series (souris)" \
-			false "APPS" "CORSAIR" "Reglages périphériques Corsair (clavier/souris)" \
-			true "APPS" "STEAM" "Installation de Steam" \
-			false "APPS" "GOG" "Installation de Gog Galaxy (Minigalaxy)" \
-			true "APPS" "WINE" "Pouvoir installer des application windows sur voidlinux" \
-			true "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
-			true "APPS" "PROTONUP" "Version de Proton-GE pour steam xbps" \
-			true "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" \
-			--button="Install Minimale:1" --button="Install:0" \
-			)
+vpiLANG=$(yad --title="$TITLE $version" --text="Choisissez votre langue :\n\nChoose your language :" \
+	--list --width="450" --height="530" --separator="" \
+	--column="LANGUAGE :IMG" --column="" --print-column="2" --hide-column="2" \
+	$WDIR/icons/FR.png "FR" \
+	$WDIR/icons/UK.png "UK" \
+	)
 valret=$?
-verif=$(echo $menuCHECK | grep -c "TRUE")
-case $valret in
+echo $vpiLANG
+case $valret in 
 	0)
-	CUSTOMINSTALL
+	MENU01START
 	;;
 	1)
-	AUTOINSTALL
+	exit
 	;;
 	255)
+	exit
 	;;
 esac
-echo -e "Retour ??? : $valret"
-echo -e "menuCHECK : $menuCHECK"
-echo -e menuCHECK
+}
+function MENU01START(){
+echo -e "\033[33,40m==>   MENU01START\033[0m"
+DETECT
+source $WDIR/LANG/installer/$vpiLANG
+menuCHOIX=$(yad --list --title="$TITLE $version" \
+				--text="$vpiLANG\n$menu01START00\n\n==== AUTO DETECT ====\n\nCPU TYPE\t : \t$cpuDETECT\nGPU TYPE\t : \t$gpuDETECT\n\nBluetooth\t : \t$blueDETECT\nVirtio-net\t : \t$vmDETECT" \
+				--width="530" --height="220" \
+				--center --on-top --icon --icon-size=32 \
+				--column="TYPE" --column="Description" --print-column="1" --separator="" \
+				"MINIMAL" "$menu01START01" \
+				"CUSTOM" "$menu01START02")
+valret=$?
+case $valret in 
+	0)
+	if [ $(echo $menuCHOIX|grep -c MINIMAL) != 0 ];then
+			# on active le mode minimal (a coder)
+			AUTOINSTALL | yad --title='Auto Installation' --window-icon=emblem-downloads --progress
+	fi
+	if [ $(echo $menuCHOIX|grep -c CUSTOM) != 0 ];then
+			# on active le mode custom (a coder)
+			MENU02CUSTOM
+	fi
+	;;
+	1)
+	exit
+	;;
+	255)
+	exit
+	;;
+esac
+}
+function MENU02CUSTOM(){
+echo -e "\033[33,40m==>   MENU02CUSTOM\033[0m"
+yad --plug="$KEY" --tabnum="1" --form --image="abp.png" --text="$TITLE" &\
+yad --plug="$KEY" --tabnum="2" --checklist --list --text="XBPS : Liste des paquets xbps utile" --hide-column="2" \
+		--column="CHECK" --column="XBPS" --column="PAQUET" --column="DESCRIPTION" \
+		true "XBPS" "cifs-utils" "Outil pour connexion SMB" \
+		true "XBPS" "smbclient" "Outil pour connexion SMB (suite)" \
+		false "XBPS" "thunderbird" "Client pour les Mails" \
+		false "XBPS" "birdtray" "Garder Thunderbird en icone dans la barre des taches" \
+		true "XBPS" "gufw" "GUI pour le firewall" \
+		false "XBPS" "zenmap" "Testeur de réseau" \
+		true "XBPS" "vlc" "lecteur multimedia vlc" \
+		false "XBPS" "gimp" "logiciel d'edition d'image" \
+		false "XBPS" "blender" "logiciel de conception 3D" \
+		false "XBPS" "ytmdl" "telechargez vos playlists youtube" \
+		true "XBPS" "filelight" "Affichez les données de vos disques durs !" \
+		true "XBPS" "lutris" "Jouez à vos jeu windows favoris préconfiguré pour linux." \
+		true "XBPS" "CPU-X" "Affichez les informations CPU" \
+		true "XBPS" "xfce4-plugins" "Suite de plugin pour personnaliser votre interface xfce" \
+		true "XBPS" "xfce4-screenshooter" "Prendre des captures d'ecran" \
+		true "XBPS" "deluge" "Telechargez vos torrent et magnet link" \
+		true "XBPS" "caffeine-ng" "Gestion de l'écran de veille (interdire la veille par applications & bien plus)" &>$res1&\
+yad --plug="$KEY" --tabnum="3" --form --text="FIX : Tous les correctifs dispo pour VoidLinux" --separator="\n" \
+		--field="FIX - Lenovo Thinkpad :CB" "!T420!X250" \
+		--field="FIX - AZERTY at login:CB" "!ELOGIND" &>$res2&\
+yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les applications déjà configuré pour vous" --hide-column="3" \
+		--column="CHECK" --column=" :IMG" --column="APPS" --column="PAQUET" --column="DESCRIPTION" \
+		false "$WDIR/icons/I3wm-color-50.png" "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
+		false "$WDIR/icons/I3wm-color-50.png" "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
+		false "$WDIR/icons/Virtualbox-50.png" "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
+		false "$WDIR/icons/VMWare-Workstation-50.png" "APPS" "MENUVMWAREWS" "VMWARE Workstation Pro / Player 16" \
+		false "$WDIR/icons/Parsec-50.png" "APPS" "PARSEC" "Gaming en streaming remote" \
+		false "$WDIR/icons/steelseries-light-50.png" "APPS" "STEELSERIES" "Reglages periphériques Steel Series (souris)" \
+		false "$WDIR/icons/Corsair-light-50.png" "APPS" "CORSAIR" "Reglages périphériques Corsair (clavier/souris)" \
+		false "$WDIR/icons/Gog-light-50.png" "APPS" "GOG" "Installation de Gog Galaxy (Minigalaxy)" \
+		true "$WDIR/icons/Wine-50.png" "APPS" "WINE" "Pouvoir installer des application windows sur voidlinux" \
+		true "$WDIR/icons/Steam-color-50.png" "APPS" "STEAM" "Installation de Steam" \
+		true "$WDIR/icons/Steam-color-50.png" "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
+		true "$WDIR/icons/Steam-color-50.png" "APPS" "PROTONUP" "Version de Proton-GE pour steam xbps" \
+		true "$WDIR/icons/ohmyzsh-50.png" "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" \
+		true "$WDIR/icons/Discord-light-50.png" "APPS" "DISCORD" "Célèbre plateforme de chat vocale" &>$res3&\
+yad --notebook --key="$KEY" --title="$TITLE" --image="abp.png" --text="$TITLE" \
+		--height="960" --width="780" --separator="|" \
+		--tab="Acceuil" --tab="XBPS" --tab="Fix" --tab="APPS" \
+		--button="Exit:1" --button="OK:0"
+ret=$?
+case $ret in
+	0)
+	echo "Bouton OK"
+	CUSTOMINSTALL | yad --title='Custom Installation' --text="Veuillez patientez jusqu'à la fin de l'installation" --window-icon=emblem-downloads --progress
+	;;
+	1)
+	pkill yad
+	exit
+	;;
+	255)
+	pkill yad
+	exit
+	;;
+esac
+}
+function MENUFIN(){
 
+echo -e "[ FIN ]==> Installation terminée"
+
+yad --info --title="$TITLE v$version : Installation terminée" \
+	--text="Installation terminée !\n\nBonne journée !\n\nTofdz"
+valret=$?
+case $valret in
+	0)
+	pkill yad				
+	exit
+	;;
+	255)
+	exit
+	;;
+esac
 }
 
-MAIN
-
+MENULANG
