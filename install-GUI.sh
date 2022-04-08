@@ -117,7 +117,7 @@ echo -e "===> Fonts SanFrancisco"
 cd $HOME
 git clone https://github.com/supermarin/YosemiteSanFranciscoFont
 if [ ! -d $HOME/.fonts ];then
-	sudo mkdir -R $HOME/.fonts/
+	sudo mkdir $HOME/.fonts/
 	echo -e "Repertoire .fonts crée !"
 fi
 sudo pycp -g $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
@@ -127,7 +127,7 @@ rm -rfv $HOME/YosemiteSanFranciscoFont
 
 # Vérification & création du repertoire .local/bin dans le $HOME
 if [ ! -d $HOME/.local/bin ]; then
-	mkdir -R $HOME/.local/bin
+	mkdir $HOME/.local/bin
 	echo "Repertoire $HOME/.local/bin crée"
 	else
 	echo "Repertoire $HOME/.local/bin déjà présent"
@@ -449,6 +449,12 @@ function DISCORD(){
 echo "Discord : Installation"
 cd $HOME
 git clone https://github.com/void-linux/void-packages;
+
+# OPTIMISATION COMPILATION EN FONCTION DU NOMBRE DE COEUR CPU
+core=$(cat /proc/cpuinfo | grep processor | wc -l)
+echo "XBPS_ALLOW_RESTRICTED=yes" > $HOME/void-packages/etc/conf
+echo "XBPS_CCACHE=yes" >> $HOME/void-packages/etc/conf
+echo "XBPS_MAKEJOBS=$core" >> $HOME/void-packages/etc/conf
 cd void-packages;
 ./xbps-src binary-bootstrap
 echo XBPS_ALLOW_RESTRICTED=yes >> etc/conf
@@ -492,7 +498,7 @@ protondir="$HOME/.local/share/Steam/Compatibilitytools.d"
 cd $HOME
 pip3 install protonup
 if [ ! -d $protondir ]; then
-	mkdir -R $protondir
+	mkdir $protondir
 	echo "PROTONUP - REPERTOIRE $protondir créé"
 fi
 protonup -d $protondir
@@ -502,47 +508,28 @@ protonup -y
 
 function AUTOINSTALL(){
 echo -e "\033[33,40m==>   AUTOINSTALL\033[0m"
-echo "01"
 SSHKEYTEST
-echo "02"
 BASE
-echo "10"
 GUFW
-echo "20"
 NANORC
-echo "30"
 FLATPAK
-echo "50"
 STEAM
-echo "60"
 WINE
-echo "70"
 PROTONFLAT
-echo "80"
 OHMYZSH
 sudo echo "Fin de AUTO-LIGHT"
-echo "100"
 MENUFIN
 }
 function CUSTOMINSTALL(){
 echo -e "\033[33,40m==>   CUSTOMINSTALL\033[0m"
-echo "00"
 MENUPARSER
-echo "15"
 SSHKEYTEST
-echo "25"
 GUFW
-echo "35"
 BASE
-echo "50"
 NANORC
-echo "65"
 FLATPAK
-echo "75"
 XBPSLOADER
-echo "85"
 APPSLOADER
-echo "100"
 MENUFIN
 }
 
@@ -783,3 +770,4 @@ esac
 }
 
 MENULANG
+
