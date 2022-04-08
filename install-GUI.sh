@@ -752,7 +752,7 @@ ret=$?
 case $ret in
 	0)
 	echo "Bouton OK"
-	CUSTOMINSTALL | yad --title='Custom Installation' --text="Veuillez patientez jusqu'à la fin de l'installation" --window-icon=emblem-downloads --progress
+	CUSTOMINSTALL
 	;;
 	1)
 	pkill yad
