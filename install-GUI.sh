@@ -2,8 +2,8 @@
 # NAME : Void-Post-Installer
 # LAUNCHER : install.sh
 TITLE="Void Post Installer"
-version="0.2.1"
-# Date : 16/11/2020 maj 07/04/2022
+version="0.2.2"
+# Date : 16/11/2020 maj 27/07/2022
 # by Tofdz
 # assisted by :
 #
@@ -135,16 +135,16 @@ fi
 
 # Prendre en compte le $HOME/$USER/.local/bin en compte dans le $PATH
 if [ -z $(sudo -S cat /etc/profile|grep -c '/.local/bin') ]; then
-	echo "==> /etc/profile : Modification en cours ..."
-	sudo -S sh -c "echo 'if [ -d "$HOME/.local/bin" ] ; then' >> /etc/profile"
-	sudo -S sh -c "echo 'PATH=$HOME/.local/bin:$PATH' >> /etc/profile"
-	sudo -S sh -c "echo 'fi' >> /etc/profile"
-	sudo -S sh -c "echo 'if [ -d /var/lib/flatpak/exports/share ];then' >> /etc/profile"
-	sudo -S sh -c "echo 'PATH=/var/lib/flatpak/exports/share:$PATH' >> /etc/profile"
-	sudo -S sh -c "echo 'fi' >> /etc/profile"
-	sudo -S sh -c "echo 'if [ -d $HOME/.local/share/flatpak/exports/share ];then'  >> /etc/profile"
-	sudo -S sh -c "echo 'PATH=$HOME/.local/share/flatpak/exports/share:$PATH' >> /etc/profile"
-	sudo -S sh -c "echo 'fi' >> /etc/profile"
+	sudo -S echo "==> /etc/profile : Modification en cours ..."
+	sudo -S echo 'if [ -d "$HOME/.local/bin" ] ; then' >> /etc/profile
+	sudo -S echo 'PATH=$HOME/.local/bin:$PATH' >> /etc/profile
+	sudo -S echo 'fi' >> /etc/profile
+	sudo -S echo 'if [ -d /var/lib/flatpak/exports/share ];then' >> /etc/profile
+	sudo -S echo 'PATH=/var/lib/flatpak/exports/share:$PATH' >> /etc/profile
+	sudo -S echo 'fi' >> /etc/profile
+	sudo -S echo 'if [ -d $HOME/.local/share/flatpak/exports/share ];then'  >> /etc/profile
+	sudo -S echo 'PATH=$HOME/.local/share/flatpak/exports/share:$PATH' >> /etc/profile
+	sudo -S echo 'fi' >> /etc/profile
 	echo 'Fichier profile - Terminé !'
 	sudo -S source /etc/profile
 else
@@ -155,7 +155,7 @@ fi
 # VERIFICATION /etc/security/limits.conf
 if [ -z $(cat /etc/security/limits.conf|grep -c '1048576') ]; then
 	echo "==> Modification /etc/security/limits.conf"
-	sudo -S sh -c "echo '*               hard    nofile          1048576' >> /etc/security/limits.conf"
+	sudo -S echo "*               hard    nofile          1048576" >> /etc/security/limits.conf
 else
 	echo "==> /etc/security/limits.conf déjà modifié"
 fi
@@ -163,7 +163,7 @@ fi
 # Modification /etc/environment
 if [ -z $(sudo -S cat /etc/environment|grep -c 'qt5ct') ]; then
 echo "==> Modification /etc/environment QT_QPA_PLATEFORMTHEME=qt5ct"
-sudo -S sh -c "echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment"
+sudo -S echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment
 else
 echo "PASS ==> /etc/environment déjà modifié"
 fi
@@ -189,8 +189,8 @@ if [ $(echo $vmDETECT | grep -c "Present") != 0 ]; then
 	echo "==> Virtio-net : Install"
 		if [ ! -f /etc/modules-load.d/virtio.conf ];then
 			sudo -S touch /etc/modules-load.d/virtio.conf
-			sudo -S sh -c 'echo "# load virtio-net" > /etc/modules-load.d/virtio.conf'
-			sudo -S sh -c 'echo "virtio-net" >> /etc/modules-load.d/virtio.conf'
+			sudo -S echo "# load virtio-net" > /etc/modules-load.d/virtio.conf
+			sudo -S echo "virtio-net" >> /etc/modules-load.d/virtio.conf
 			echo "==> Virtio-net : Fichier crée"
 		else
 			echo "==> Virtio-net : fichier déjà présent"
@@ -203,12 +203,10 @@ fi
 function INTELCPU(){
 echo "===> CPU : INTEL INSTALL"
 sudo vpm i -y intel-ucode
-sudo xbps-reconfigure --force linux-5.15
 }
 function AMDCPU(){
 echo "===> CPU : AMD INSTALL"
 sudo vpm i -y linux-firmware-amd
-sudo xbps-reconfigure --force linux-5.15
 }
 function AMDGPU(){
 
@@ -768,6 +766,4 @@ case $valret in
 	;;
 esac
 }
-
 MENULANG
-
