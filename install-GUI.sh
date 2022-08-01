@@ -2,8 +2,8 @@
 # NAME : Void-Post-Installer
 # LAUNCHER : install.sh
 TITLE="Void Post Installer"
-version="0.2.2"
-# Date : 16/11/2020 maj 27/07/2022
+version="0.2.4"
+# Date : 16/11/2020 maj 01/08/2022
 # by Tofdz
 # assisted by :
 #
@@ -125,51 +125,13 @@ sudo fc-cache -fv
 sudo echo -e "Suppression des Fichiers inutile"
 rm -rfv $HOME/YosemiteSanFranciscoFont
 
-# Vérification & création du repertoire .local/bin dans le $HOME
-if [ ! -d $HOME/.local/bin ]; then
-	mkdir $HOME/.local/bin
-	echo "Repertoire $HOME/.local/bin crée"
-	else
-	echo "Repertoire $HOME/.local/bin déjà présent"
-fi
-
-# Prendre en compte le $HOME/$USER/.local/bin en compte dans le $PATH
-if [ -z $(sudo -S cat /etc/profile|grep -c '/.local/bin') ]; then
-	sudo -S echo "==> /etc/profile : Modification en cours ..."
-	sudo -S echo 'if [ -d "$HOME/.local/bin" ] ; then' >> /etc/profile
-	sudo -S echo 'PATH=$HOME/.local/bin:$PATH' >> /etc/profile
-	sudo -S echo 'fi' >> /etc/profile
-	sudo -S echo 'if [ -d /var/lib/flatpak/exports/share ];then' >> /etc/profile
-	sudo -S echo 'PATH=/var/lib/flatpak/exports/share:$PATH' >> /etc/profile
-	sudo -S echo 'fi' >> /etc/profile
-	sudo -S echo 'if [ -d $HOME/.local/share/flatpak/exports/share ];then'  >> /etc/profile
-	sudo -S echo 'PATH=$HOME/.local/share/flatpak/exports/share:$PATH' >> /etc/profile
-	sudo -S echo 'fi' >> /etc/profile
-	echo 'Fichier profile - Terminé !'
-	sudo -S source /etc/profile
-else
-	echo -e "==> /etc/profile : Fichier /etc/profile déjà modifié : "
-	echo -e "==> /etc/profile : TERMINE"
-fi
-
-# VERIFICATION /etc/security/limits.conf
-if [ -z $(cat /etc/security/limits.conf|grep -c '1048576') ]; then
-	echo "==> Modification /etc/security/limits.conf"
-	sudo -S echo "*               hard    nofile          1048576" >> /etc/security/limits.conf
-else
-	echo "==> /etc/security/limits.conf déjà modifié"
-fi
-
-# Modification /etc/environment
-if [ -z $(sudo -S cat /etc/environment|grep -c 'qt5ct') ]; then
-echo "==> Modification /etc/environment QT_QPA_PLATEFORMTHEME=qt5ct"
-sudo -S echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment
-else
-echo "PASS ==> /etc/environment déjà modifié"
-fi
 # Attribue à l'utilisateur le group input (pour les manettes de jeu)
 sudo usermod -a -G input $USER
 echo "$(groups)"
+
+cd $WDIR/scripts/
+./00-VOID-SYS.sh
+cd $WDIR
 }
 # SUPPORT BLUETOOTH & VIRTIONET
 function BLUETOOTH(){
@@ -767,3 +729,4 @@ case $valret in
 esac
 }
 MENULANG
+
