@@ -425,7 +425,6 @@ echo "XBPS_CCACHE=yes" >> $HOME/void-packages/etc/conf
 echo "XBPS_MAKEJOBS=$core" >> $HOME/void-packages/etc/conf
 cd void-packages;
 ./xbps-src binary-bootstrap
-echo XBPS_ALLOW_RESTRICTED=yes >> etc/conf
 ./xbps-src pkg discord
 cd hostdir/binpkgs/nonfree
 sudo -S xbps-install --repository=. discord
