@@ -45,3 +45,22 @@ sudo -S echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment
 else
 sudo -S echo "PASS ==> /etc/environment déjà modifié"
 fi
+# Prendre en compte le $HOME/$USER/.local/bin en compte dans le $PATH
+sudo -S echo "===> $HOME/$USER/.local/bin : Modification fichiers"
+if [ -e $(cat /etc/profile|grep "/.local/bin") ]; then
+	sudo -S echo "==> /etc/profile : Modification en cours ..."
+	sudo -S echo 'if [ -d "$HOME/.local/bin" ]; then' >> /etc/profile
+	sudo -S echo 'PATH=$HOME/.local/bin:$PATH' >> /etc/profile
+	sudo -S echo 'fi' >> /etc/profile
+	sudo -S echo 'if [ -d /var/lib/flatpak/exports/share ]; then' >> /etc/profile
+	sudo -S echo 'PATH=/var/lib/flatpak/exports/share:$PATH' >> /etc/profile
+	sudo -S echo 'fi' >> /etc/profile
+	sudo -S echo 'if [ -d $HOME/.local/share/flatpak/exports/share ]; then'  >> /etc/profile
+	sudo -S echo 'PATH=$HOME/.local/share/flatpak/exports/share:$PATH' >> /etc/profile
+	sudo -S echo 'fi' >> /etc/profile
+	sudo -S echo 'Fichier profile - Terminé !'
+	sudo -S source /etc/profile
+else
+	sudo -S echo -e "==> /etc/profile : Fichier /etc/profile déjà modifié : "
+	sudo -S echo -e "==> /etc/profile : TERMINE"
+fi
