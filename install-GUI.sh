@@ -88,7 +88,7 @@ sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
 
 # Kernel 
 echo -e "===> BASE INSTALL : Kernel : Update"
-sudo vpm i -y linux linux-headers
+sudo vpm i -y linux5.15 linux5.15-headers
 echo "==> Kernel : Purge"
 sudo -S vkpurge rm all
 echo "==> Update Grub"
