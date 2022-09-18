@@ -2,8 +2,8 @@
 # NAME : Void-Post-Installer
 # LAUNCHER : install.sh
 TITLE="Void Post Installer"
-version="0.2.4"
-# Date : 16/11/2020 maj 01/08/2022
+version="0.2.5"
+# Date : 16/11/2020 maj 19/09/2022
 # by Tofdz
 # assisted by :
 #
@@ -81,33 +81,36 @@ if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
 function BASE(){
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
 echo -e "===> BASE INSTALL"
-sudo xbps-install -Syuv xbps;sudo xbps-install -Syuv;
+sudo -S xbps-install -Syuv xbps
+sudo -S xbps-install -Syuv
 # INSTALLATION VPM
-sudo xbps-install -Syuv vpm vsv;
-sudo vpm i -y void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
+sudo -S xbps-install -Syuv vpm vsv void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree linux5.15 linux5.15-headers;
 
 # Kernel 
 echo -e "===> BASE INSTALL : Kernel : Update"
-sudo vpm i -y linux5.15 linux5.15-headers
 echo "==> Kernel : Purge"
 sudo -S vkpurge rm all
 echo "==> Update Grub"
-sudo -s update-grub
+sudo -S update-grub
 
 # DRIVERS CPU/GPU/BLUETOOTH/VIRTIO
 echo -e "===> BASE INSTALL : CPU/GPU"
+
+# CPU & GPU INSTALL
 $cpuDETECT
 $gpuDETECT
+
+# BT & Virt INSTALL
 BLUETOOTH
 VIRTIONET
 
 # Base Apps
-sudo vpm i -y xorg-server-devel xorg-server-devel-32bit git-all nano zsh curl wget python3-pip testdisk octoxbps cpufrequtils notepadqq mc htop ytop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
-sudo ln -s /etc/sv/socklog-unix /var/service;sudo ln -s /etc/sv/nanoklogd /var/service;
+sudo -S vpm i -y xorg-server-devel xorg-server-devel-32bit git-all nano zenity zsh curl wget python3-pip testdisk octoxbps cpufrequtils notepadqq mc htop ytop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
+sudo -S ln -s /etc/sv/socklog-unix /var/service;sudo -S ln -s /etc/sv/nanoklogd /var/service;
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
-sudo vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
-sudo rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
+sudo -S vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
+sudo -S rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
 
 # INSTALLATION Wallpaper
 pycp -g $WDIR/wallpapers/* $XDG_PICTURES_DIR
@@ -120,13 +123,13 @@ if [ ! -d $HOME/.fonts ];then
 	sudo mkdir $HOME/.fonts/
 	echo -e "Repertoire .fonts crée !"
 fi
-sudo pycp -g $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
-sudo fc-cache -fv
-sudo echo -e "Suppression des Fichiers inutile"
+sudo -S pycp -g $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
+sudo -S fc-cache -fv
+sudo -S echo -e "Suppression des Fichiers inutile"
 rm -rfv $HOME/YosemiteSanFranciscoFont
 
 # Attribue à l'utilisateur le group input (pour les manettes de jeu)
-sudo usermod -a -G input $USER
+sudo -S usermod -a -G input $USER
 echo "$(groups)"
 
 sudo -S echo "===> 04A $HOME/$USER/.local/bin : Verification Dossier présent"
@@ -141,6 +144,7 @@ cd $WDIR/scripts/
 sudo -S ./00-VOID-SYS.sh
 cd $WDIR
 }
+
 # SUPPORT BLUETOOTH & VIRTIONET
 function BLUETOOTH(){
 echo "==> BLUETOOTH CHECK INSTALL"
@@ -172,7 +176,7 @@ fi
 # SUPPORT CPU & GPU
 function INTELCPU(){
 echo "===> CPU : INTEL INSTALL"
-sudo vpm i -y intel-ucode
+sudo vpm i -y intel-ucode linux-firmware-intel
 }
 function AMDCPU(){
 echo "===> CPU : AMD INSTALL"
@@ -504,8 +508,7 @@ function BANNER(){
 ipcrm -M $KEY
 softNAME="Void-Post-Installer"
 
-PASS=$(yad --entry --hide-text --title="$TITLE $version" --text="Enter User Password")
-echo $PASS|sudo -S clear;
+
 
 echo -e "####################################"
 echo -e "##"
@@ -602,10 +605,8 @@ done
 }
 
 function MENULANG(){
-
-BANNER
 echo -e "\033[33,40m==>   MENULANG START\033[0m"
-
+BANNER
 vpiLANG=$(yad --title="$TITLE $version" --text="Choisissez votre langue :\n\nChoose your language :" \
 	--list --width="450" --height="530" --separator="" \
 	--column="LANGUAGE :IMG" --column="" --print-column="2" --hide-column="2" \
@@ -696,8 +697,8 @@ yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les appl
 		true "$WDIR/icons/Steam-color-50.png" "APPS" "STEAM" "Installation de Steam" \
 		true "$WDIR/icons/Steam-color-50.png" "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
 		true "$WDIR/icons/Steam-color-50.png" "APPS" "PROTONUP" "Version de Proton-GE pour steam xbps" \
-		true "$WDIR/icons/ohmyzsh-50.png" "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" \
-		true "$WDIR/icons/Discord-light-50.png" "APPS" "DISCORD" "Célèbre plateforme de chat vocale" &>$res3&\
+		true "$WDIR/icons/Discord-light-50.png" "APPS" "DISCORD" "Célèbre plateforme de chat vocale" \
+		true "$WDIR/icons/ohmyzsh-50.png" "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" &>$res3&\
 yad --notebook --key="$KEY" --title="$TITLE" --image="abp.png" --text="$TITLE" \
 		--height="960" --width="780" --separator="|" \
 		--tab="Acceuil" --tab="XBPS" --tab="Fix" --tab="APPS" \
@@ -735,4 +736,6 @@ case $valret in
 	;;
 esac
 }
+
 MENULANG
+
