@@ -1,5 +1,28 @@
 #!/bin/bash
-echo "==> 01 Void : System modifications"
+echo "==> 00 Void : System modifications"
+
+
+# CLEANINSTALL
+echo -e "==> CLEANER"
+#CLEANER
+echo "===> BASE CLEANING - PLEASE WAIT !"
+sudo -S touch /etc/xbps.d/Base_Install.conf
+sudo -S echo "ignorepkg=linux-firmware-amd" >> /etc/xbps.d/Base_Install.conf
+sudo -S echo "ignorepkg=linux-firmware-intel" >> /etc/xbps.d/Base_Install.conf
+sudo -S echo "ignorepkg=linux-firmware-nvidia" >> /etc/xbps.d/Base_Install.conf
+sudo -S echo "ignorepkg=xf86-video-amdgpu" >> /etc/xbps.d/Base_Install.conf
+sudo -S echo "ignorepkg=xf86-video-ati" >> /etc/xbps.d/Base_Install.conf
+sudo -S echo "ignorepkg=xf86-video-dummy" >> /etc/xbps.d/Base_Install.conf
+sudo -S echo "ignorepkg=xf86-video-fbdev" >> /etc/xbps.d/Base_Install.conf
+sudo -S echo "ignorepkg=xf86-video-intel" >> /etc/xbps.d/Base_Install.conf
+sudo -S echo "ignorepkg=xf86-video-nouveau" >> /etc/xbps.d/Base_Install.conf
+sudo -S echo "ignorepkg=xf86-video-vesa" >> /etc/xbps.d/Base_Install.conf
+sudo -S echo "ignorepkg=xf86-video-vmware" >> /etc/xbps.d/Base_Install.conf
+
+sudo vpm remove -y linux-firmware-amd linux-firmware-intel linux-firmware-nvidia xf86-video-amdgpu xf86-video-ati xf86-video-dummy xf86-video-fbdev xf86-video-intel xf86-video-nouveau xf86-video-vesa xf86-video-vmware 
+echo "==> Suppression Base_Install.conf"
+sudo -S rm /etc/xbps.d/Base_Install.conf
+
 # Verification /etc/sysctl.conf
 
 VER1=$(cat /etc/sysctl.conf|grep vm.max_map_count=1048576)
@@ -64,3 +87,4 @@ else
 	sudo -S echo -e "==> /etc/profile : Fichier /etc/profile déjà modifié : "
 	sudo -S echo -e "==> /etc/profile : TERMINE"
 fi
+
