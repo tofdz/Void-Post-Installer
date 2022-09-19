@@ -713,7 +713,7 @@ yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les appl
 		true "$WDIR/icons/Wine-50.png" "APPS" "WINE" "Pouvoir installer des applications windows sur voidlinux" \
 		true "$WDIR/icons/Steam-color-50.png" "APPS" "STEAM" "Installation de Steam" \
 		true "$WDIR/icons/Steam-color-50.png" "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
-		true "$WDIR/icons/Steam-color-50.png" "APPS" "PROTONUP" "Version de Proton-GE pour steam xbps" \
+		false "$WDIR/icons/Steam-color-50.png" "APPS" "PROTONUP" "Version de Proton-GE pour steam xbps" \
 		true "$WDIR/icons/Discord-light-50.png" "APPS" "DISCORD" "Célèbre plateforme de chat vocale" \
 		true "$WDIR/icons/ohmyzsh-50.png" "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" &>$res3&\
 yad --notebook --key="$KEY" --title="$TITLE" --image="abp.png" --text="$TITLE" \
