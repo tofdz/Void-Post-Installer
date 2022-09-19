@@ -508,7 +508,8 @@ function BANNER(){
 ipcrm -M $KEY
 softNAME="Void-Post-Installer"
 
-
+PASS=$(yad --entry --hide-text --title="$TITLE $version" --text="Enter User Password")
+echo $PASS|sudo -S clear;
 
 echo -e "####################################"
 echo -e "##"
