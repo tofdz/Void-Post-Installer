@@ -660,7 +660,23 @@ esac
 }
 function MENU02CUSTOM(){
 echo -e "\033[33,40m==>   MENU02CUSTOM\033[0m"
-yad --plug="$KEY" --tabnum="1" --form --image="abp.png" --text="$TITLE" &\
+yad --plug="$KEY" --tabnum="1" --form --image="abp.png" --text="\n\nBienvenue dans la post Installation de VoidLinux : \
+					\n\nCette Post Installation permettra de finir de configurer correctement votre système \
+					\nainsi qu'un paramètrage correct des fichiers de config de base. \
+					\nDes modifications vont etre apportés à votre système pour y remedier. \
+					\n\nSection XBPS : \
+					\n\nListe de paquets installés via l'installateur fourni de base avec void (xbps), \
+					\npour une base install bien fournie ! \
+					\nUne selection par défaut est déja réalisée (les plus utilisés) \
+					\n\nSection Fix : \
+					\n\nDes correctifs en fonction des modèles, \
+					\nun correctif qui empeche la detection d'un clavier azerty au login \
+					\n\nSection APPS : \
+					\n\nListe d'applications et leurs configuration pour une utilisation facile \
+					\n\n\nINFO : \
+					\n\n\nFaites votre selection et validez en cliquant sur le bouton OK \
+					\net l'installation se deroulera automatiquement (Veuillez attendre le message de fin svp). \
+					\n\nTofdz 2022" &\
 yad --plug="$KEY" --tabnum="2" --checklist --list --text="XBPS : Liste des paquets xbps utile" --hide-column="2" \
 		--column="CHECK" --column="XBPS" --column="PAQUET" --column="DESCRIPTION" \
 		true "XBPS" "cifs-utils" "Outil pour connexion SMB" \
@@ -693,7 +709,7 @@ yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les appl
 		false "$WDIR/icons/steelseries-light-50.png" "APPS" "STEELSERIES" "Reglages periphériques Steel Series (souris)" \
 		false "$WDIR/icons/Corsair-light-50.png" "APPS" "CORSAIR" "Reglages périphériques Corsair (clavier/souris)" \
 		false "$WDIR/icons/Gog-light-50.png" "APPS" "GOG" "Installation de Gog Galaxy (Minigalaxy)" \
-		true "$WDIR/icons/Wine-50.png" "APPS" "WINE" "Pouvoir installer des application windows sur voidlinux" \
+		true "$WDIR/icons/Wine-50.png" "APPS" "WINE" "Pouvoir installer des applications windows sur voidlinux" \
 		true "$WDIR/icons/Steam-color-50.png" "APPS" "STEAM" "Installation de Steam" \
 		true "$WDIR/icons/Steam-color-50.png" "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
 		true "$WDIR/icons/Steam-color-50.png" "APPS" "PROTONUP" "Version de Proton-GE pour steam xbps" \
@@ -738,4 +754,3 @@ esac
 }
 
 MENULANG
-
