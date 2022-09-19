@@ -8,7 +8,7 @@ OS : VoidLinux
 ![Capture d’écran_2022-09-19_02-25-36](https://user-images.githubusercontent.com/80813116/190934478-58eb200c-21ea-4952-a536-85e9b2a90808.png)
 
 # Description
-Une post installation de void linux qui permet de jouer clé en main à Elden Ring.
+Une post installation de Voidlinux.
 
 # Liste des modifications 
 
@@ -20,7 +20,9 @@ Une post installation de void linux qui permet de jouer clé en main à Elden Ri
 - Desactivation dhcpcd (conflit avec NetworkManager)
 - Desactivation des TTY inutiles
 - configuration de nano (highlighting et affichage ligne & co)
-- Installation des drivers graphique
+- Nettoyage firmware & drivers de base
+- Reinstallation suivant detection firmware CPU & GPU
+- Installation kernel 5.15 (pour les virtualisations. Pour le gaming favoriser le 5.19)
 
 # Application installées de base :
 
