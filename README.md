@@ -3,8 +3,9 @@
 Compatibilité CPU : AMD & Intel
 Compatibilité GPU : (Nvidia & AMD)
 OS : VoidLinux
-![VPI-Menu1](https://user-images.githubusercontent.com/80813116/145446339-2390a5ca-f5a9-4f7b-a726-5b6b77c97df4.png)
 
+![MENU2](https://user-images.githubusercontent.com/80813116/190934322-b6b9bd91-b832-43a4-93eb-fbcaeb8b4432.png)
+![MENU3](https://user-images.githubusercontent.com/80813116/190934336-370be22b-44da-4325-a2d8-d2704421daab.png)
 
 # Description
 Une post installation de void linux qui permet de jouer clé en main à Elden Ring.
