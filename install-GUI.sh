@@ -105,13 +105,14 @@ BLUETOOTH
 VIRTIONET
 
 # Base Apps
-sudo -S vpm i -y xorg-server-devel xorg-server-devel-32bit git-all nano zenity zsh curl wget python3-pip testdisk octoxbps cpufrequtils notepadqq mc htop ytop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
+sudo -S vpm i -y xorg-server-devel xorg-server-devel-32bit git-all nano inxi zenity picom zsh curl wget python3-pip thunar-archive-plugin catfish testdisk octoxbps cpufrequtils notepadqq mc htop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
 sudo -S ln -s /etc/sv/socklog-unix /var/service;sudo -S ln -s /etc/sv/nanoklogd /var/service;
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
 sudo -S vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
 sudo -S rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
-
+# CONFIG PICOM
+pycp $WDIR/config/picom.conf $HOME/.config/
 # INSTALLATION Wallpaper
 pycp -g $WDIR/wallpapers/* $XDG_PICTURES_DIR
 
@@ -191,7 +192,7 @@ sudo vpm i -y mesa mesa-dri
 function NVIDIA(){
 
 echo "===> nvidia INSTALL"
-sudo vpm i -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl
+sudo vpm i -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl nvtop
 }
 function INTELGPU(){
 echo -e "==> INTELINSTALL"
