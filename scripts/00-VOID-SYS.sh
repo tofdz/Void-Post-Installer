@@ -88,3 +88,50 @@ else
 	sudo -S echo -e "==> /etc/profile : TERMINE"
 fi
 
+# AJOUT DE L'AUTO UPDATER & CONFIGURATION
+if [ ! -d /var/service/snooze-daily ]; then
+	if [ ! -d /etc/cron.daily ]; then
+	echo -e "Repertoire cron.daily absent : création en cours..."
+	sudo -S mkdir /etc/cron.daily
+	else
+	echo -e "Repertoire Cron.daily présent"
+	fi
+	echo -e "Création service snooze-daily en cours ..."
+	sudo -S ln -s /etc/sv/snooze-daily /var/service
+else
+	echo -e "Service snooze-daily déjà présent"
+fi
+pycp $WDIR/outils/VOID-UPDATER.sh $HOME/.local/bin/;
+chmod +x $HOME/.local/bin/VOID-UPDATER.sh;
+if [ ! -f /etc/cron.daily/update ];then
+	sudo -S echo -e '#!/bin/bash' > /etc/cron.daily/update
+	sudo -S echo -e "cd /home/$USER/" >> /etc/cron.daily/update
+	sudo -S echo -e 'exec ./VOID-UPDATER.sh' >> /etc/cron.daily/update
+	sudo -S chmod +x /etc/cron.daily/update
+else
+	echo -e "Fichier deja présent"
+fi
+# AJOUT DE LA FONCTION RECHERCHE DANS THUNAR
+sudo -S echo "<?xml version="1.0" encoding="UTF-8"?>" > $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "<actions>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "<action>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<icon>utilities-terminal</icon>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<name>Ouvrir un terminal ici</name>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<unique-id>1659223755776079-1</unique-id>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<command>exo-open --working-directory %f --launch TerminalEmulator</command>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<description>Exemple d’une action personnalisée</description>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<patterns>*</patterns>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<startup-notify/>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<directories/>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "</action>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "<action>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<icon>searching</icon>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<name>Recherche</name>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<unique-id>1663781577501216-1</unique-id>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<command>/usr/bin/catfish --path=%f</command>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<description>Effectuer une recherche</description>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<patterns>*</patterns>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<directories/>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "	<text-files/>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "</action>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "</actions>" >> $HOME/$USER/.config/Thunar/uca.xml

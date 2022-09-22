@@ -35,7 +35,7 @@ else
 echo "==> i3 config files déjà présent - skip"
 fi
 # Verification
-sudo vpm i -y i3-gaps i3ipc-glib i3status i3wsr rofi i3blocks i3blocks-blocklets pasystray font-awesome5 lxappearance feh adwaita-plus compton compton-conf ImageMagick i3lock-color xautolock 
+sudo vpm i -y i3-gaps i3ipc-glib i3status i3wsr rofi i3blocks i3blocks-blocklets font-awesome5 lxappearance feh adwaita-plus ImageMagick i3lock-color xautolock 
 
 sudo pycp $CONFIGDIR/scripts/blurlock /bin/
 sudo chmod +x /bin/blurlock
