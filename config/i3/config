@@ -20,7 +20,8 @@ exec --no-startup-id dex --autostart --environment i3
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
-
+default_border none
+default_floating_border none
 #Ecran de veille
 #exec_always --no-startup-id xautolock -time 2 -locker blurlock -corners +00-
 
@@ -30,13 +31,15 @@ bindsym $mod+x exec --no-startup-id blurlock
 # Start Apps
 # Applis au démarrage
 # enlever le # pour démarrer
-exec_always compton
-exec_always feh --bg-center $HOME/Images/Venom_dark.jpeg
+#exec_always compton
+exec_always --no-startup-id picom
+exec feh --bg-scale $HOME/Images/Wallpapers/verne-ho.jpg
 exec_always --no-startup-id octoxbps-notifier
-exec_always --no-startup-id birdtray
-exec --no-startup-id flatpak run com.discordapp.Discord
-exec --no-startup-id steam
-
+#exec_always --no-startup-id birdtray
+exec --no-startup-id ulauncher
+exec --no-startup-id Discord
+exec --no-startup-id flatpak run com.valvesoftware.Steam
+exec --no-startup-id musikcube
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
@@ -106,50 +109,41 @@ bindsym $mod+q focus parent
 ## Personnalisation des workspaces
 
 # Workspaces : Icones
-
-set $ws1 " 1 :     "
-set $ws2 " 2 :  "
-set $ws3 " 3 :  "
-set $ws4 " 4 :  "
-set $ws5 " 5 :  "
-set $ws6 " 6 :  "
-set $ws7 " 7 :     "
-set $ws8 " 8 :     "
-set $ws9 " 9 :     "
-set $ws10 " 10 :    "
-set $ws11 "     "
-set $ws12 "     "
-set $ws13 "     "
-set $ws14 "       "
-set $ws15 "      "
-set $ws16 "       "
+set $ws1 "1    "
+set $ws2 "2    "
+set $ws3 "3     "
+set $ws4 "4    "
+set $ws5 "5  "
+set $ws6 "6   "
+set $ws7 "7    "
 # assigner les apps sur les workspaces  
 #
-#assign [class="xfce4-terminal|Xfce4-terminal"] $ws2
-#assign [class="notepadqq-bin|Notepadqq"] $ws3
-#assign [class="firefox|Navigator|Firefox"] $ws4
-#assign [class="thunar|Thunar"] $ws5
-assign [class="minitube|Minitube"] $ws7
-#assign [class="Parsec|parsec"] $ws7
-assign [class="discord|discord"] $ws8
-assign [class="Steam"] $ws9
-assign [class="SC Controller"] $ws10
-assign [class="gpartedbin|GParted"] $ws10
-assign [class="lxappearance|Lxappearance"] $ws10
-assign [class="nm-connection-editor|Nm-connection-editor"] $ws10
-assign [class="pavucontrol|Pavucontrol"] $ws10
-assign [class="xfce4-taskmanager|Xfce4-taskmanager"] $ws10
-assign [class="xfce4-power-manager-settings|Xfce4-power-manager-settings"] $ws10
-assign [class="nvidia-settings|Nvidia-settings"] $ws10
-assign [class="xfce4-appfinder|Xfce4-appfinder"] $ws10
-assign [class="octoxbps|octoxbps"] $ws10
-assign [class="steam_app_*"] $ws11
-assign [class="RPCS3*"] $ws11
+assign [class="Steam"] $ws1
+assign [class="discord|discord"] $ws1
+assign [class="thunar|Thunar"] $ws2
+assign [class="gpartedbin|GParted"] $ws2
+assign [class="notepadqq-bin|Notepadqq"] $ws2
+assign [class="musikcube|musikcube"] $ws3
+assign [class="firefox|Navigator|Firefox"] $ws3
+assign [class="minitube|Minitube"] $ws3
+assign [class="vlc"] $ws3
+assign [class="RPCS3*"] $ws5
+assign [class="steam_app_*"] $ws5
+assign [class="Parsec|parsec"] $ws5
+#assign [class="xfce4-terminal|Xfce4-terminal"] $ws3
+assign [class="SC Controller"] $ws6
+assign [class="lxappearance|Lxappearance"] $ws6
+assign [class="nm-connection-editor|Nm-connection-editor"] $ws6
+assign [class="pavucontrol|Pavucontrol"] $ws6
+assign [class="xfce4-taskmanager|Xfce4-taskmanager"] $ws6
+assign [class="xfce4-power-manager-settings|Xfce4-power-manager-settings"] $ws6
+assign [class="nvidia-settings|Nvidia-settings"] $ws6
+assign [class="xfce4-appfinder|Xfce4-appfinder"] $ws6
+assign [class="octoxbps|octoxbps"] $ws6
 #assign [class=""] $ws12
-assign [class="vlc"] $ws13
-assign [class="zenmap|Zenmap"] $ws14
-assign [class="VirtualBox Manager"] $ws15
-assign [class="Thunderbird|Claws"] $ws16
+assign [class="zenmap|Zenmap"] $ws4
+assign [class="VirtualBox Manager"] $ws4
+assign [class="Thunderbird|Claws"] $ws7
 # Workspace : switcher 
 bindsym $mod+Tab workspace next_on_output
 bindsym $mod+Shift+Tab workspace prev_on_output
@@ -220,7 +214,7 @@ bar {
 }
 
 for_window [class=".*"] border_pixel 5
-gaps inner 15
+gaps inner 25
 smart_gaps on
 smart_borders on
 #border_radius 3
