@@ -280,7 +280,7 @@ function GUFW(){
 # INTERFACE GRAPHIQUE POUR CONTROLER SON GUFW
 # DE MANIERE TRES SIMPLE !!!!
 sudo vpm i -y gufw
-
+sudo ln -s /etc/sv/ufw /var/service
 # CONFIGURATION POUR RENDRE FONCTIONNELLE LE GUI
 if [ ! -f $HOME/.local/bin/gufw-launcher ]; then
 	touch $HOME/.local/bin/gufw-launcher
