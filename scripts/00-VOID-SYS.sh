@@ -112,26 +112,26 @@ else
 	echo -e "Fichier deja présent"
 fi
 # AJOUT DE LA FONCTION RECHERCHE DANS THUNAR
-sudo -S echo "<?xml version="1.0" encoding="UTF-8"?>" > $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "<actions>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "<action>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<icon>utilities-terminal</icon>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<name>Ouvrir un terminal ici</name>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<unique-id>1659223755776079-1</unique-id>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<command>exo-open --working-directory %f --launch TerminalEmulator</command>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<description>Exemple d’une action personnalisée</description>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<patterns>*</patterns>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<startup-notify/>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<directories/>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "</action>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "<action>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<icon>searching</icon>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<name>Recherche</name>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<unique-id>1663781577501216-1</unique-id>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<command>/usr/bin/catfish --path=%f</command>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<description>Effectuer une recherche</description>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<patterns>*</patterns>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<directories/>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "	<text-files/>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "</action>" >> $HOME/$USER/.config/Thunar/uca.xml
-sudo -S echo "</actions>" >> $HOME/$USER/.config/Thunar/uca.xml
+sudo -S echo "<?xml version="1.0" encoding="UTF-8"?>" > $HOME/.config/Thunar/uca.xml
+sudo -S echo "<actions>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "<action>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<icon>utilities-terminal</icon>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<name>Ouvrir un terminal ici</name>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<unique-id>1659223755776079-1</unique-id>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<command>exo-open --working-directory %f --launch TerminalEmulator</command>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<description>Exemple d’une action personnalisée</description>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<patterns>*</patterns>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<startup-notify/>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<directories/>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "</action>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "<action>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<icon>searching</icon>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<name>Recherche</name>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<unique-id>1663781577501216-1</unique-id>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<command>/usr/bin/catfish --path=%f</command>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<description>Effectuer une recherche</description>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<patterns>*</patterns>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<directories/>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "	<text-files/>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "</action>" >> $HOME/.config/Thunar/uca.xml
+sudo -S echo "</actions>" >> $HOME/.config/Thunar/uca.xml
