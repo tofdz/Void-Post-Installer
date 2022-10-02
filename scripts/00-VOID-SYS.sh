@@ -105,7 +105,7 @@ pycp $WDIR/outils/VOID-UPDATER.sh $HOME/.local/bin/;
 chmod +x $HOME/.local/bin/VOID-UPDATER.sh;
 if [ ! -f /etc/cron.daily/update ];then
 	sudo -S echo -e '#!/bin/bash' > /etc/cron.daily/update
-	sudo -S echo -e "cd /home/$USER/" >> /etc/cron.daily/update
+	sudo -S echo -e "cd /home/$voiduser/" >> /etc/cron.daily/update
 	sudo -S echo -e 'exec ./VOID-UPDATER.sh' >> /etc/cron.daily/update
 	sudo -S chmod +x /etc/cron.daily/update
 else
