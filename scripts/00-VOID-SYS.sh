@@ -1,6 +1,9 @@
 #!/bin/bash
-echo "==> 00 Void : System modifications"
+voiduser=$USER
 
+
+echo "==> 00 Void : System modifications"
+echo "$voiduser"
 
 # CLEANINSTALL
 echo -e "==> CLEANER"
