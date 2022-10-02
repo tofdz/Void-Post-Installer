@@ -23,6 +23,7 @@ TMP01=$(mktemp --tmpdir iface1.XXXXXXXX)
 TMP02=$(mktemp --tmpdir iface1.XXXXXXXX)
 TMP03=$(mktemp --tmpdir iface1.XXXXXXXX)
 TMP04=$(mktemp --tmpdir iface1.XXXXXXXX)
+voiduser=$USER
 
 function NET(){
 echo -e "===> NET"
