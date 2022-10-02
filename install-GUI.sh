@@ -142,7 +142,7 @@ if [ ! -d $HOME/.local/bin ]; then
 fi
 
 cd $WDIR/scripts/
-sudo -S ./00-VOID-SYS.sh
+./00-VOID-SYS.sh
 cd $WDIR
 }
 
