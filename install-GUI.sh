@@ -1,6 +1,7 @@
 #!/bin/bash
 # NAME : Void-Post-Installer
 # LAUNCHER : install.sh
+
 TITLE="Void Post Installer"
 version="0.2.5"
 # Date : 16/11/2020 maj 19/09/2022
@@ -13,6 +14,7 @@ version="0.2.5"
 
 WDIR=$(pwd)
 chmod +x $WDIR/scripts/*
+chmod +x $WDIR/outils/*
 source ~/.config/user-dirs.dirs
 KEY="12345"
 
@@ -48,7 +50,7 @@ SSHDIR="$HOME/.ssh/"
 PRIK="id_ed25519"
 echo -e "[ SSH ] ==> CHECK CLES SSH"
 if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
-			# On ouvre une fenetre pour saisir la passphrase		
+			# On ouvre une fenetre pour saisir la passphrase
 			PASSPHRASE=$(yad --entry --width="800" --height="100" \
 							--title="$TITLE $version" --text="Vous n'avez pas généré de clés SSH. Un mot de passe (passphrase) est demandé (sans = connexion auto)" \
 							--entry-label="Votre passphrase SSH : " \
@@ -63,7 +65,6 @@ if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
 						ssh-keygen -f $SSHDIR$PRIK -t ed25519 -N ""
 				else
 				ssh-keygen -f $SSHDIR$PRIK -t ed25519  -P $PASSPHRASE
-				
 				fi
 				;;
 				1)
@@ -142,7 +143,7 @@ if [ ! -d $HOME/.local/bin ]; then
 fi
 
 cd $WDIR/scripts/
-./00-VOID-SYS.sh
+sudo -S ./00-VOID-SYS.sh
 cd $WDIR
 }
 
@@ -280,7 +281,7 @@ function GUFW(){
 # INTERFACE GRAPHIQUE POUR CONTROLER SON GUFW
 # DE MANIERE TRES SIMPLE !!!!
 sudo vpm i -y gufw
-sudo ln -s /etc/sv/ufw /var/service
+
 # CONFIGURATION POUR RENDRE FONCTIONNELLE LE GUI
 if [ ! -f $HOME/.local/bin/gufw-launcher ]; then
 	touch $HOME/.local/bin/gufw-launcher
@@ -435,6 +436,35 @@ cd hostdir/binpkgs/nonfree
 sudo -S xbps-install --repository=. discord
 cd $HOME
 rm -Rf void-packages
+}
+function PICOM(){
+echo "Picom : Installation"
+# Nettoyage préalable
+if [[ $(sudo -S vpm list|grep -c "picom") != 0 ]]; then
+		sudo -S echo -e "ignorepkg=picom" > /etc/xbps.d/void.conf
+		sudo -S vpm remove -y picom
+		sudo -S rm /etc/xbps.d/void.conf
+fi
+if [[ $(sudo -S vpm list|grep -c "compton") != 0 ]]; then
+		sudo -S echo -e "ignorepkg=compton" > /etc/xbps.d/void.conf
+		sudo -S echo -e "ignorepkg=compton-conf" >> /etc/xbps.d/void.conf
+		sudo -S vpm remove -y compton
+		sudo -S rm /etc/xbps.d/void.conf
+fi
+# Installation Picom-ibhagwan
+cd $HOME
+git clone https://github.com/void-linux/void-packages
+cd void-packages
+core=$(cat /proc/cpuinfo | grep processor | wc -l)
+echo "XBPS_ALLOW_RESTRICTED=yes" > $HOME/void-packages/etc/conf
+echo "XBPS_CCACHE=yes" >> $HOME/void-packages/etc/conf
+echo "XBPS_MAKEJOBS=$core" >> $HOME/void-packages/etc/conf
+cd void-packages;
+./xbps-src binary-bootstrap
+git clone https://github.com/ibhagwan/picom-ibhagwan-template
+mv picom-ibhagwan-template ./srcpkgs/picom-ibhagwan
+./xbps-src pkg picom-ibhagwan
+sudo -S xbps-install --repository=hostdir/binpkgs picom-ibhagwan
 }
 function PARSEC(){
 echo "Flatpak : Installation Parsec"
@@ -705,6 +735,7 @@ yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les appl
 		--column="CHECK" --column=" :IMG" --column="APPS" --column="PAQUET" --column="DESCRIPTION" \
 		false "$WDIR/icons/I3wm-color-50.png" "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
 		false "$WDIR/icons/I3wm-color-50.png" "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
+		true "$WDIR/icons/I3wm-color-50.png" "APPS" "PICOM" "Version de picom by ibhagwan" \
 		false "$WDIR/icons/Virtualbox-50.png" "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
 		false "$WDIR/icons/VMWare-Workstation-50.png" "APPS" "MENUVMWAREWS" "VMWARE Workstation Pro / Player 16" \
 		false "$WDIR/icons/Parsec-50.png" "APPS" "PARSEC" "Gaming en streaming remote" \
@@ -746,7 +777,7 @@ yad --info --title="$TITLE v$version : Installation terminée" \
 valret=$?
 case $valret in
 	0)
-	pkill yad				
+	pkill yad
 	exit
 	;;
 	255)
