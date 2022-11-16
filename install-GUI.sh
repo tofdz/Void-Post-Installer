@@ -3,8 +3,8 @@
 # LAUNCHER : install.sh
 
 TITLE="Void Post Installer"
-version="0.2.5"
-# Date : 16/11/2020 maj 19/09/2022
+version="0.2.6"
+# Date : 16/11/2020 maj 16/11/2022
 # by Tofdz
 # assisted by :
 #
@@ -17,7 +17,6 @@ chmod +x $WDIR/scripts/*
 chmod +x $WDIR/outils/*
 source ~/.config/user-dirs.dirs
 KEY="12345"
-
 res1=$(mktemp --tmpdir iface1.XXXXXXXX)
 res2=$(mktemp --tmpdir iface1.XXXXXXXX)
 res3=$(mktemp --tmpdir iface1.XXXXXXXX)
@@ -83,7 +82,6 @@ function BASE(){
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
 echo -e "===> BASE INSTALL"
 sudo -S xbps-install -Syuv xbps
-sudo -S xbps-install -Syuv
 # INSTALLATION VPM
 sudo -S xbps-install -Syuv vpm vsv void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree linux5.15 linux5.15-headers;
 
@@ -107,15 +105,52 @@ VIRTIONET
 
 # Base Apps
 sudo -S vpm i -y xorg-server-devel xorg-server-devel-32bit git-all nano inxi zenity picom zsh curl wget python3-pip thunar-archive-plugin catfish testdisk octoxbps cpufrequtils notepadqq mc htop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
-sudo -S ln -s /etc/sv/socklog-unix /var/service;sudo -S ln -s /etc/sv/nanoklogd /var/service;
+sudo -S ln -s /etc/sv/socklog-unix /var/service; sudo -S ln -s /etc/sv/nanoklogd /var/service;
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
 sudo -S vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
 sudo -S rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
+
+#========================================
+# AJOUT DE L'AUTO UPDATER & CONFIGURATION
+#========================================
+sudo -S echo -e "===> BASE INSTALL : AUTO-UPDATER $voiduser"
+if [ ! -d /var/service/snooze-daily ]; then
+	if [ ! -d /etc/cron.daily ]; then
+	sudo -S echo -e "Repertoire cron.daily absent : création en cours..."
+	sudo -S mkdir /etc/cron.daily
+	else
+	sudo -S echo -e "Repertoire Cron.daily présent"
+	fi
+	sudo -S echo -e "Création service snooze-daily en cours ..."
+	sudo -S ln -s /etc/sv/snooze-daily /var/service
+else
+	sudo -S echo -e "Service snooze-daily déjà présent"
+fi
+# Copie VOID-UPDATER dans .local/bin
+sudo -S pycp $WDIR/outils/VOID-UPDATER.sh $HOME/.local/bin/;
+if [ ! -d /etc/cron.hourly ]; then
+	sudo -S echo -e "Dossier absent : création"
+	sudo -S mkdir /etc/cron.hourly
+else
+	sudo -S echo -e "Dossier Présent"
+fi
+if [ ! -f /etc/cron.hourly/updater ]; then
+	sudo -s <<eof
+	touch /etc/cron.hourly/updater 
+	echo -e '#!/bin/bash' > /etc/cron.hourly/updater
+	echo -e "cd /home/$voiduser/" >> /etc/cron.hourly/updater
+	echo -e 'exec ./VOID-UPDATER.sh' >> /etc/cron.hourly/updater
+	chmod +x /etc/cron.hourly/updater
+	eof
+else
+	sudo -S echo -e "Fichier deja présent"
+fi
+
 # CONFIG PICOM
-pycp $WDIR/config/picom.conf $HOME/.config/
+sudo -S pycp $WDIR/config/picom.conf $HOME/.config/
 # INSTALLATION Wallpaper
-pycp -g $WDIR/wallpapers/* $XDG_PICTURES_DIR
+sudo -S pycp -g $WDIR/wallpapers/* $XDG_PICTURES_DIR
 
 # Installation fonts SanFrancisco
 echo -e "===> Fonts SanFrancisco"
@@ -141,9 +176,36 @@ if [ ! -d $HOME/.local/bin ]; then
 	else
 	sudo -S echo "Repertoire $HOME/.local/bin déjà présent"
 fi
+#==================================
+# THUNAR : Ajout fonction recherche
+#==================================
+echo "<?xml version="1.0" encoding="UTF-8"?>" > $HOME/.config/Thunar/uca.xml
+echo "<actions>" >> $HOME/.config/Thunar/uca.xml
+echo "<action>" >> $HOME/.config/Thunar/uca.xml
+echo "	<icon>utilities-terminal</icon>" >> $HOME/.config/Thunar/uca.xml
+echo "	<name>Ouvrir un terminal ici</name>" >> $HOME/.config/Thunar/uca.xml
+echo "	<unique-id>1659223755776079-1</unique-id>" >> $HOME/.config/Thunar/uca.xml
+echo "	<command>exo-open --working-directory %f --launch TerminalEmulator</command>" >> $HOME/.config/Thunar/uca.xml
+echo "	<description>Exemple d’une action personnalisée</description>" >> $HOME/.config/Thunar/uca.xml
+echo "	<patterns>*</patterns>" >> $HOME/.config/Thunar/uca.xml
+echo "	<startup-notify/>" >> $HOME/.config/Thunar/uca.xml
+echo "	<directories/>" >> $HOME/.config/Thunar/uca.xml
+echo "</action>" >> $HOME/.config/Thunar/uca.xml
+echo "<action>" >> $HOME/.config/Thunar/uca.xml
+echo "	<icon>searching</icon>" >> $HOME/.config/Thunar/uca.xml
+echo "	<name>Recherche</name>" >> $HOME/.config/Thunar/uca.xml
+echo "	<unique-id>1663781577501216-1</unique-id>" >> $HOME/.config/Thunar/uca.xml
+echo "	<command>/usr/bin/catfish --path=%f</command>" >> $HOME/.config/Thunar/uca.xml
+echo "	<description>Effectuer une recherche</description>" >> $HOME/.config/Thunar/uca.xml
+echo "	<patterns>*</patterns>" >> $HOME/.config/Thunar/uca.xml
+echo "	<directories/>" >> $HOME/.config/Thunar/uca.xml
+echo "	<text-files/>" >> $HOME/.config/Thunar/uca.xml
+echo "</action>" >> $HOME/.config/Thunar/uca.xml
+echo "</actions>" >> $HOME/.config/Thunar/uca.xml
+
 
 cd $WDIR/scripts/
-sudo -S ./00-VOID-SYS.sh
+./00-VOID-SYS.sh
 cd $WDIR
 }
 
@@ -247,7 +309,7 @@ flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flath
 }
 function NANORC(){
 # Configuration highlighting pour nano (met le code en couleur)
-echo "===> NANO HIGHLIGHTING"
+sudo -S echo "===> NANO HIGHLIGHTING"
 
 touch $HOME/.nanorc
 echo 'include "/usr/share/nano/asm.nanorc"' > $HOME/.nanorc
