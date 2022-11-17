@@ -3,7 +3,7 @@
 # LAUNCHER : install.sh
 
 TITLE="Void Post Installer"
-version="0.2.6"
+version="0.2.7"
 # Date : 16/11/2020 maj 16/11/2022
 # by Tofdz
 # assisted by :
@@ -104,7 +104,7 @@ BLUETOOTH
 VIRTIONET
 
 # Base Apps
-sudo -S vpm i -y xorg-server-devel xorg-server-devel-32bit git-all nano inxi zenity picom zsh curl wget python3-pip thunar-archive-plugin catfish testdisk octoxbps cpufrequtils notepadqq mc htop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
+sudo -S vpm i -y dracut-network dracut-uefi dracut-crypt-ssh xorg-server-devel xorg-server-devel-32bit git-all nano inxi zenity picom zsh curl wget python3-pip thunar-archive-plugin catfish testdisk octoxbps cpufrequtils notepadqq mc htop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
 sudo -S ln -s /etc/sv/socklog-unix /var/service; sudo -S ln -s /etc/sv/nanoklogd /var/service;
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
@@ -136,13 +136,14 @@ else
 	sudo -S echo -e "Dossier Présent"
 fi
 if [ ! -f /etc/cron.hourly/updater ]; then
-	sudo -s <<eof
-	touch /etc/cron.hourly/updater 
-	echo -e '#!/bin/bash' > /etc/cron.hourly/updater
-	echo -e "cd /home/$voiduser/" >> /etc/cron.hourly/updater
-	echo -e 'exec ./VOID-UPDATER.sh' >> /etc/cron.hourly/updater
-	chmod +x /etc/cron.hourly/updater
-	eof
+	
+	touch updater 
+	echo -e '#!/bin/bash' > updater
+	echo -e "cd /home/$voiduser/" >> updater
+	echo -e 'exec ./VOID-UPDATER.sh' >> updater
+	chmod +x /updater
+	sudo -S chown root:root updater
+	sudo -S mv updater /etc/cron.hourly/
 else
 	sudo -S echo -e "Fichier deja présent"
 fi
@@ -214,7 +215,8 @@ function BLUETOOTH(){
 echo "==> BLUETOOTH CHECK INSTALL"
 if [ $(echo $blueDETECT | grep -c "Present") != 0 ]; then
 	echo "==> BLUETOOTH DETECTED"
-	sudo -S vpm i -y bluez bluez-qt5
+	sudo -S vpm i -y bluez bluez-qt5 blueman
+	sudo -S ln -s /etc/sv/bluetoothd/ /var/service/
 	blueDETECT=$(sudo -S lsusb | grep "Bluetooth")
 else
 	echo "==> BLUETOOTH NOT DETECTED : SKIP PROCESS"
