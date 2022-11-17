@@ -3,7 +3,7 @@
 # LAUNCHER : install.sh
 
 TITLE="Void Post Installer"
-version="0.2.7"
+version="0.2.8"
 # Date : 16/11/2020 maj 16/11/2022
 # by Tofdz
 # assisted by :
@@ -409,6 +409,25 @@ sudo -S ./03-VOID-Login_AZERTY.sh
 cd $WDIR
 }
 
+function TEAMVIEWER(){
+
+# Installation TeamViewer
+sudo -S echo "===> TeamViewer : Installation"
+
+if [ ! -d $HOME/Applications ]; then
+	sudo -S echo "Repertoire Application absent : création"
+	mkdir $HOME/Applications
+	else
+	sudo -S echo "Repertoire Application Présent"
+fi
+cd $HOME/Applications
+wget https://download.teamviewer.com/download/linux/teamviewer_amd64.tar.xz
+tar vxf teamviewer_amd64.tar.xz
+cd $HOME/Applications/teamviewer
+./teamviewer;
+pycp $HOME/Applications/teamviewer/teamviewer.desktop $HOME/.local/share/applications
+
+}
 function VMWAREWSPLY(){
 echo "==> APPS : VMWare Workstation Player 16"
 sudo -S vpm i -y libpcsclite pcsclite
@@ -484,22 +503,32 @@ cd $WDIR/scripts/
 cd $WDIR
 }
 function DISCORD(){
-echo "Discord : Installation"
+sudo -S echo "===> Discord : Installation"
 cd $HOME
-git clone https://github.com/void-linux/void-packages;
-
-# OPTIMISATION COMPILATION EN FONCTION DU NOMBRE DE COEUR CPU
-core=$(cat /proc/cpuinfo | grep processor | wc -l)
-echo "XBPS_ALLOW_RESTRICTED=yes" > $HOME/void-packages/etc/conf
-echo "XBPS_CCACHE=yes" >> $HOME/void-packages/etc/conf
-echo "XBPS_MAKEJOBS=$core" >> $HOME/void-packages/etc/conf
-cd void-packages;
-./xbps-src binary-bootstrap
-./xbps-src pkg discord
-cd hostdir/binpkgs/nonfree
-sudo -S xbps-install --repository=. discord
-cd $HOME
-rm -Rf void-packages
+if [ ! -d $HOME/Applications ];then
+	mkdir $HOME/Applications
+fi
+if [ ! -d $HOME/Discord ];then
+# Téléchargement & installation de Discord
+	cd $HOME/Applications
+	wget -O discord.tar.gz "https://discordapp.com/api/download?platform=linux&format=tar.gz"
+	tar xfv discord.tar.gz; rm discord.tar.gz;
+# Création raccourci pour le menu systeme
+	echo "[Desktop Entry]" > $HOME/.local/share/applications/discord.desktop
+	echo "Name=Discord" >> $HOME/.local/share/applications/discord.desktop
+	echo "StartupWMClass=discord" >> $HOME/.local/share/applications/discord.desktop
+	echo "Comment=All-in-one voice and text chat for gamers that's free, secure, and works on both your desktop and phone." >> $HOME/.local/share/applications/discord.desktop
+	echo "GenericName=Internet Messenger" >> $HOME/.local/share/applications/discord.desktop
+	echo "Exec=$HOME/Applications/Discord/Discord" >> $HOME/.local/share/applications/discord.desktop
+	echo "Icon=discord" >> $HOME/.local/share/applications/discord.desktop
+	echo "Type=Application" >> $HOME/.local/share/applications/discord.desktop
+	echo "Categories=Network;InstantMessaging;" >> $HOME/.local/share/applications/discord.desktop
+	echo "Path=$HOME/Applications/Discord" >> $HOME/.local/share/applications/discord.desktop
+	echo "Terminal=false" >> $HOME/.local/share/applications/discord.desktop
+	echo "StartupNotify=false" >> $HOME/.local/share/applications/discord.desktop
+	else
+	sudo -S echo "discord deja installé, supprimmez le dossier Discord pour relancer l'installation"
+fi
 }
 function PICOM(){
 echo "Picom : Installation"
@@ -557,19 +586,6 @@ function PROTONFLAT(){
 
 echo "==> Install Proton via Flatpak"
 flatpak install --user com.valvesoftware.Steam.CompatibilityTool.Proton-GE
-}
-function PROTONUP(){
-# Installation ProtonUp : ProtonGE pour Steam (steam xbps version)
-protondir="$HOME/.local/share/Steam/Compatibilitytools.d"
-cd $HOME
-pip3 install protonup
-if [ ! -d $protondir ]; then
-	mkdir $protondir
-	echo "PROTONUP - REPERTOIRE $protondir créé"
-fi
-protonup -d $protondir
-protonup -o $XDG_DOWNLOAD_DIR
-protonup -y
 }
 
 function AUTOINSTALL(){
@@ -801,6 +817,7 @@ yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les appl
 		false "$WDIR/icons/I3wm-color-50.png" "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
 		true "$WDIR/icons/I3wm-color-50.png" "APPS" "PICOM" "Version de picom by ibhagwan" \
 		false "$WDIR/icons/Virtualbox-50.png" "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
+		true "$WDIR/icons/teamviewer_48.png" "APPS" "TEAMVIEWER" "TeamViewer" \
 		false "$WDIR/icons/VMWare-Workstation-50.png" "APPS" "MENUVMWAREWS" "VMWARE Workstation Pro / Player 16" \
 		false "$WDIR/icons/Parsec-50.png" "APPS" "PARSEC" "Gaming en streaming remote" \
 		false "$WDIR/icons/steelseries-light-50.png" "APPS" "STEELSERIES" "Reglages periphériques Steel Series (souris)" \
@@ -809,7 +826,6 @@ yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les appl
 		true "$WDIR/icons/Wine-50.png" "APPS" "WINE" "Pouvoir installer des applications windows sur voidlinux" \
 		true "$WDIR/icons/Steam-color-50.png" "APPS" "STEAM" "Installation de Steam" \
 		true "$WDIR/icons/Steam-color-50.png" "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
-		false "$WDIR/icons/Steam-color-50.png" "APPS" "PROTONUP" "Version de Proton-GE pour steam xbps" \
 		true "$WDIR/icons/Discord-light-50.png" "APPS" "DISCORD" "Célèbre plateforme de chat vocale" \
 		true "$WDIR/icons/ohmyzsh-50.png" "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" &>$res3&\
 yad --notebook --key="$KEY" --title="$TITLE" --image="abp.png" --text="$TITLE" \
