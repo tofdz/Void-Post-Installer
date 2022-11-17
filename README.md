@@ -29,7 +29,6 @@ Une post installation de Voidlinux.
 (Graphique)
 
 - Steam		: Jouez avec support manette Xbox/Dualshock4 natif
-- ProtonUP	: Pour jouer avec les derniers mise a jour Proton sur Steam
 - Parsec	: Connectez sur vos autres machines à distance
 - Discord	: Restez en contacts avec vos amis !
 - VirtualBox	: Créez des machines virtuelles
@@ -41,6 +40,7 @@ Une post installation de Voidlinux.
 - Xarchiver	: Compressez/décompressez vos archives (winrar)
 - Zenmap	: Testez votre réseau privé
 - OctoXBPS	: Gestionnaire de paquets & Mise a jour systeme
+- TeamViewer    : Outil permettant la prise de controle ou le partage d'un ordinateur
 
 (Terminal)
 
@@ -84,7 +84,6 @@ Programme               Lien
 - octoxbps :       https://github.com/aarnt/octoxbps
 - vsv :https://github.com/bahamas10/vsv
 - vpm :            https://github.com/netzverweigerer/vpm
-- protonup :       https://github.com/AUNaseef/protonup
 - rivalcfg :       https://github.com/flozz/rivalcfg  
 - San Francisco : https://github.com/supermarin/YosemiteSanFranciscoFont  
 - ytmdl :         https://github.com/deepjyoti30/ytmdl
