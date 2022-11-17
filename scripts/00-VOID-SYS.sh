@@ -11,23 +11,24 @@ echo -e "==> 00 Void : System modifications"
 echo -e "==> CLEANER"
 
 #CLEANER
-echo "===> BASE CLEANING - PLEASE WAIT !"
-touch /etc/xbps.d/Base_Install.conf
-echo "ignorepkg=linux-firmware-amd" >> /etc/xbps.d/Base_Install.conf
-echo "ignorepkg=linux-firmware-intel" >> /etc/xbps.d/Base_Install.conf
-echo "ignorepkg=linux-firmware-nvidia" >> /etc/xbps.d/Base_Install.conf
-echo "ignorepkg=xf86-video-amdgpu" >> /etc/xbps.d/Base_Install.conf
-echo "ignorepkg=xf86-video-ati" >> /etc/xbps.d/Base_Install.conf
-echo "ignorepkg=xf86-video-dummy" >> /etc/xbps.d/Base_Install.conf
-echo "ignorepkg=xf86-video-fbdev" >> /etc/xbps.d/Base_Install.conf
-echo "ignorepkg=xf86-video-intel" >> /etc/xbps.d/Base_Install.conf
-echo "ignorepkg=xf86-video-nouveau" >> /etc/xbps.d/Base_Install.conf
-echo "ignorepkg=xf86-video-vesa" >> /etc/xbps.d/Base_Install.conf
-echo "ignorepkg=xf86-video-vmware" >> /etc/xbps.d/Base_Install.conf
-
+sudo -S echo "===> BASE CLEANING - PLEASE WAIT !"
+touch Base_Install.conf
+echo "ignorepkg=linux-firmware-amd" >> Base_Install.conf
+echo "ignorepkg=linux-firmware-intel" >> Base_Install.conf
+echo "ignorepkg=linux-firmware-nvidia" >> Base_Install.conf
+echo "ignorepkg=xf86-video-amdgpu" >> Base_Install.conf
+echo "ignorepkg=xf86-video-ati" >> Base_Install.conf
+echo "ignorepkg=xf86-video-dummy" >> Base_Install.conf
+echo "ignorepkg=xf86-video-fbdev" >> Base_Install.conf
+echo "ignorepkg=xf86-video-intel" >> Base_Install.conf
+echo "ignorepkg=xf86-video-nouveau" >> Base_Install.conf
+echo "ignorepkg=xf86-video-vesa" >> Base_Install.conf
+echo "ignorepkg=xf86-video-vmware" >> Base_Install.conf
+sudo -S chown root:root Base_Install.conf
+sudo -S mv Base_Install.conf /etc/xbps.d/
 vpm remove -y linux-firmware-amd linux-firmware-intel linux-firmware-nvidia xf86-video-amdgpu xf86-video-ati xf86-video-dummy xf86-video-fbdev xf86-video-intel xf86-video-nouveau xf86-video-vesa xf86-video-vmware 
-echo "==> Suppression Base_Install.conf"
-rm /etc/xbps.d/Base_Install.conf
+sudo -S echo "==> Suppression Base_Install.conf"
+sudo -S rm /etc/xbps.d/Base_Install.conf
 
 # Verification /etc/sysctl.conf
 echo "==> Vérification /etc/sysctl.conf : $VER1"
