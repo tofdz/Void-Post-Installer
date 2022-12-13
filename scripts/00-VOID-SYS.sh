@@ -34,35 +34,35 @@ sudo -S rm /etc/xbps.d/Base_Install.conf
 echo "==> Vérification /etc/sysctl.conf : $VER1"
 echo "===> 02 /etc/sysctl.conf : vm.max_map_count=1048576"
 if [ -e $VER1 ]; then
-	echo "==!> Modification /etc/sysclt absente : modification en cours"
-	echo "vm.max_map_count=1048576" >> /etc/sysctl.conf
-	echo "==> Vérification /etc/sysctl.conf : $VER1"
-	else
-	echo "==> Fichier /etc/sysctl.conf : déjà modifié"
+        echo "==!> Modification /etc/sysclt absente : modification en cours"
+        echo "vm.max_map_count=1048576" | sudo -S tee -a /etc/sysctl.conf
+        echo "==> Vérification /etc/sysctl.conf : $VER1"
+        else
+        echo "==> Fichier /etc/sysctl.conf : déjà modifié"
 fi
 sudo -S echo "===> 03 /etc/sysctl.conf : abi.vsyscall32 = 0"
 if [ -e $VER2 ]; then
-	sudo -S echo "Modification /etc/sysclt absente : modification en cours"
-	echo "abi.vsyscall32 = 0" >> /etc/sysctl.conf
-	sudo -S echo "Vérification /etc/sysctl.conf : $VER2"
-	else
-	sudo -S echo "Fichier /etc/sysctl.conf : déjà modifié"
+        sudo -S echo "Modification /etc/sysclt absente : modification en cours"
+        echo "abi.vsyscall32 = 0" | sudo -S tee -a /etc/sysctl.conf
+        sudo -S echo "Vérification /etc/sysctl.conf : $VER2"
+        else
+        sudo -S echo "Fichier /etc/sysctl.conf : déjà modifié"
 fi
 
 # Verification limits.conf
 sudo -S echo "===> 04 /etc/security/limits.conf pour $voiduser"
 if [ -e $VER4 ]; then
-	sudo -S echo "==> Modification /etc/security/limits.conf"
-	echo "$voiduser           -       nice            -20" >> /etc/security/limits.conf
-	echo "$voiduser           -       nofile          1048576" >> /etc/security/limits.conf
+        sudo -S echo "==> Modification /etc/security/limits.conf"
+        echo "$voiduser           -       nice            -20" | sudo -S tee -a /etc/security/limits.conf
+        echo "$voiduser           -       nofile          1048576" | sudo -S tee -a /etc/security/limits.conf
 else
-	sudo -S echo "==> /etc/security/limits.conf déjà modifié"
+        sudo -S echo "==> /etc/security/limits.conf déjà modifié"
 fi
 
 # Modification /etc/environment
 if [ -e $VER5 ]; then
 sudo -S echo "==> Modification /etc/environment QT_QPA_PLATEFORMTHEME=qt5ct"
-echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment
+echo 'export QT_QPA_PLATFORMTHEME=qt5ct' | sudo -S tee -a /etc/environment
 else
 sudo -S echo "PASS ==> /etc/environment déjà modifié"
 fi
@@ -72,20 +72,18 @@ fi
 #==============================
 echo "===> $HOME/.local/bin : Modification fichiers"
 if [ -e $(cat /etc/profile|grep "/.local/bin") ]; then
-	sudo -S echo "==> /etc/profile : Modification en cours ..."
-	echo 'if [ -d "$HOME/.local/bin" ]; then' >> /etc/profile
-	echo 'PATH=$HOME/.local/bin:$PATH' >> /etc/profile
-	echo 'fi' >> /etc/profile
-	echo 'if [ -d /var/lib/flatpak/exports/share ]; then' >> /etc/profile
-	echo 'PATH=/var/lib/flatpak/exports/share:$PATH' >> /etc/profile
-	echo 'fi' >> /etc/profile
-	echo 'if [ -d $HOME/.local/share/flatpak/exports/share ]; then'  >> /etc/profile
-	echo 'PATH=$HOME/.local/share/flatpak/exports/share:$PATH' >> /etc/profile
-	echo 'fi' >> /etc/profile
-	sudo -S echo 'Fichier profile - Terminé !'
+        sudo -S echo "==> /etc/profile : Modification en cours ..."
+        echo 'if [ -d "$HOME/.local/bin" ]; then' | sudo -S tee -a /etc/profile
+        echo 'PATH=$HOME/.local/bin:$PATH' | sudo -S tee -a /etc/profile
+        echo 'fi' | sudo -S tee -a /etc/profile
+        echo 'if [ -d /var/lib/flatpak/exports/share ]; then' | sudo -S tee -a /etc/profile
+        echo 'PATH=/var/lib/flatpak/exports/share:$PATH' | sudo -S tee -a /etc/profile
+        echo 'fi' | sudo -S tee -a /etc/profile
+        echo 'if [ -d $HOME/.local/share/flatpak/exports/share ]; then' | sudo -S tee -a /etc/profile
+        echo 'PATH=$HOME/.local/share/flatpak/exports/share:$PATH' | sudo -S tee -a /etc/profile
+        echo 'fi' | sudo -S tee -a /etc/profile
+        sudo -S echo 'Fichier profile - Terminé !'
 else
-	echo -e "==> /etc/profile : Fichier /etc/profile déjà modifié : "
-	echo -e "==> /etc/profile : TERMINE"
+        echo -e "==> /etc/profile : Fichier /etc/profile déjà modifié : "
+        echo -e "==> /etc/profile : TERMINE"
 fi
-
-eof
