@@ -14,10 +14,11 @@ if [ -f /etc/X11/xorg.conf.d/00-Keyboard.conf ]; then
 	
 else
 	sudo -S touch /etc/X11/xorg.conf.d/00-Keyboard.conf
-	sudo -S echo 'Section "InputClass' > /etc/X11/xorg.conf.d/00-Keyboard.conf
-    	sudo -S echo '     Identifier "system-keyboard"' >> /etc/X11/xorg.conf.d/00-Keyboard.conf
-    	sudo -S echo '     MatchisKeyboard "on"' >> /etc/X11/xorg.conf.d/00-Keyboard.conf
-	sudo -S echo '     Option "XkbLayout" "fr"' >> /etc/X11/xorg.conf.d/00-Keyboard.conf
-    	sudo -S echo '     Option "XkbModel" "pc105"' >> /etc/X11/xorg.conf.d/00-Keyboard.conf
-	sudo -S	echo 'EndSection' >> /etc/X11/xorg.conf.d/00-Keyboard.conf
+        sudo -S echo 'Section "InputClass"' | sudo -S tee /etc/X11/xorg.conf.d/00-Keyboard.conf
+	sudo -S echo '     Identifier "system-keyboard"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+	sudo -S echo '     MatchisKeyboard "on"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+        sudo -S echo '     Option "XkbLayout" "fr"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+	sudo -S echo '     Option "XkbModel" "pc105"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+        sudo -S echo '     Option "XkbOptions" "caps:shiftlock"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+        sudo -S echo 'EndSection' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
 fi
