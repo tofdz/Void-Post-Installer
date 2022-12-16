@@ -1,0 +1,46 @@
+#!/bin/bash
+# Auto Kill musikcube
+clear
+
+#TMP=$(mktemp --tmpdir iface1.XXXXXXXX)
+tab[0]="picom"
+tab[1]="musikcube"
+tab[2]="glava"
+
+function TITLE(){
+echo "==================="
+echo " AUTO KILL MACHINE "
+echo "==================="
+}
+
+function RESET(){
+
+i=0;
+SORTIE=""
+
+while ((${#tab[*]}!=$i)); do
+	echo -e "\n==> Verification activité ${tab[$i]}"
+	SORTIE=$(ps -eo pid,user,fname | grep "${tab[$i]}" | grep "$USER" | awk '{print $1}')
+	if [ -n "$SORTIE" ]; then
+		echo "[ /!\ ] ${tab[$i]} detecté"
+		echo "PID associé à ${tab[$i]} PID : $SORTIE"
+		kill $SORTIE
+		SORTIE=""
+		echo "CLEAN SORTIE : $SORTIE"
+		SORTIE=$(ps -eo pid,user,fname | grep "${tab[$i]}" | grep "$USER" | awk '{print $1}')
+			if [ -n $SORTIE ]; then
+			echo "PID associé à ${tab[$i]} ON ! ERREUR !"
+			else
+			echo "PID associé à ${tab[$i]} OFF ! SUCCESS !"
+			fi
+	else
+		echo "AUCUN PID associé à ${tab[$i]}"
+	fi
+	i=$(($i+1));
+done
+}
+
+RESET
+clear
+TITLE
+RESET

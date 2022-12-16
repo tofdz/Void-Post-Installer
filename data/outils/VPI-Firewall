@@ -1,0 +1,3 @@
+#!/bin/bash
+PASS=$(yad --entry --image=security-low --title="GUFW Firewall" --hide-text --text="Firewall Launcher\n\nEnter user password :\n")
+echo -e $PASS|sudo -S gufw-pkexec

@@ -3,8 +3,8 @@
 # LAUNCHER : install.sh
 
 TITLE="Void Post Installer"
-version="0.2.8"
-# Date : 16/11/2020 maj 16/11/2022
+version="0.2.7"
+# Date : 16/11/2020 maj 16/12/2022
 # by Tofdz
 # assisted by :
 #
@@ -13,8 +13,11 @@ version="0.2.8"
 # Celine    : Les petits pains !!
 
 WDIR=$(pwd)
-chmod +x $WDIR/scripts/*
-chmod +x $WDIR/outils/*
+scripts="$WDIR/data/install"
+outils="$WDIR/data/outils"
+icons="$WDIR/data/icons"
+chmod +x $scripts/*
+chmod +x $outils/*
 source ~/.config/user-dirs.dirs
 KEY="12345"
 res1=$(mktemp --tmpdir iface1.XXXXXXXX)
@@ -205,7 +208,7 @@ echo "</action>" >> $HOME/.config/Thunar/uca.xml
 echo "</actions>" >> $HOME/.config/Thunar/uca.xml
 
 
-cd $WDIR/scripts/
+cd $scripts
 ./00-VOID-SYS.sh
 cd $WDIR
 }
@@ -242,46 +245,56 @@ fi
 # SUPPORT CPU & GPU
 function INTELCPU(){
 echo "===> CPU : INTEL INSTALL"
-sudo vpm i -y intel-ucode linux-firmware-intel
+sudo -S vpm i -y intel-ucode linux-firmware-intel
 }
 function AMDCPU(){
 echo "===> CPU : AMD INSTALL"
-sudo vpm i -y linux-firmware-amd
+sudo -S vpm i -y linux-firmware-amd
 }
 function AMDGPU(){
 
 echo "===> AMD INSTALL"
-sudo vpm i -y mesa mesa-dri
+sudo -S vpm i -y mesa mesa-dri linux-firmware-amd
 
 }
 function NVIDIA(){
 
 echo "===> nvidia INSTALL"
-sudo vpm i -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl nvtop
+sudo -S vpm i -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl nvtop
+# Fichier de configuration pour la gestion des ventilateurs
+sudo -S touch /etc/X11/xorg.conf.d/11-nvidia.conf
+echo 'Section "OutputClass"' | sudo -S tee /etc/X11/xorg.conf.d/11-nvidia.conf
+echo '     Identifier "nvidia"' | sudo -S tee -a /etc/X11/xorg.conf.d/11-nvidia.conf
+echo '     MatchDriver "nvidia-drm"' | sudo -S tee -a /etc/X11/xorg.conf.d/11-nvidia.conf
+echo '     Driver "nvidia"' | sudo -S tee -a /etc/X11/xorg.conf.d/11-nvidia.conf
+echo '     Option "Coolbits" "4"' | sudo -S tee -a /etc/X11/xorg.conf.d/11-nvidia.conf
+echo 'EndSection' | sudo -S tee -a /etc/X11/xorg.conf.d/11-nvidia.conf
 }
+
 function INTELGPU(){
 echo -e "==> INTELINSTALL"
-sudo vpm i -y mesa mesa-dri mesa-vulkan-intel linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode
+sudo -S vpm i -y mesa mesa-dri mesa-vulkan-intel linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode
 }
 # UTILITAIRES SOURIS/CLAVIER CORSAIR & SOURIS STEELSERIES
 function STEELSERIES(){
 echo "===> STEELSERIES INSTALL"
-cd $WDIR/scripts/
+cd $scripts
 ./07-VOID-rivalcfg.sh
 cd $WDIR
 }
 function CORSAIR(){
-sudo vpm i -y ckb-next;
-sudo ln -s /etc/sv/ckb-next-daemon /var/service;
-sudo vsv enable ckb-next-daemon && sudo vsv start ckb-next-daemon;
+sudo -S vpm i -y ckb-next;
+sudo -S ln -s /etc/sv/ckb-next-daemon /var/service;
+sudo -S vsv enable ckb-next-daemon && sudo vsv start ckb-next-daemon;
 }
 # OPTIMISATION FOR LENOVO LAPTOP
 function T420(){
 
 echo "===> T420 addons"
-sudo vpm i -y tlp tlp-rdw tp_smapi-dkms tpacpi-bat mesa-dri linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel libva-intel-driver
-sudo chmod +x $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh;sudo pycp $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh /etc/acpi
-sudo vsv restart acpid
+sudo -S vpm i -y tlp tlp-rdw tp_smapi-dkms tpacpi-bat mesa-dri linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel libva-intel-driver
+sudo -S chmod +x $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh
+sudo -S pycp $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh /etc/acpi
+sudo -S vsv restart acpid
 }
 function X250(){
 
@@ -305,7 +318,7 @@ sudo vpm i -y tp_smapi-dkms tpacpi-bat
 function FLATPAK(){
 echo "===> FLATPAK"
 # installation via flatpak de Discord & Parsec
-sudo vpm i -y flatpak
+sudo -S vpm i -y flatpak
 echo "Flatpak : Création des repos si non existant"
 flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
@@ -371,8 +384,8 @@ fi
 }
 function VPIAPPS(){
 
-chmod +x $WDIR/outils/*
-pycp $WDIR/outils/ZenIso $HOME/.local/bin/
+
+pycp $outils/ZenIso $HOME/.local/bin/
 
 echo '[Desktop Entry]' > $XDG_DESKTOP_DIR/ZenIso.desktop
 echo 'Version=1.0' >> $XDG_DESKTOP_DIR/ZenIso.desktop
@@ -388,7 +401,7 @@ echo 'Categories=System;' >> $XDG_DESKTOP_DIR/ZenIso.desktop
 function I3INSTALLER(){
 # configuration window manager i3
 echo "===> i3"
-cd $WDIR/scripts/
+cd $scripts
 ./08-VOID-i3.sh
 cd $WDIR
 }
@@ -404,16 +417,27 @@ function ELOGIND(){
 # Configuration clavier azerty pour
 # se connecter à sa session.
 echo -e "===> CONFIGURATION AZERTY AU LOGIN"
-cd $WDIR/scripts/
+cd $scripts
 sudo -S ./03-VOID-Login_AZERTY.sh
 cd $WDIR
 }
 
+function SHIFTLOCK(){
+# Fonction verr. maj + shift
+sudo -S touch /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo 'Section "InputClass"' | sudo -S tee /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo '     Identifier "system-keyboard"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo '     MatchisKeyboard "on"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo '     Option "XkbLayout" "fr"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo '     Option "XkbModel" "pc105"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo '     Option "XkbOptions" "caps:shiftlock"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo 'EndSection' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+}
 function TEAMVIEWER(){
 
 # Installation TeamViewer
 sudo -S echo "===> TeamViewer : Installation"
-
+sudo -S vpm i -y minizip qt5-quickcontrols
 if [ ! -d $HOME/Applications ]; then
 	sudo -S echo "Repertoire Application absent : création"
 	mkdir $HOME/Applications
@@ -444,17 +468,21 @@ fi
 sudo -S ./VMware-Player-16.0.0-16894299.x86_64.bundle
 sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr/share/applications/vmware-player.desktop
 cd $HOME/.local/bin/
-touch vmware-launcher-player
-echo "#!/bin/bash" > vmware-launcher-player
-echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> vmware-launcher-player
-echo "vmplayer" >> vmware-launcher-player
-pycp $WDIR/outils/vmware-registration $HOME/.local/bin
-chmod +x $HOME/.local/bin/vmware-registration
-
+if [ ! -f vmware-launcher-player ]; then
+	touch vmware-launcher-player
+else
+	echo "#!/bin/bash" > vmware-launcher-player
+	echo "PASS=$(yad --entry --hide-text --title="VMWare-Launcher-Player" --text="Pass :")" >> vmware-launcher-player
+	echo "sudo -S /etc/init.d/vmware start && sudo -S vmware-usbarbitrator" >> vmware-launcher-player
+	echo "vmplayer" >> vmware-launcher-player
+	chmod +x vmware-launcher-player
+	pycp $WDIR/outils/vmware-registration $HOME/.local/bin
+	chmod +x $HOME/.local/bin/vmware-registration
+fi
 }
 function VMWAREWSPRO(){
 echo "==> APPS : VMWare Workstation Pro 16"
-sudo -S vpm i -y libpcsclite pcsclite
+sudo -S vpm i -y make libpcsclite pcsclite
 sudo -S ln -s /etc/sv/pcscd /var/service
 sudo vsv start pcscd
 cd $HOME
@@ -465,7 +493,7 @@ chmod +x *
 if [ ! -d /etc/init.d/ ];then
 sudo mkdir /etc/init.d/
 fi
-sudo -S ././VMware-Workstation-Full-16.2.3-19376536.x86_64.bundle
+sudo -S ./VMware-Workstation-Full-16.2.3-19376536.x86_64.bundle
 # EDITION DES RACCOURCIS DESKTOP
 sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher/' /usr/share/applications/vmware-workstation.desktop
 sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr/share/applications/vmware-player.desktop
@@ -474,12 +502,16 @@ sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr
 cd $HOME/.local/bin/
 touch vmware-launcher vmware-launcher-player
 echo "#!/bin/bash" > vmware-launcher-player
-echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> vmware-launcher-player
+echo "PASS=$(yad --entry --hide-text --title="VMWare-Launcher-Player" --text="Pass :")" >> vmware-launcher
+echo "sudo -S /etc/init.d/vmware start && sudo -S vmware-usbarbitrator" >> vmware-launcher-player
 echo "vmplayer" >> vmware-launcher-player
+chmod +x vmware-launcher-player
 # Pour Workstation
 echo "#!/bin/bash" > vmware-launcher
-echo "sudo /etc/init.d/vmware start && sudo vmware-usbarbitrator" >> vmware-launcher
+echo "PASS=$(yad --entry --hide-text --title="VMWare-Launcher" --text="Pass :")" >> vmware-launcher
+echo "sudo -S /etc/init.d/vmware start && sudo -S vmware-usbarbitrator" >> vmware-launcher
 echo "vmware" >> vmware-launcher
+chmod +x vmware-launcher
 # Outil d'enregistrement de license
 pycp $WDIR/outils/vmware-registration $HOME/.local/bin
 chmod +x $HOME/.local/bin/vmware-registration
@@ -498,7 +530,7 @@ $vmwareSELECT
 function VIRTUALBOX(){
 echo "===> VIRTUALBOX INSTALL"
 
-cd $WDIR/scripts/
+cd $scripts
 ./09-VOID-VirtualBox.sh
 cd $WDIR
 }
@@ -565,19 +597,19 @@ flatpak install --user -y Parsec
 }
 function STEAM(){
 echo -e "===> STEAM"
-cd $WDIR/scripts/
+cd $scripts
 ./05-VOID-Steam.sh
 cd $WDIR
 }
 function GOG(){
 echo "===> GOG INSTALL"
-cd $WDIR/scripts/
+cd $scripts
 ./06-VOID-GOG.sh
 cd $WDIR
 }
 function WINE(){
 echo "===> WINE INSTALL"
-cd $WDIR/scripts/
+cd $scripts
 ./10-VOID-Wine.sh
 cd $WDIR
 }
@@ -722,8 +754,8 @@ BANNER
 vpiLANG=$(yad --title="$TITLE $version" --text="Choisissez votre langue :\n\nChoose your language :" \
 	--list --width="450" --height="530" --separator="" \
 	--column="LANGUAGE :IMG" --column="" --print-column="2" --hide-column="2" \
-	$WDIR/icons/FR.png "FR" \
-	$WDIR/icons/UK.png "UK" \
+	$icons/FR.png "FR" \
+	$icons/UK.png "UK" \
 	)
 valret=$?
 echo $vpiLANG
@@ -810,24 +842,25 @@ yad --plug="$KEY" --tabnum="2" --checklist --list --text="XBPS : Liste des paque
 		true "XBPS" "caffeine-ng" "Gestion de l'écran de veille (interdire la veille par applications & bien plus)" &>$res1&\
 yad --plug="$KEY" --tabnum="3" --form --text="FIX : Tous les correctifs dispo pour VoidLinux" --separator="\n" \
 		--field="FIX - Lenovo Thinkpad :CB" "!T420!X250" \
-		--field="FIX - AZERTY at login:CB" "!ELOGIND" &>$res2&\
+		--field="FIX - AZERTY at login:CB" "!ELOGIND" \
+		--field="FIX - ShiftLock:CB" "!SHIFTLOCK"&>$res2&\
 yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les applications déjà configuré pour vous" --hide-column="3" \
 		--column="CHECK" --column=" :IMG" --column="APPS" --column="PAQUET" --column="DESCRIPTION" \
-		false "$WDIR/icons/I3wm-color-50.png" "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
-		false "$WDIR/icons/I3wm-color-50.png" "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
-		true "$WDIR/icons/I3wm-color-50.png" "APPS" "PICOM" "Version de picom by ibhagwan" \
-		false "$WDIR/icons/Virtualbox-50.png" "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
-		true "$WDIR/icons/teamviewer_48.png" "APPS" "TEAMVIEWER" "TeamViewer" \
-		false "$WDIR/icons/VMWare-Workstation-50.png" "APPS" "MENUVMWAREWS" "VMWARE Workstation Pro / Player 16" \
-		false "$WDIR/icons/Parsec-50.png" "APPS" "PARSEC" "Gaming en streaming remote" \
-		false "$WDIR/icons/steelseries-light-50.png" "APPS" "STEELSERIES" "Reglages periphériques Steel Series (souris)" \
-		false "$WDIR/icons/Corsair-light-50.png" "APPS" "CORSAIR" "Reglages périphériques Corsair (clavier/souris)" \
-		false "$WDIR/icons/Gog-light-50.png" "APPS" "GOG" "Installation de Gog Galaxy (Minigalaxy)" \
-		true "$WDIR/icons/Wine-50.png" "APPS" "WINE" "Pouvoir installer des applications windows sur voidlinux" \
-		true "$WDIR/icons/Steam-color-50.png" "APPS" "STEAM" "Installation de Steam" \
-		true "$WDIR/icons/Steam-color-50.png" "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
-		true "$WDIR/icons/Discord-light-50.png" "APPS" "DISCORD" "Célèbre plateforme de chat vocale" \
-		true "$WDIR/icons/ohmyzsh-50.png" "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" &>$res3&\
+		false "$icons/I3wm-color-50.png" "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
+		false "$icons/I3wm-color-50.png" "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
+		true "$icons/I3wm-color-50.png" "APPS" "PICOM" "Version de picom by ibhagwan" \
+		false "$icons/Virtualbox-50.png" "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
+		true "$icons/teamviewer_48.png" "APPS" "TEAMVIEWER" "TeamViewer" \
+		false "$icons/VMWare-Workstation-50.png" "APPS" "MENUVMWAREWS" "VMWARE Workstation Pro / Player 16" \
+		false "$icons/Parsec-50.png" "APPS" "PARSEC" "Gaming en streaming remote" \
+		false "$icons/steelseries-light-50.png" "APPS" "STEELSERIES" "Reglages periphériques Steel Series (souris)" \
+		false "$icons/Corsair-light-50.png" "APPS" "CORSAIR" "Reglages périphériques Corsair (clavier/souris)" \
+		false "$icons/Gog-light-50.png" "APPS" "GOG" "Installation de Gog Galaxy (Minigalaxy)" \
+		true "$icons/Wine-50.png" "APPS" "WINE" "Pouvoir installer des applications windows sur voidlinux" \
+		true "$icons/Steam-color-50.png" "APPS" "STEAM" "Installation de Steam" \
+		true "$icons/Steam-color-50.png" "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
+		true "$icons/Discord-light-50.png" "APPS" "DISCORD" "Célèbre plateforme de chat vocale" \
+		true "$icons/ohmyzsh-50.png" "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" &>$res3&\
 yad --notebook --key="$KEY" --title="$TITLE" --image="abp.png" --text="$TITLE" \
 		--height="960" --width="780" --separator="|" \
 		--tab="Acceuil" --tab="XBPS" --tab="Fix" --tab="APPS" \

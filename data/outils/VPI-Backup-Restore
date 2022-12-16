@@ -1,0 +1,187 @@
+#!/bin/bash
+# BACKUP-RESTORE
+# By Tofdz
+coulroug='\e[0,31m'
+coulvert='\e[0,32m'
+couljaun='\e[0,33m'
+###
+# VARIABLES
+PASS=$(yad --entry --hide-text --title="$version " --text="Entrez votre mot de passe :")
+echo $PASS|sudo -S clear
+unset TABA
+unset TABB
+unset TABC
+TMP01=$(mktemp --tmpdir iface1.XXXXXXXX)
+TMP02=$(mktemp --tmpdir iface1.XXXXXXXX)
+TMP03=$(mktemp --tmpdir iface1.XXXXXXXX)
+TMP04=$(mktemp --tmpdir iface1.XXXXXXXX)
+TMP05=$(mktemp --tmpdir iface1.XXXXXXXX)
+TMP06=$(mktemp --tmpdir iface1.XXXXXXXX)
+TMP07=$(mktemp --tmpdir iface1.XXXXXXXX)
+TMP08=$(mktemp --tmpdir iface1.XXXXXXXX)
+version="BACKUP-RESTORE v0.0.1"
+
+function BACKUP(){
+echo -e "============================"
+echo -e "=                          ="
+echo -e "=        BACKUP            ="
+echo -e "=                          ="
+echo -e "============================"
+
+compteur=${#TABB[*]};i=0;
+if [ -f $dossier/BACKUP.bak ]; then
+	rm $dossier/BACKUP.bak
+	echo -e "$coulroug ==> suppression ancien BACKUP.bak dans $dossier"
+else
+	echo -e "$couljaun [BAK] BACKUP.bak absent : génération du fichier en cours"
+fi
+while (($i!=$compteur)); do
+echo -e "$coulvert \n ==> Backup ${TABB[$i]} vers $dossier"
+#sudo -S dd bs=4M status=progress if=/dev/${TABB[$i]} of=$dossier/${TABB[$i]}.img
+sudo -S pv /dev/${TABB[$i]}|dd of=$dossier/${TABB[$i]}.img bs=4M
+# CREATION ET ALIMENTATION DU FICHIER DE BACKUP
+echo -e "${TABB[$i]}" >> $dossier/BACKUP.bak
+i=$(($i+1))
+done
+if [ ! -f $dossier/BACKUP.bak ]; then
+	echo -e "$coulroug [/!\] $dossier/BACKUP.bak absent : erreur"
+	else
+	echo -e "$coulvert [OK]$dossier/BACKUP.bak généré"
+	echo -e "$coulvert \n ==> BACKUP TERMINE"
+fi
+
+rm $TMP01 $TMP02 $TMP03 $TMP04 $TMP05 $TMP06 $TMP07 $TMP08
+exit
+}
+function RESTOR(){
+echo -e "============================"
+echo -e "=                          ="
+echo -e "=        RESTORE           ="
+echo -e "=                          ="
+echo -e "============================"
+compteur=${#TABC[*]};i=0;
+while (($i!=$compteur)); do
+echo -e "$couljaun\n ==> Restauration /dev/${TABC[$i]} depuis $backdir/${TABC[$i]}.img"
+#sudo -S dd bs=4M status=progress if=$backdir/${TABC[$i]}.img of=/dev/${TABC[$i]}
+sudo -S pv $backdir/${TABC[$i]}.img|sudo -S dd of=/dev/${TABC[$i]} bs=4M
+i=$(($i+1))
+done
+echo -e "$coulvert [OK] RESTAURATION TERMINE"
+rm $TMP01 $TMP02 $TMP03 $TMP04 $TMP05 $TMP06 $TMP07 $TMP08
+exit
+}
+function MENUDIR(){
+# ON RECUPERE LE RESULTAT DE LA SELECTION POUR LE METTRE DANS UN TABLEAU
+echo $devsToMnt > $TMP07
+# ON REMPLACE LES ESPACES PAR DES RETOURS A LA LIGNE
+sed 's/ /\n/g' $TMP07 > $TMP08
+# ON CHARGE LE CONTENU DU FICHIER DANS UN TABLEAU
+
+while read -r data;
+do
+TABB+=("$data")
+done < $TMP08
+dossier=$(yad --file --directory)
+valret=$?
+case $valret in
+	0)
+	BACKUP
+	;;
+	1)
+	echo "Bouton Quit"
+	exit
+	;;
+	255)
+	echo "exit"
+	exit
+	;;
+esac
+}
+function MAINBACKUP(){
+###
+# ON RECUPERES LE SUDO POUR DD
+
+###
+# Creation du fichier contenant les partitions
+lsblk -r -o name,size,mountpoint,type > $TMP01
+
+###
+# Nettoyage
+sed '/\NAME/d' $TMP01 > $TMP02
+sed '/\//d' $TMP02 > $TMP03
+sed '/\SWAP/d' $TMP03 > $TMP04
+sed '/\disk/d' $TMP04 > $TMP05
+cat $TMP05 | cut -d " " -f1,2 > $TMP06
+
+###
+# MOULINETTE POUR ALIMENTER LE TABLEAU AVEC LES PARTITIONS A BACKUP
+declare -i disknum
+mapfile -d $'\n' -t TABA < $TMP06
+devsToMnt=$(for i in $(seq ${#TABA[@]})
+                do
+                  echo FALSE
+                  for element in "${TABA[$i-1]}"
+                      do
+                          read -r col1 col2 <<< "${element}"
+                          disknum+=1
+                          echo "${disknum}"
+                          echo "${col1}"
+                          echo "${col2}"
+                      done
+            done \
+| yad --list --center \
+      --width="600" --height="400" \
+      --text="Selectionne la partition a sauvegarder :" \
+      --checklist --column="  " --column=# --column="  " --column="SIZE" \
+	  --print-column 3 --multiple --separator=" ")
+valret=$?
+case $valret in
+	0)
+	MENUDIR
+	;;
+	1)
+	echo "Bouton Quit"
+	exit
+	;;
+	255)
+	echo "exit"
+	exit
+	;;
+esac
+}
+function MAINRESTOR(){
+yad --title="$version" --info --text="Choississez le repertoire des fichiers a restaurer"
+backdir=$(yad --text="Choississez le repertoire des fichiers a restaurer :" --file --directory)
+yad --title="$version" --info --text="Choississez le fichier BACKUP.bak"
+backfile=$(yad --file)
+# MENU RESTAURATION SELECTION DU FICHIER DE REINSTALLATION
+while read -r data
+do
+TABC+=("$data")
+done < $backfile
+RESTOR
+}
+function MAINMENU(){
+# MENU DE SELECTION POUR SAUVEGARDE OU RESTAURATION
+# DES PARTITIONS
+selMENU=$(yad --title="$TITLE $version" --text="Backup ou Restauration ? :" \
+	--list --width="450" --height="530" --separator="" \
+	--column="SELECTION" --column="" --print-column="2" --hide-column="2" \
+	"BACKUP" "MAINBACKUP" \
+	"RESTORE" "MAINRESTOR" \
+	)
+valret=$?
+case $valret in 
+	0)
+	$selMENU
+	exit
+	;;
+	1)
+	exit
+	;;
+	255)
+	exit
+	;;
+esac
+}
+MAINMENU
