@@ -15,14 +15,15 @@ Une post installation de Voidlinux.
 - Création des clés SSH (ed pas RSA)
 - Ajout des repository VoidLinux.
 - Correction du bug du clavier QWERTY au login
+- Ajout de la fonction desactivation Verr.Maj via la touche shift (maj)
 - Gestion de la mise en veille de l'ecran avec verrouillage session sur timer
 - Verrouillage l'ecran avec un effet de floutage en faisant Mod+x.
 - Desactivation dhcpcd (conflit avec NetworkManager)
 - Desactivation des TTY inutiles
 - configuration de nano (highlighting et affichage ligne & co)
 - Nettoyage firmware & drivers de base
-- Reinstallation suivant detection firmware CPU & GPU
-- Installation kernel 5.15 (pour les virtualisations. Pour le gaming favoriser le 5.19)
+- Detection CPU/GPU et installation des firmwares & drivers necessaire
+- Installation kernel 5.15 (pour les virtualisations. Pour le gaming favoriser le kernel 6.XX)
 
 # Application installées de base :
 
