@@ -1,3 +1,0 @@
-#!/bin/bash
-PASS=$(yad --entry --hide-text --title="Firewall-gufw-Launcher" --text="Pass :")
-echo $PASS|sudo -S gufw-pkexec
