@@ -11,7 +11,7 @@ version="0.2.7"
 # DrNeKoSan : crash test !
 # Odile     : Les cafés !
 # Celine    : Les petits pains !!
-
+voiduser=$USER
 WDIR=$(pwd)
 scripts="$WDIR/data/install"
 outils="$WDIR/data/outils"
@@ -150,12 +150,11 @@ if [ ! -f /etc/cron.hourly/updater ]; then
 	chmod +x /updater
 	sudo -S chown root:root updater
 	sudo -S mv updater /etc/cron.hourly/
+	sudo -S ln -s /etc/sv/snooze-hourly /var/service
 else
 	sudo -S echo -e "Fichier deja présent"
 fi
 
-# CONFIG PICOM
-sudo -S pycp $WDIR/config/picom.conf $HOME/.config/
 # INSTALLATION Wallpaper
 sudo -S pycp -g $WDIR/wallpapers/* $XDG_PICTURES_DIR
 
@@ -173,9 +172,11 @@ sudo -S echo -e "Suppression des Fichiers inutile"
 rm -rfv $HOME/YosemiteSanFranciscoFont
 
 # Attribue à l'utilisateur le group input (pour les manettes de jeu)
-sudo -S usermod -a -G input $USER
-echo "$(groups)"
+sudo -S echo -e "## Ajout de $voiduser au groupe Input"
+sudo -S usermod -a -G input $voiduser
+sudo -S echo -e "==> Liste des groupes :\n$(groups)"
 
+# Création dossier .local/bin si absent (en cas de fresh install)
 sudo -S echo "===> 04A $HOME/$USER/.local/bin : Verification Dossier présent"
 if [ ! -d $HOME/.local/bin ]; then
 	mkdir $HOME/.local/bin
@@ -589,6 +590,9 @@ git clone https://github.com/ibhagwan/picom-ibhagwan-template
 mv picom-ibhagwan-template ./srcpkgs/picom-ibhagwan
 ./xbps-src pkg picom-ibhagwan
 sudo -S xbps-install --repository=hostdir/binpkgs picom-ibhagwan
+
+# CONFIG PICOM
+sudo -S pycp $WDIR/config/picom.conf $HOME/.config/
 }
 function PARSEC(){
 echo "Flatpak : Installation Parsec"
