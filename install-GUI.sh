@@ -87,6 +87,9 @@ echo -e "===> BASE INSTALL"
 sudo -S xbps-install -Syuv xbps
 # INSTALLATION VPM
 sudo -S xbps-install -Syuv vpm vsv void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree linux5.15 linux5.15-headers;
+# CLEANALL
+cd $scripts
+./00-VOID-SYS.sh
 
 # Kernel 
 echo -e "===> BASE INSTALL : Kernel : Update"
@@ -107,7 +110,7 @@ BLUETOOTH
 VIRTIONET
 
 # Base Apps
-sudo -S vpm i -y dracut-network dracut-uefi dracut-crypt-ssh xorg-server-devel xorg-server-devel-32bit git-all nano inxi zenity picom zsh curl wget python3-pip thunar-archive-plugin catfish testdisk octoxbps cpufrequtils notepadqq mc htop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
+sudo -S vpm i -y linux-firmware dracut-network dracut-uefi dracut-crypt-ssh xorg-server-devel xorg-server-devel-32bit git-all nano inxi zenity snooze zsh curl wget python3-pip thunar-archive-plugin catfish testdisk octoxbps cpufrequtils notepadqq mc htop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
 sudo -S ln -s /etc/sv/socklog-unix /var/service; sudo -S ln -s /etc/sv/nanoklogd /var/service;
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
@@ -206,10 +209,6 @@ echo "	<directories/>" >> $HOME/.config/Thunar/uca.xml
 echo "	<text-files/>" >> $HOME/.config/Thunar/uca.xml
 echo "</action>" >> $HOME/.config/Thunar/uca.xml
 echo "</actions>" >> $HOME/.config/Thunar/uca.xml
-
-
-cd $scripts
-./00-VOID-SYS.sh
 cd $WDIR
 }
 
