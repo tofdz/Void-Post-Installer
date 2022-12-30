@@ -3,8 +3,8 @@
 # LAUNCHER : install.sh
 
 TITLE="Void Post Installer"
-version="0.2.7"
-# Date : 16/11/2020 maj 16/12/2022
+version="0.2.9"
+# Date : 16/11/2020 maj 30/12/2022
 # by Tofdz
 # assisted by :
 #
@@ -16,6 +16,8 @@ WDIR=$(pwd)
 scripts="$WDIR/data/install"
 outils="$WDIR/data/outils"
 icons="$WDIR/data/icons"
+dirapp="$HOME/.local/bin"
+shareapp="$HOME/.local/share/applications"
 chmod +x $scripts/*
 chmod +x $outils/*
 source ~/.config/user-dirs.dirs
@@ -73,7 +75,7 @@ if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
 				echo "EXIT"
 				exit
 				;;
-				255)
+				252)
 				exit
 				;;
 			esac
@@ -86,7 +88,7 @@ function BASE(){
 echo -e "===> BASE INSTALL"
 sudo -S xbps-install -Syuv xbps
 # INSTALLATION VPM
-sudo -S xbps-install -Syuv vpm vsv void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree linux5.15 linux5.15-headers;
+sudo -S xbps-install -Syuv vpm vsv void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
 # CLEANALL
 cd $scripts
 ./00-VOID-SYS.sh
@@ -109,13 +111,13 @@ $gpuDETECT
 BLUETOOTH
 VIRTIONET
 
-# Base Apps
-sudo -S vpm i -y linux-firmware dracut-network dracut-uefi dracut-crypt-ssh xorg-server-devel xorg-server-devel-32bit git-all nano inxi zenity snooze zsh curl wget python3-pip thunar-archive-plugin catfish testdisk octoxbps cpufrequtils notepadqq mc htop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
-sudo -S ln -s /etc/sv/socklog-unix /var/service; sudo -S ln -s /etc/sv/nanoklogd /var/service;
-
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
 sudo -S vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
 sudo -S rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
+
+# Base Apps
+sudo -S vpm i -y linux5.15 linux5.15-headers linux-firmware dracut-network dracut-uefi xorg-server-devel xorg-server-devel-32bit git-all nano inxi zenity snooze zsh curl wget python3-pip thunar-archive-plugin catfish testdisk octoxbps cpufrequtils notepadqq mc htop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
+sudo -S ln -s /etc/sv/socklog-unix /var/service; sudo -S ln -s /etc/sv/nanoklogd /var/service;
 
 #========================================
 # AJOUT DE L'AUTO UPDATER & CONFIGURATION
@@ -134,7 +136,7 @@ else
 	sudo -S echo -e "Service snooze-daily déjà présent"
 fi
 # Copie VOID-UPDATER dans .local/bin
-sudo -S pycp $WDIR/outils/VOID-UPDATER.sh $HOME/.local/bin/;
+sudo -S pycp $WDIR/outils/VOID-UPDATER.sh $dirapp;
 if [ ! -d /etc/cron.hourly ]; then
 	sudo -S echo -e "Dossier absent : création"
 	sudo -S mkdir /etc/cron.hourly
@@ -177,12 +179,12 @@ sudo -S usermod -a -G input $voiduser
 sudo -S echo -e "==> Liste des groupes :\n$(groups)"
 
 # Création dossier .local/bin si absent (en cas de fresh install)
-sudo -S echo "===> 04A $HOME/$USER/.local/bin : Verification Dossier présent"
-if [ ! -d $HOME/.local/bin ]; then
-	mkdir $HOME/.local/bin
-	sudo -S echo "Repertoire $HOME/.local/bin crée"
+sudo -S echo "===> 04A $dirapp : Verification Dossier présent"
+if [ ! -d $dirapp ]; then
+	mkdir $dirapp
+	sudo -S echo "Repertoire $dirapp crée"
 	else
-	sudo -S echo "Repertoire $HOME/.local/bin déjà présent"
+	sudo -S echo "Repertoire $dirapp déjà présent"
 fi
 #==================================
 # THUNAR : Ajout fonction recherche
@@ -259,7 +261,7 @@ sudo -S vpm i -y mesa mesa-dri linux-firmware-amd
 }
 function NVIDIA(){
 
-echo "===> nvidia INSTALL"
+sudo -S echo -e "===> nvidia INSTALL"
 sudo -S vpm i -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl nvtop
 # Fichier de configuration pour la gestion des ventilateurs
 sudo -S touch /etc/X11/xorg.conf.d/11-nvidia.conf
@@ -269,8 +271,24 @@ echo '     MatchDriver "nvidia-drm"' | sudo -S tee -a /etc/X11/xorg.conf.d/11-nv
 echo '     Driver "nvidia"' | sudo -S tee -a /etc/X11/xorg.conf.d/11-nvidia.conf
 echo '     Option "Coolbits" "4"' | sudo -S tee -a /etc/X11/xorg.conf.d/11-nvidia.conf
 echo 'EndSection' | sudo -S tee -a /etc/X11/xorg.conf.d/11-nvidia.conf
-}
 
+sudo -S echo -e "==> Installation GreenWithEnvy"
+flatpak install --user com.leinardi.gwe
+sudo -S echo -e "==> GWE : Création raccourci pour le démarrage auto"
+echo '[Desktop Entry]'|tee $HOME/.config/autostart/GreenWithEnvy.desktop
+echo 'Encoding=UTF-8'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
+echo 'Version=0.9.4'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
+echo 'Type=Application'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
+echo 'Name=GreenWithEnvy'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
+echo 'Comment=Afterburner Like'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
+echo 'Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=/app/bin/gwe >'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
+echo 'OnlyShowIn=XFCE;'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
+echo 'RunHook=0'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
+echo 'StartupNotify=false'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
+echo 'Terminal=false'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
+echo 'Hidden=false'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
+
+}
 function INTELGPU(){
 echo -e "==> INTELINSTALL"
 sudo -S vpm i -y mesa mesa-dri mesa-vulkan-intel linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode
@@ -314,7 +332,36 @@ sudo vpm i -y linux-firmware-broadcom linux-firmware-intel linux-firmware-networ
 sudo vpm i -y tp_smapi-dkms tpacpi-bat
 
 }
+function T470(){
 
+# Support TouchScreen
+if [ $(lsusb|grep -c "Touch") != 0]; then
+	sudo -S echo -e "T470 : TouchScreen detecté : installation"
+	sudo -S vpm i -y xinput xinput_calibrator
+	if [ ! -f $shareapp/VPI-TouchScreen_Calibration ]; then
+		echo '#!/bin/bash' > $dirapp/VPI-TouchScreen_Calibration
+		echo 'PASS=$(yad --entry --image=window-maximize --title="TouchScreen Calibration" --hide-text --text="TouchScreen Calibration\n\nEnter user password :\n")' >> $dirapp/VPI-TouchScreen_Calibration
+		echo 'echo -e $PASS|sudo -S xinput_calibration' >> $dirapp/VPI-TouchScreen_Calibration
+	else
+		echo 'VPI-TouchScreen_Calibration présent'
+	fi
+	if [ ! -f $shareapp/VPI-TouchScreen_Calibration.desktop ]; then
+		echo '[Desktop Entry]' > $shareapp/VPI-TouchScreen_Calibration.desktop
+		echo 'Version=1.0' >> $shareapp/VPI-TouchScreen_Calibration.desktop
+		echo 'Type=Application' >> $shareapp/VPI-TouchScreen_Calibration.desktop
+		echo 'Name=VPI-TouchScreen_Calibration' >> $shareapp/VPI-TouchScreen_Calibration.desktop
+		echo 'Exec=VPI-TouchScreen_Calibration' >> $shareapp/VPI-TouchScreen_Calibration.desktop
+		echo 'Icon=window-maximize' >> $shareapp/VPI-TouchScreen_Calibration.desktop
+		echo 'Terminal=false' >> $shareapp/VPI-TouchScreen_Calibration.desktop
+		echo 'StartupNotify=false' >> $shareapp/VPI-TouchScreen_Calibration.desktop
+		echo 'Categories=X-VPI;' >> $shareapp/VPI-TouchScreen_Calibration.desktop
+	else
+		echo 'VPI-TouchScreen_Calibration.desktop présent'
+	fi
+else
+	sudo -S echo -e "T470 : TouchScreen non detecté"
+fi
+}
 function FLATPAK(){
 echo "===> FLATPAK"
 # installation via flatpak de Discord & Parsec
@@ -355,48 +402,200 @@ echo 'include "/usr/share/nano/tex.nanorc"' >> $HOME/.nanorc
 
 }
 function GUFW(){
-# INTERFACE GRAPHIQUE POUR CONTROLER SON GUFW
-# DE MANIERE TRES SIMPLE !!!!
-sudo vpm i -y gufw
-
-# CONFIGURATION POUR RENDRE FONCTIONNELLE LE GUI
-if [ ! -f $HOME/.local/bin/gufw-launcher ]; then
-	touch $HOME/.local/bin/gufw-launcher
-	echo '#!/bin/bash' > $HOME/.local/bin/gufw-launcher
-	echo 'PASS=$(yad --entry --hide-text --text="VPI - gufw Launcher")' >> $HOME/.local/bin/gufw-launcher
-	echo '$PASS|sudo -S gufw-pkexec clear' >> $HOME/.local/bin/gufw-launcher
-	chmod +x $HOME/.local/bin/gufw-launcher
-
-	if [ ! -f $XDG_DEKTOP_DIR/gufw.desktop ]; then
-		touch $XDG_DEKTOP_DIR/gufw.desktop
-		echo '[Desktop Entry]' > $XDG_DEKTOP_DIR/gufw.desktop
-		echo 'Version=1.0' >> $XDG_DEKTOP_DIR/gufw.desktop
-		echo 'Type=Application' >> $XDG_DEKTOP_DIR/gufw.desktop
-		echo 'Name=gufw' >> $XDG_DEKTOP_DIR/gufw.desktop
-		echo 'Comment=Firewall' >> $XDG_DEKTOP_DIR/gufw.desktop
-		echo 'Exec=$HOME/.local/bin/gufw-launcher' >> $XDG_DEKTOP_DIR/gufw.desktop
-		echo 'Icon=caveau' >> $XDG_DEKTOP_DIR/gufw.desktop
-		echo 'Terminal=false' >> $XDG_DEKTOP_DIR/gufw.desktop
-		echo 'StartupNotify=false' >> $XDG_DEKTOP_DIR/gufw.desktop
+if [ $(sudo -S vpm list|grep -c "gufw") != 0 ]; then
+	sudo -S echo -e "[GUFW] ==> Config files"
+	VPIXFCE
+	if [ ! -f $dirapp/VPI-Firewall ]; then
+		echo '#!/bin/bash' > $dirapp/VPI-Firewall
+		echo 'PASS=$(yad --entry --image=security-low --title="GUFW Firewall" --hide-text --text="Firewall Launcher\n\nEnter user password :\n")' >> $dirapp/VPI-Firewall
+		echo 'echo $PASS|sudo -S gufw-pkexec' >> $dirapp/VPI-Firewall
+		chmod +x $dirapp/VPI-Firewall
+	else
+		echo "Fichier VPI-Firewall présent"
 	fi
+	if [ ! -f $shareapp/VPI-Firewall.desktop ]; then
+	# VPI-Firewall
+		echo '[Desktop Entry]' > $shareapp/VPI-Firewall.desktop
+		echo 'Version=1.0' >> $shareapp/VPI-Firewall.desktop
+		echo 'Type=Application' >> $shareapp/VPI-Firewall.desktop
+		echo 'Name=VPI-Firewall' >> $shareapp/VPI-Firewall.desktop
+		echo 'Exec=VPI-Firewall' >> $shareapp/VPI-Firewall.desktop
+		echo 'Icon=security-low' >> $shareapp/VPI-Firewall.desktop
+		echo 'Terminal=false' >> $shareapp/VPI-Firewall.desktop
+		echo 'StartupNotify=false' >> $shareapp/VPI-Firewall.desktop
+		echo 'Categories=X-VPI;' >> $shareapp/VPI-Firewall.desktop
+	else
+		echo "Fichier VPI-Firewall.desktop présent"
+	fi
+else
+	sudo -S echo -e "[GUFW] ==> Paquet gufw absent : veuillez installer gufw"
 fi
+}
+function VPIXFCE(){
+dirmenu="$HOME/.config/menus"
+file="xfce-applications.menu"
+sudo -S echo -e "[VPIXFCE] ==> Verification Backup fichier $file"
+if [ -f $dirmenu/$file.bak ]; then
+	sudo -S echo -e "[VPIXFCE] ==> Fichier $file.bak présent"
+	else
+	sudo -S echo -e "[VPIXFCE] ==> Création backup $file"
+	pycp $dirmenu/$file $dirmenu/$file.bak
+	sudo -S echo -e "[VPIXFCE] ==> Backup $file créé"
+fi
+# RECUPERE LE NUMERO DE LIGNE A MODIFIER :
+
+sudo -S echo -e "[VPIXFCE] ==> Edition fichier $file"
+if [ $(grep -c "X-VPI" $dirmenu/$file) = 0 ]; then
+	sudo -S echo -e "[VPIXFCE] ==> Fichier $file non modifié : modification en cours"
+	ligne=$(grep -n "Name>Other" $dirmenu/$file|cut -d: -f1)
+	lignecorr=$(($ligne-2))
+	sed "$lignecorr a\\
+	<Menu>\\
+		<Name>VPI</Name>\\
+		<Directory>VPI.directory</Directory>\\
+		<Include>\\
+			<Category>X-VPI</Category>\\
+		</Include>\\
+	</Menu>" $dirmenu/$file > $dirmenu/xfce-test
+	
+ligne=$(grep -n "Menuname>Other" $dirmenu/xfce-test|cut -d: -f1)
+sed "$ligne a\\
+		<Menuname>VPI</Menuname>" $dirmenu/xfce-test > $dirmenu/$file
+	rm $dirmenu/xfce-test
+	sudo -S echo -e "[VPIXFCE] ==> $file modifié"
+else
+	sudo -S echo "[VPIXFCE] Fichier $file déjà modifié"
+fi
+
+if [ ! -f $HOME/.local/share/desktop-directories/VPI.directory ]; then
+	sudo -S echo -e "[VPIXFCE] ==> Création VPI.directory"
+	echo 'Fichier VPI.directory absent : création'
+	echo '[Desktop Entry]' > $HOME/.local/share/desktop-directories/VPI.directory
+	echo 'Version=1.1' >> $HOME/.local/share/VPI.directory
+	echo 'Type=Directory' >> $HOME/.local/share/VPI.directory
+	echo 'Name=VPI' >> $HOME/.local/share/VPI.directory
+	echo 'Comment=Application Void Post Installer by TofF.' >> $HOME/.local/share/VPI.directory
+	echo 'Icon=xfce-system-settings-symbolic' >> $HOME/.local/share/VPI.directory
+	sudo -S echo -e "[VPIXFCE] ==> Fichier VPI.directory créé"
+else
+	sudo -S echo -e "[VPIXFCE] ==> Fichier VPI.directory présent"
+fi
+
 
 }
 function VPIAPPS(){
+sudo -S echo -e "==> Installation VPI-Apps"
+pycp $outils/VPI-* $dirapp
+# VERIFICATION PRESENCE & MODIF FICHIER MENU
+VPIXFCE
 
+#VPI-Backup-Restore
+if [ ! -f $shareapp/VPI-Backup-Restore.desktop ]; then
+	echo '[Desktop Entry]' > $shareapp/VPI-Backup-Restore.desktop
+	echo 'Version=1.0' >> $shareapp/VPI-Backup-Restore.desktop
+	echo 'Type=Application' >> $shareapp/VPI-Backup-Restore.desktop
+	echo 'Name=VPI-Backup-Restore' >> $shareapp/VPI-Backup-Restore.desktop
+	echo 'Exec=VPI-Backup-Restore' >> $shareapp/VPI-Backup-Restore.desktop
+	echo 'Icon=document-save-as' >> $shareapp/VPI-Backup-Restore.desktop
+	echo 'Terminal=false' >> $shareapp/VPI-Backup-Restore.desktop
+	echo 'StartupNotify=false' >> $shareapp/VPI-Backup-Restore.desktop
+	echo 'Categories=X-VPI;' >> $shareapp/VPI-Backup-Restore.desktop
+else
+	echo 'VPI-Backup-Restore.desktop présent'
+fi
 
-pycp $outils/ZenIso $HOME/.local/bin/
+# VPI-ManageUser
+if [ ! -f $shareapp/VPI-ManageUser.desktop ]; then
+echo '[Desktop Entry]' > $shareapp/VPI-ManageUser.desktop
+echo 'Version=1.0' >> $shareapp/VPI-ManageUser.desktop
+echo 'Type=Application' >> $shareapp/VPI-ManageUser.desktop
+echo 'Name=VPI-ManageUser' >> $shareapp/VPI-ManageUser.desktop
+echo 'Exec=VPI-ManageUser' >> $shareapp/VPI-ManageUser.desktop
+echo 'Icon=system-users' >> $shareapp/VPI-ManageUser.desktop
+echo 'Terminal=false' >> $shareapp/VPI-ManageUser.desktop
+echo 'StartupNotify=false' >> $shareapp/VPI-ManageUser.desktop
+echo 'Categories=X-VPI;' >> $shareapp/VPI-ManageUser.desktop
+else
+	echo 'VPI-ManageUser.desktop présent'
+fi
+#VPI-UPDATER
+if [ ! -f $shareapp/VPI-UPDATER.desktop ]; then
+echo '[Desktop Entry]' > $shareapp/VPI-UPDATER.desktop
+echo 'Version=1.0' >> $shareapp/VPI-UPDATER.desktop
+echo 'Type=Application' >> $shareapp/VPI-UPDATER.desktop
+echo 'Name=VPI-UPDATER' >> $shareapp/VPI-UPDATER.desktop
+echo 'Exec=VPI-UPDATER' >> $shareapp/VPI-UPDATER.desktop
+echo 'Icon=system-software-update' >> $shareapp/VPI-UPDATER.desktop
+echo 'Terminal=false' >> $shareapp/VPI-UPDATER.desktop
+echo 'StartupNotify=false' >> $shareapp/VPI-UPDATER.desktop
+echo 'Categories=X-VPI;' >> $shareapp/VPI-UPDATER.desktop
+else
+	echo 'VPI-UPDATER.desktop présent'
+fi
 
-echo '[Desktop Entry]' > $XDG_DESKTOP_DIR/ZenIso.desktop
-echo 'Version=1.0' >> $XDG_DESKTOP_DIR/ZenIso.desktop
-echo 'Type=Application' >> $XDG_DESKTOP_DIR/ZenIso.desktop
-echo 'Name=ZenIso' >> $XDG_DESKTOP_DIR/ZenIso.desktop
-echo 'Exec=ZenIso' >> $XDG_DESKTOP_DIR/ZenIso.desktop
-echo 'Icon=tools-media-optical-burn-image' >> $XDG_DESKTOP_DIR/ZenIso.desktop
-echo 'Terminal=false' >> $XDG_DESKTOP_DIR/ZenIso.desktop
-echo 'StartupNotify=false' >> $XDG_DESKTOP_DIR/ZenIso.desktop
-echo 'Categories=System;' >> $XDG_DESKTOP_DIR/ZenIso.desktop
+# VPI-Void-install-USB
+if [ ! -f $shareapp/VPI-Void-install-USB.desktop ]; then
+echo '[Desktop Entry]' > $shareapp/VPI-Void-install-USB.desktop
+echo 'Version=1.0' >> $shareapp/VPI-Void-install-USB.desktop
+echo 'Type=Application' >> $shareapp/VPI-Void-install-USB.desktop
+echo 'Name=VPI-Void-install-USB' >> $shareapp/VPI-Void-install-USB.desktop
+echo 'Exec=VPI-Void-install-USB' >> $shareapp/VPI-Void-install-USB.desktop
+echo 'Icon=system-run' >> $shareapp/VPI-Void-install-USB.desktop
+echo 'Terminal=false' >> $shareapp/VPI-Void-install-USB.desktop
+echo 'StartupNotify=false' >> $shareapp/VPI-Void-install-USB.desktop
+echo 'Categories=X-VPI;' >> $shareapp/VPI-Void-install-USB.desktop
+else
+	echo 'VPI-Void-install-USB.desktop présent'
+fi
 
+#VPI-ZenIso
+if [ ! -f $shareapp/VPI-ZenIso.desktop ]; then
+echo '[Desktop Entry]' > $shareapp/VPI-ZenIso.desktop
+echo 'Version=1.0' >> $shareapp/VPI-ZenIso.desktop
+echo 'Type=Application' >> $shareapp/VPI-ZenIso.desktop
+echo 'Name=VPI-ZenIso' >> $shareapp/VPI-ZenIso.desktop
+echo 'Exec=VPI-ZenIso' >> $shareapp/VPI-ZenIso.desktop
+echo 'Icon=tools-media-optical-burn-image' >> $shareapp/VPI-ZenIso.desktop
+echo 'Terminal=false' >> $shareapp/VPI-ZenIso.desktop
+echo 'StartupNotify=false' >> $shareapp/VPI-ZenIso.desktop
+echo 'Categories=X-VPI;' >> $shareapp/VPI-ZenIso.desktop
+else
+	echo 'VPI-ZenIso.desktop présent'
+fi
+
+# VPI-lxdm-config-launcher
+if [ ! -f $shareapp/VPI-lxdm-config-launcher.desktop ]; then
+echo '[Desktop Entry]' > $shareapp/VPI-lxdm-config-launcher.desktop
+echo 'Version=1.0' >> $shareapp/VPI-lxdm-config-launcher.desktop
+echo 'Type=Application' >> $shareapp/VPI-lxdm-config-launcher.desktop
+echo 'Name=VPI-lxdm-config-launcher' >> $shareapp/VPI-lxdm-config-launcher.desktop
+echo 'Exec=VPI-lxdm-config-launcher' >> $shareapp/VPI-lxdm-config-launcher.desktop
+echo 'Icon=image-x-generic' >> $shareapp/VPI-lxdm-config-launcher.desktop
+echo 'Terminal=false' >> $shareapp/VPI-lxdm-config-launcher.desktop
+echo 'StartupNotify=false' >> $shareapp/VPI-lxdm-config-launcher.desktop
+echo 'Categories=X-VPI;' >> $shareapp/VPI-lxdm-config-launcher.desktop
+else
+	echo 'VPI-lxdm-config-launcher.desktop présent'
+fi
+
+# VPI-vmware-registration
+if [ $(ls /etc | grep -c "vmware") != 0 ]; then
+	if [ ! -f $shareapp/VPI-vmware-registration.desktop ]; then
+	echo '[Desktop Entry]' > $shareapp/VPI-vmware-registration.desktop
+	echo 'Version=1.0' >> $shareapp/VPI-vmware-registration.desktop
+	echo 'Type=Application' >> $shareapp/VPI-vmware-registration.desktop
+	echo 'Name=VPI-vmware-registration' >> $shareapp/VPI-vmware-registration.desktop
+	echo 'Exec=VPI-vmware-registration' >> $shareapp/VPI-vmware-registration.desktop
+	echo 'Icon=error-correct' >> $shareapp/VPI-vmware-registration.desktop
+	echo 'Terminal=false' >> $shareapp/VPI-vmware-registration.desktop
+	echo 'StartupNotify=false' >> $shareapp/VPI-vmware-registration.desktop
+	echo 'Categories=X-VPI;' >> $shareapp/VPI-vmware-registration.desktop
+	else
+		echo 'VPI-vmware-registration.desktop présent'
+	fi
+else
+	sudo -S echo -e "vmware workstation absent du systeme"
+fi
 }
 function I3INSTALLER(){
 # configuration window manager i3
@@ -467,7 +666,7 @@ sudo mkdir /etc/init.d/
 fi
 sudo -S ./VMware-Player-16.0.0-16894299.x86_64.bundle
 sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr/share/applications/vmware-player.desktop
-cd $HOME/.local/bin/
+cd $dirapp
 if [ ! -f vmware-launcher-player ]; then
 	touch vmware-launcher-player
 else
@@ -476,8 +675,8 @@ else
 	echo "sudo -S /etc/init.d/vmware start && sudo -S vmware-usbarbitrator" >> vmware-launcher-player
 	echo "vmplayer" >> vmware-launcher-player
 	chmod +x vmware-launcher-player
-	pycp $WDIR/outils/vmware-registration $HOME/.local/bin
-	chmod +x $HOME/.local/bin/vmware-registration
+	pycp $outils/VPI-vmware-registration $dirapp
+	cd $HOME && sudo -S rm -Rf VMWareInstall
 fi
 }
 function VMWAREWSPRO(){
@@ -499,7 +698,7 @@ sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher/' /usr/share/
 sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr/share/applications/vmware-player.desktop
 # CREATION DES LAUNCHERS DANS $HOME/.local/bin (path)
 # Pour VMPlayer
-cd $HOME/.local/bin/
+cd $dirapp
 touch vmware-launcher vmware-launcher-player
 echo "#!/bin/bash" > vmware-launcher-player
 echo "PASS=$(yad --entry --hide-text --title="VMWare-Launcher-Player" --text="Pass :")" >> vmware-launcher
@@ -513,8 +712,7 @@ echo "sudo -S /etc/init.d/vmware start && sudo -S vmware-usbarbitrator" >> vmwar
 echo "vmware" >> vmware-launcher
 chmod +x vmware-launcher
 # Outil d'enregistrement de license
-pycp $WDIR/outils/vmware-registration $HOME/.local/bin
-chmod +x $HOME/.local/bin/vmware-registration
+pycp $outils/VPI-vmware-registration $dirapp
 cd $HOME && sudo -S rm -Rf VMWareInstall
 }
 function MENUVMWAREWS(){
@@ -540,12 +738,18 @@ cd $HOME
 if [ ! -d $HOME/Applications ];then
 	mkdir $HOME/Applications
 fi
-if [ ! -d $HOME/Discord ];then
+if [ -d $HOME/Applications/Discord ]; then
+	sudo -S echo "discord deja installé, reinstallation en cours"
+	sudo -S rm -rfv $HOME/Applications/Discord
+fi
+
 # Téléchargement & installation de Discord
+sudo -S echo -e "Discord : Téléchargement"
 	cd $HOME/Applications
 	wget -O discord.tar.gz "https://discordapp.com/api/download?platform=linux&format=tar.gz"
 	tar xfv discord.tar.gz; rm discord.tar.gz;
 # Création raccourci pour le menu systeme
+sudo -S echo -e "Discord : Création raccourci"	
 	echo "[Desktop Entry]" > $HOME/.local/share/applications/discord.desktop
 	echo "Name=Discord" >> $HOME/.local/share/applications/discord.desktop
 	echo "StartupWMClass=discord" >> $HOME/.local/share/applications/discord.desktop
@@ -558,9 +762,6 @@ if [ ! -d $HOME/Discord ];then
 	echo "Path=$HOME/Applications/Discord" >> $HOME/.local/share/applications/discord.desktop
 	echo "Terminal=false" >> $HOME/.local/share/applications/discord.desktop
 	echo "StartupNotify=false" >> $HOME/.local/share/applications/discord.desktop
-	else
-	sudo -S echo "discord deja installé, supprimmez le dossier Discord pour relancer l'installation"
-fi
 }
 function PICOM(){
 echo "Picom : Installation"
@@ -576,20 +777,22 @@ if [[ $(sudo -S vpm list|grep -c "compton") != 0 ]]; then
 		sudo -S vpm remove -y compton
 		sudo -S rm /etc/xbps.d/void.conf
 fi
+
+sudo -S vpm i -y picom
 # Installation Picom-ibhagwan
-cd $HOME
-git clone https://github.com/void-linux/void-packages
-cd void-packages
-core=$(cat /proc/cpuinfo | grep processor | wc -l)
-echo "XBPS_ALLOW_RESTRICTED=yes" > $HOME/void-packages/etc/conf
-echo "XBPS_CCACHE=yes" >> $HOME/void-packages/etc/conf
-echo "XBPS_MAKEJOBS=$core" >> $HOME/void-packages/etc/conf
-cd void-packages;
-./xbps-src binary-bootstrap
-git clone https://github.com/ibhagwan/picom-ibhagwan-template
-mv picom-ibhagwan-template ./srcpkgs/picom-ibhagwan
-./xbps-src pkg picom-ibhagwan
-sudo -S xbps-install --repository=hostdir/binpkgs picom-ibhagwan
+#cd $HOME
+#git clone https://github.com/void-linux/void-packages
+#cd void-packages
+#core=$(cat /proc/cpuinfo | grep processor | wc -l)
+#echo "XBPS_ALLOW_RESTRICTED=yes" > $HOME/void-packages/etc/conf
+#echo "XBPS_CCACHE=yes" >> $HOME/void-packages/etc/conf
+#echo "XBPS_MAKEJOBS=$core" >> $HOME/void-packages/etc/conf
+#cd void-packages;
+#./xbps-src binary-bootstrap
+#git clone https://github.com/ibhagwan/picom-ibhagwan-template
+#mv picom-ibhagwan-template ./srcpkgs/picom-ibhagwan
+#./xbps-src pkg picom-ibhagwan
+#sudo -S xbps-install --repository=hostdir/binpkgs picom-ibhagwan
 
 # CONFIG PICOM
 sudo -S pycp $WDIR/config/picom.conf $HOME/.config/
@@ -641,8 +844,8 @@ function CUSTOMINSTALL(){
 echo -e "\033[33,40m==>   CUSTOMINSTALL\033[0m"
 MENUPARSER
 SSHKEYTEST
-GUFW
 BASE
+GUFW
 NANORC
 FLATPAK
 XBPSLOADER
@@ -755,6 +958,7 @@ function MENULANG(){
 echo -e "\033[33,40m==>   MENULANG START\033[0m"
 BANNER
 vpiLANG=$(yad --title="$TITLE $version" --text="Choisissez votre langue :\n\nChoose your language :" \
+	--center --on-top \
 	--list --width="450" --height="530" --separator="" \
 	--column="LANGUAGE :IMG" --column="" --print-column="2" --hide-column="2" \
 	$icons/FR.png "FR" \
@@ -769,7 +973,7 @@ case $valret in
 	1)
 	exit
 	;;
-	255)
+	252)
 	exit
 	;;
 esac
@@ -779,7 +983,7 @@ echo -e "\033[33,40m==>   MENU01START\033[0m"
 DETECT
 source $WDIR/LANG/installer/$vpiLANG
 menuCHOIX=$(yad --list --title="$TITLE $version" \
-				--text="$vpiLANG\n$menu01START00\n\n==== AUTO DETECT ====\n\nCPU TYPE\t : \t$cpuDETECT\nGPU TYPE\t : \t$gpuDETECT\n\nBluetooth\t : \t$blueDETECT\nVirtio-net\t : \t$vmDETECT" \
+				--text="$vpiLANG\n$menu01START00\n\n==== AUTO DETECT ====\n\nUtilisateur\t : \t$voiduser\n\nCPU TYPE\t : \t$cpuDETECT\nGPU TYPE\t : \t$gpuDETECT\n\nBluetooth\t : \t$blueDETECT\nVirtio-net\t : \t$vmDETECT" \
 				--width="530" --height="220" \
 				--center --on-top --icon --icon-size=32 \
 				--column="TYPE" --column="Description" --print-column="1" --separator="" \
@@ -800,30 +1004,14 @@ case $valret in
 	1)
 	exit
 	;;
-	255)
+	252)
 	exit
 	;;
 esac
 }
 function MENU02CUSTOM(){
 echo -e "\033[33,40m==>   MENU02CUSTOM\033[0m"
-yad --plug="$KEY" --tabnum="1" --form --image="abp.png" --text="\n\nBienvenue dans la post Installation de VoidLinux : \
-					\n\nCette Post Installation permettra de finir de configurer correctement votre système \
-					\nainsi qu'un paramètrage correct des fichiers de config de base. \
-					\nDes modifications vont etre apportés à votre système pour y remedier. \
-					\n\nSection XBPS : \
-					\n\nListe de paquets installés via l'installateur fourni de base avec void (xbps), \
-					\npour une base install bien fournie ! \
-					\nUne selection par défaut est déja réalisée (les plus utilisés) \
-					\n\nSection Fix : \
-					\n\nDes correctifs en fonction des modèles, \
-					\nun correctif qui empeche la detection d'un clavier azerty au login \
-					\n\nSection APPS : \
-					\n\nListe d'applications et leurs configuration pour une utilisation facile \
-					\n\n\nINFO : \
-					\n\n\nFaites votre selection et validez en cliquant sur le bouton OK \
-					\net l'installation se deroulera automatiquement (Veuillez attendre le message de fin svp). \
-					\n\nTofdz 2022" &\
+yad --plug="$KEY" --tabnum="1" --form --image="abp.png" yad --text-info --wrap < $WDIR/LANG/installer/menu-fr.txt &\
 yad --plug="$KEY" --tabnum="2" --checklist --list --text="XBPS : Liste des paquets xbps utile" --hide-column="2" \
 		--column="CHECK" --column="XBPS" --column="PAQUET" --column="DESCRIPTION" \
 		true "XBPS" "cifs-utils" "Outil pour connexion SMB" \
@@ -842,16 +1030,16 @@ yad --plug="$KEY" --tabnum="2" --checklist --list --text="XBPS : Liste des paque
 		true "XBPS" "xfce4-plugins" "Suite de plugin pour personnaliser votre interface xfce" \
 		true "XBPS" "xfce4-screenshooter" "Prendre des captures d'ecran" \
 		true "XBPS" "deluge" "Telechargez vos torrent et magnet link" \
-		true "XBPS" "caffeine-ng" "Gestion de l'écran de veille (interdire la veille par applications & bien plus)" &>$res1&\
+		true "XBPS" "caffeine-ng" "Gestion de l'écran de veille" &>$res1&\
 yad --plug="$KEY" --tabnum="3" --form --text="FIX : Tous les correctifs dispo pour VoidLinux" --separator="\n" \
-		--field="FIX - Lenovo Thinkpad :CB" "!T420!X250" \
+		--field="FIX - Lenovo Thinkpad :CB" "!T420!X250!T470" \
 		--field="FIX - AZERTY at login:CB" "!ELOGIND" \
 		--field="FIX - ShiftLock:CB" "!SHIFTLOCK"&>$res2&\
 yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les applications déjà configuré pour vous" --hide-column="3" \
 		--column="CHECK" --column=" :IMG" --column="APPS" --column="PAQUET" --column="DESCRIPTION" \
 		false "$icons/I3wm-color-50.png" "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
 		false "$icons/I3wm-color-50.png" "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
-		true "$icons/I3wm-color-50.png" "APPS" "PICOM" "Version de picom by ibhagwan" \
+		true "$icons/I3wm-color-50.png" "APPS" "PICOM" "Composition : affichage effet graphique" \
 		false "$icons/Virtualbox-50.png" "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
 		true "$icons/teamviewer_48.png" "APPS" "TEAMVIEWER" "TeamViewer" \
 		false "$icons/VMWare-Workstation-50.png" "APPS" "MENUVMWAREWS" "VMWARE Workstation Pro / Player 16" \
@@ -865,7 +1053,8 @@ yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les appl
 		true "$icons/Discord-light-50.png" "APPS" "DISCORD" "Célèbre plateforme de chat vocale" \
 		true "$icons/ohmyzsh-50.png" "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" &>$res3&\
 yad --notebook --key="$KEY" --title="$TITLE" --image="abp.png" --text="$TITLE" \
-		--height="960" --width="780" --separator="|" \
+		--center --on-top \
+		--width="780" --height="750" --separator="|" \
 		--tab="Acceuil" --tab="XBPS" --tab="Fix" --tab="APPS" \
 		--button="Exit:1" --button="OK:0"
 ret=$?
@@ -878,7 +1067,7 @@ case $ret in
 	pkill yad
 	exit
 	;;
-	255)
+	252)
 	pkill yad
 	exit
 	;;
@@ -896,10 +1085,9 @@ case $valret in
 	pkill yad
 	exit
 	;;
-	255)
+	252)
 	exit
 	;;
 esac
 }
-
 MENULANG

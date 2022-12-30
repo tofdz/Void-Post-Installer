@@ -3,14 +3,11 @@
 # Gestionnaire d'utilisateurs
 # Crée par Tofdz le 30/11/2021
 # version 0.0.1
-echo "#===================#"
-echo "#  VOID-ManageUser  #"
-echo "#===================#"
-# MODE ADMIN
+
 # VARIABLES
-PASS=$(yad --entry --hide-text --text="$TITLE $version")
-echo $PASS|sudo -S clear
-										# MOT DE PASSE SESSION SUDO AU DEMARRAGE
+
+TITLE="VPI-ManageUser"
+version="0.0.2"
 WDIR=$(pwd)								# SOURCE REPERTOIRE DE TRAVAIL ACTUEL 
 source $HOME/.config/user-dirs.dirs		# SOURCE LOCAL FILES
 LISTUSER=$(mktemp)						# FICHIER TEMPORAIRE
@@ -57,17 +54,17 @@ function DELETEUSER(){
 echo "==> DELETEUSER"
 echo "Utilisateur à supprimer : $choix"
 
-sudo userdel $choix
+sudo -S userdel $choix
 if [ -d /home/$choix ];then
-	sudo rm -rf /home/$choix
-	sudo sync
+	sudo -S rm -rf /home/$choix
+	sudo -S sync
 fi
 MENUCHOIX
 }					# SUPPRIMER LE COMPTE & /HOME/USER
 
 function WARNINGCREATION(){
-echo "==> WARNINGCREATION"
-echo "Utilisateur : $UTILISATEUR Nom Complet : $SESSION" 
+sudo -S echo -e "==> WARNINGCREATION"
+sudo -S echo -e "Utilisateur : $UTILISATEUR Nom Complet : $SESSION" 
 
 yad --title="Création utilisateur" --width 400 --height 100 \
 	--text="Attention !\nVous etes sur le point de créer l'utilisateur $UTILISATEUR ,\nAinsi que son home directory : /home/$UTILISATEUR\n\nVoulez vous continuer ?" \
@@ -83,13 +80,13 @@ case $? in
 		255)
 		exit
 esac
-}
+}			# MENU AVERTISSEMENT CREATION UTILISATEUR
 function WARNINGDELETE(){
-echo "==> WARNINGDELETE"
+sudo -S echo -e "==> WARNINGDELETE"
 
 valret=$(yad --title="Suppression utilisateur" --width 400 --height 100 \
 	--text="Vous allez procéder à la suppression définitive de(s) utilisateur(s)\n$choix\n\nainsi que de toutes les données contenues dans \n\nCETTE SUPPRESSION EST DEFINITIVE !\nVoulez vous continuer ?" \
-	--button="ANNULATION:1" --button="CREATION:0")
+	--button="ANNULATION:1" --button="DELETE:0")
 case $? in
    0)
    DELETEUSER
@@ -103,7 +100,7 @@ esac
 
 
 
-}				# AVERTISSEMENT AVANT SUPPRESSION DEFINITIVE
+}				# MENU AVERTISSEMENT SUPPRESSION UTILISATEUR
 
 function MENUCREATION(){
 echo "==> MENUCREATION"
@@ -180,7 +177,7 @@ case $? in
    exit
 esac
 	# OUVRIR UN MENU POUR VALIDER LE CHOIX "VOULEZ VOUS VRAIMENT DETRUIRE USER ET /home/USER ?"
-}				# MENU EFFACER UTILISATEUR + FONCTIONS	
+}				# MENU EFFACER UTILISATEUR + FONCTIONS
 function MENUCHOIX(){
 
 echo "==> MENU CHOIX"
@@ -212,6 +209,15 @@ case $choix in
 esac
 }					# MENU DE SELECTION CREATION / EFFACER
 
+function START(){
+
+PASS=$(yad --entry --hide-text --text="$TITLE $version")
+echo $PASS|sudo -S clear
+
+sudo -S echo -e "#===================#"
+sudo -S echo -e "#  VPI-ManageUser   #"
+sudo -S echo -e "#===================#"
+
 
 valret=$(yad --title "VOID-ManageUser" --width 350 --height 100 \
 		--text "Bonjour $USER !\n\nCet utilitaire permet l'administration\ndes comptes utilisateurs\nATTENTION MODIFICATION DEFINITIVE !!!!")
@@ -225,3 +231,5 @@ case $? in
    255)
    exit
 esac
+}						# MENU DEMARRAGE + DROITS SUDO
+START

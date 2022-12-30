@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<channel name="xfce4-panel" version="1.0">
+  <property name="configver" type="int" value="2"/>
+  <property name="panels" type="array">
+    <value type="int" value="1"/>
+    <property name="dark-mode" type="bool" value="true"/>
+    <property name="panel-1" type="empty">
+      <property name="position" type="string" value="p=8;x=960;y=1059"/>
+      <property name="length" type="uint" value="100"/>
+      <property name="position-locked" type="bool" value="true"/>
+      <property name="icon-size" type="uint" value="34"/>
+      <property name="size" type="uint" value="35"/>
+      <property name="plugin-ids" type="array">
+        <value type="int" value="1"/>
+        <value type="int" value="12"/>
+        <value type="int" value="7"/>
+        <value type="int" value="8"/>
+        <value type="int" value="17"/>
+        <value type="int" value="11"/>
+        <value type="int" value="16"/>
+        <value type="int" value="14"/>
+        <value type="int" value="9"/>
+        <value type="int" value="10"/>
+        <value type="int" value="2"/>
+        <value type="int" value="3"/>
+        <value type="int" value="4"/>
+        <value type="int" value="5"/>
+        <value type="int" value="18"/>
+        <value type="int" value="6"/>
+        <value type="int" value="15"/>
+        <value type="int" value="13"/>
+      </property>
+      <property name="length-adjust" type="bool" value="true"/>
+      <property name="autohide-behavior" type="uint" value="0"/>
+    </property>
+  </property>
+  <property name="plugins" type="empty">
+    <property name="plugin-2" type="string" value="tasklist">
+      <property name="grouping" type="uint" value="1"/>
+    </property>
+    <property name="plugin-3" type="string" value="separator">
+      <property name="expand" type="bool" value="true"/>
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-4" type="string" value="pager"/>
+    <property name="plugin-5" type="string" value="separator">
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-6" type="string" value="systray">
+      <property name="square-icons" type="bool" value="false"/>
+      <property name="known-legacy-items" type="array">
+        <value type="string" value="connexion au réseau wi-fi « laforge » active : laforge (76 %)"/>
+        <value type="string" value="connexion au réseau wi-fi « laforge » active : laforge (66 %)"/>
+        <value type="string" value="connexion au réseau wi-fi « laforge » active : laforge (68 %)"/>
+        <value type="string" value="connexion au réseau wi-fi « laforge » active : laforge (71 %)"/>
+        <value type="string" value="connexion au réseau wi-fi « laforge » active : laforge (67 %)"/>
+        <value type="string" value="connexion au réseau wi-fi « laforge » active : laforge (73 %)"/>
+        <value type="string" value="connexion au réseau wi-fi « laforge » active : laforge (74 %)"/>
+        <value type="string" value="connexion au réseau wi-fi « laforge » active : laforge (69 %)"/>
+        <value type="string" value="connexion au réseau wi-fi « laforge » active : laforge (70 %)"/>
+        <value type="string" value="connexion au réseau ethernet « wired connection 1 » active"/>
+        <value type="string" value="connexion au réseau wi-fi « laforge » active : laforge (91 %)"/>
+        <value type="string" value="connexion au réseau wi-fi « laforge » active : laforge (78 %)"/>
+        <value type="string" value="xfce4-power-manager"/>
+        <value type="string" value="telegramdesktop"/>
+        <value type="string" value="ulauncher"/>
+        <value type="string" value="barrier"/>
+        <value type="string" value="kvirc"/>
+        <value type="string" value="caffeine"/>
+        <value type="string" value="vmware-tray"/>
+        <value type="string" value="octoxbps-notifier"/>
+        <value type="string" value="pasystray"/>
+        <value type="string" value="thunar"/>
+        <value type="string" value="pulseaudio system tray"/>
+        <value type="string" value="applet networkmanager"/>
+      </property>
+      <property name="known-items" type="array">
+        <value type="string" value="vlc"/>
+        <value type="string" value="TeamViewer"/>
+        <value type="string" value="blueman"/>
+        <value type="string" value="TelegramDesktop"/>
+        <value type="string" value="Barrier"/>
+        <value type="string" value="ulauncher"/>
+        <value type="string" value="KVIrc"/>
+        <value type="string" value="caffeine"/>
+        <value type="string" value="remmina-icon"/>
+        <value type="string" value="steam"/>
+        <value type="string" value="discord1"/>
+        <value type="string" value="octoxbps-notifier"/>
+      </property>
+      <property name="hide-new-items" type="bool" value="false"/>
+      <property name="icon-size" type="int" value="0"/>
+      <property name="symbolic-icons" type="bool" value="true"/>
+      <property name="single-row" type="bool" value="false"/>
+    </property>
+    <property name="plugin-1" type="string" value="whiskermenu"/>
+    <property name="plugin-7" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="16709943031.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-8" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="16709943172.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-9" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="16709943293.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-10" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="16709943414.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-11" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="16709943776.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-12" type="string" value="separator">
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-13" type="string" value="clock">
+      <property name="mode" type="uint" value="4"/>
+      <property name="flash-separators" type="bool" value="true"/>
+      <property name="timezone" type="string" value="0"/>
+    </property>
+    <property name="plugin-14" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="16710004381.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-15" type="string" value="power-manager-plugin"/>
+    <property name="plugin-16" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="16710940801.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-17" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="16710980532.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-18" type="string" value="pulseaudio">
+      <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
+      <property name="mpris-players" type="string" value="firefox.instance13796;firefox.instance1828;firefox.instance2078;firefox.instance32626;firefox.instance4001;firefox.instance5834;firefox.instance913;vlc"/>
+    </property>
+  </property>
+  <property name="plugin-9" type="string" value="power-manager-plugin"/>
+  <property name="plugin-11" type="string" value="separator">
+    <property name="style" type="uint" value="0"/>
+  </property>
+  <property name="plugin-12" type="string" value="clock">
+    <property name="mode" type="uint" value="4"/>
+    <property name="timezone" type="string" value="Etc/GMT-0"/>
+  </property>
+  <property name="plugin-13" type="string" value="separator">
+    <property name="style" type="uint" value="0"/>
+  </property>
+  <property name="plugin-10" type="string" value="pulseaudio">
+    <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
+    <property name="mpris-players" type="string" value="firefox.instance12520;firefox.instance13527;firefox.instance14214;firefox.instance1494;firefox.instance1540;firefox.instance15735;firefox.instance1654;firefox.instance1678;firefox.instance1693;firefox.instance1703;firefox.instance1707;firefox.instance1718;firefox.instance1729;firefox.instance17338;firefox.instance1762;firefox.instance1820;firefox.instance1854;firefox.instance1898;firefox.instance1907;firefox.instance1976;firefox.instance1977;firefox.instance1998;firefox.instance2092;firefox.instance2144;firefox.instance2225;firefox.instance23372;firefox.instance2369;firefox.instance2370;firefox.instance25008;firefox.instance2576;firefox.instance2769;firefox.instance27798;firefox.instance2840;firefox.instance2852;firefox.instance2870;firefox.instance29525;firefox.instance2974;firefox.instance2998;firefox.instance3041;firefox.instance3078;firefox.instance3311;firefox.instance3419;firefox.instance3792;firefox.instance4509;firefox.instance4842;firefox.instance5011;firefox.instance5374;firefox.instance6162;firefox.instance6897;firefox.instance7307;firefox.instance8605;firefox.instance8712"/>
+    <property name="enable-wnck" type="bool" value="false"/>
+    <property name="enable-multimedia-keys" type="bool" value="false"/>
+    <property name="enable-mpris" type="bool" value="false"/>
+  </property>
+  <property name="plugin-7" type="string" value="whiskermenu"/>
+  <property name="plugin-1" type="string" value="launcher">
+    <property name="items" type="array">
+      <value type="string" value="16637347071.desktop"/>
+    </property>
+  </property>
+  <property name="plugin-8" type="string" value="launcher">
+    <property name="items" type="array">
+      <value type="string" value="16637347752.desktop"/>
+    </property>
+  </property>
+  <property name="plugin-14" type="string" value="launcher">
+    <property name="items" type="array">
+      <value type="string" value="16637348033.desktop"/>
+    </property>
+  </property>
+  <property name="plugin-15" type="string" value="separator">
+    <property name="style" type="uint" value="0"/>
+  </property>
+</channel>
