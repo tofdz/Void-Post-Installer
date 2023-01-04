@@ -3,8 +3,8 @@
 # LAUNCHER : install.sh
 
 TITLE="Void Post Installer"
-version="0.2.9"
-# Date : 16/11/2020 maj 30/12/2022
+version="0.3.0"
+# Date : 16/11/2020 maj 04/01/2023
 # by Tofdz
 # assisted by :
 #
@@ -32,7 +32,8 @@ TMP04=$(mktemp --tmpdir iface1.XXXXXXXX)
 
 function NET(){
 echo -e "===> NET"
-ip[0]=8.8.8.8
+ip[0]=
+ip[1]=1.1.1.1
 i=0
 while ((${#ip[*]}!=$i)) ; do
 	ping -c1 -q ${ip[$i]};ipR[$i]=${?};
@@ -41,9 +42,9 @@ done
 i=0
 while ((${#ip[*]}!=$i)) ; do
 	if [ ${ipR[$i]} -eq 0 ];then
-	echo -e " ${ip[$i]} est ONLINE"
+	sudo -S echo -e " ${ip[$i]} est ONLINE"
 	else
-	echo -e " ${ip[$i]} est OFFLINE"
+	sudo -S echo -e " ${ip[$i]} est OFFLINE"
 	exit
 	fi
 	i=$((i+1));
@@ -82,6 +83,39 @@ if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
 	else
 			echo -e "[ SSH ] ==> fichiers ssh deja present"
 	fi
+### Installation des clés dans la configuration
+## Config SSH
+
+# BACKUP CONFIG FILE
+sudo -S echo -e "[SSHD] Modification /etc/ssh/sshd_config"
+if [ ! -f /etc/ssh/sshd_config.sav ]; then
+	sudo -S echo -e "[SSHD] Backup en cours vers /etc/ssh/sshd_config.sav"
+	sudo -S pycp /etc/ssh/sshd_config /etc/ssh/sshd_config.sav
+	if [ -f /etc/ssh/sshd_config.sav ]; then
+		sudo -S echo -e "[SSHD] Backup OK"
+	else
+		sudo -S echo -e "[SSHD] Backup échoué : erreur"
+	fi
+else
+	sudo -S echo -e "sshd déjà backup"
+fi
+# CONFIG SSHD_CONFIG
+if [ $(grep -c "HostKey $SSHDIR$PRIK" /etc/ssh/sshd_config) = 0 ]; then
+	ligne=$(grep -n "#HostKey /etc/ssh/ssh_host_ed25519_key" /etc/ssh/sshd_config|cut -d: -f1)
+	lignecorr=$(($ligne+1))
+	sudo -S sed "$ligne a\\
+HostKey $SSHDIR$PRIK" /etc/ssh/sshd_config > $WDIR/sshd_config
+sudo -S rm /etc/ssh/sshd_config;
+sudo -S echo -e "[SSHD] Remplacement du fichier sshd d'origine par celui modifié"
+sudo -S cp $WDIR/sshd_config /etc/ssh/
+	if [ -f /etc/ssh/sshd_config ]; then
+		sudo -S echo -e "[SSHD] Fichier bien remplacé "
+	else
+		sudo -S echo -e "[SSHD] Fichier absent : erreur"
+	fi
+else
+sudo -S echo -e "[SSHD] Fichier sshd_config déjà patché"
+fi
 }
 function BASE(){
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
@@ -93,12 +127,6 @@ sudo -S xbps-install -Syuv vpm vsv void-repo-multilib void-repo-nonfree void-rep
 cd $scripts
 ./00-VOID-SYS.sh
 
-# Kernel 
-echo -e "===> BASE INSTALL : Kernel : Update"
-echo "==> Kernel : Purge"
-sudo -S vkpurge rm all
-echo "==> Update Grub"
-sudo -S update-grub
 
 # DRIVERS CPU/GPU/BLUETOOTH/VIRTIO
 sudo -S echo -e "===> BASE INSTALL : CPU/GPU"
@@ -110,6 +138,13 @@ $gpuDETECT
 # BT & Virt INSTALL
 BLUETOOTH
 VIRTIONET
+
+# Kernel 
+echo -e "===> BASE INSTALL : Kernel : Update"
+echo "==> Kernel : Purge"
+sudo -S vkpurge rm all
+echo "==> Update Grub"
+sudo -S update-grub
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
 sudo -S vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6;
@@ -234,8 +269,8 @@ if [ $(echo $vmDETECT | grep -c "Present") != 0 ]; then
 	echo "==> Virtio-net : Install"
 		if [ ! -f /etc/modules-load.d/virtio.conf ];then
 			sudo -S touch /etc/modules-load.d/virtio.conf
-			sudo -S echo "# load virtio-net" > /etc/modules-load.d/virtio.conf
-			sudo -S echo "virtio-net" >> /etc/modules-load.d/virtio.conf
+			sudo -S echo "# load virtio-net" | sudo -S tee /etc/modules-load.d/virtio.conf
+			sudo -S echo "virtio-net" | sudo -S tee -a /etc/modules-load.d/virtio.conf
 			echo "==> Virtio-net : Fichier crée"
 		else
 			echo "==> Virtio-net : fichier déjà présent"
@@ -362,6 +397,18 @@ else
 	sudo -S echo -e "T470 : TouchScreen non detecté"
 fi
 }
+function SHIFTLOCK(){
+# Fonction verr. maj + shift
+sudo -S touch /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo 'Section "InputClass"' | sudo -S tee /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo '     Identifier "system-keyboard"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo '     MatchisKeyboard "on"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo '     Option "XkbLayout" "fr"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo '     Option "XkbModel" "pc105"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo '     Option "XkbOptions" "caps:shiftlock"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo 'EndSection' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+}
+
 function FLATPAK(){
 echo "===> FLATPAK"
 # installation via flatpak de Discord & Parsec
@@ -621,17 +668,6 @@ sudo -S ./03-VOID-Login_AZERTY.sh
 cd $WDIR
 }
 
-function SHIFTLOCK(){
-# Fonction verr. maj + shift
-sudo -S touch /etc/X11/xorg.conf.d/00-Keyboard.conf
-echo 'Section "InputClass"' | sudo -S tee /etc/X11/xorg.conf.d/00-Keyboard.conf
-echo '     Identifier "system-keyboard"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
-echo '     MatchisKeyboard "on"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
-echo '     Option "XkbLayout" "fr"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
-echo '     Option "XkbModel" "pc105"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
-echo '     Option "XkbOptions" "caps:shiftlock"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
-echo 'EndSection' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
-}
 function TEAMVIEWER(){
 
 # Installation TeamViewer
@@ -647,7 +683,6 @@ cd $HOME/Applications
 wget https://download.teamviewer.com/download/linux/teamviewer_amd64.tar.xz
 tar vxf teamviewer_amd64.tar.xz
 cd $HOME/Applications/teamviewer
-./teamviewer;
 pycp $HOME/Applications/teamviewer/teamviewer.desktop $HOME/.local/share/applications
 
 }
@@ -775,6 +810,7 @@ if [[ $(sudo -S vpm list|grep -c "compton") != 0 ]]; then
 		sudo -S echo -e "ignorepkg=compton" > /etc/xbps.d/void.conf
 		sudo -S echo -e "ignorepkg=compton-conf" >> /etc/xbps.d/void.conf
 		sudo -S vpm remove -y compton
+		sudo -S vpm remove -y compton-conf
 		sudo -S rm /etc/xbps.d/void.conf
 fi
 
@@ -855,14 +891,13 @@ MENUFIN
 
 function BANNER(){
 ipcrm -M $KEY
-softNAME="Void-Post-Installer"
 
 PASS=$(yad --entry --hide-text --title="$TITLE $version" --text="Enter User Password")
 echo $PASS|sudo -S clear;
 
 echo -e "####################################"
 echo -e "##"
-echo -e "##\t\t$softNAME"
+echo -e "##\t\t$sTITLE"
 echo -e "##\t\tV $version"
 echo -e "##"
 echo -e "######"
@@ -955,8 +990,9 @@ done
 }
 
 function MENULANG(){
-echo -e "\033[33,40m==>   MENULANG START\033[0m"
+
 BANNER
+sudo -S echo -e "\033[33,40m==>   MENULANG START\033[0m"
 vpiLANG=$(yad --title="$TITLE $version" --text="Choisissez votre langue :\n\nChoose your language :" \
 	--center --on-top \
 	--list --width="450" --height="530" --separator="" \
@@ -994,7 +1030,7 @@ case $valret in
 	0)
 	if [ $(echo $menuCHOIX|grep -c MINIMAL) != 0 ];then
 			# on active le mode minimal (a coder)
-			AUTOINSTALL | yad --title='Auto Installation' --window-icon=emblem-downloads --progress
+			AUTOINSTALL
 	fi
 	if [ $(echo $menuCHOIX|grep -c CUSTOM) != 0 ];then
 			# on active le mode custom (a coder)
@@ -1011,7 +1047,8 @@ esac
 }
 function MENU02CUSTOM(){
 echo -e "\033[33,40m==>   MENU02CUSTOM\033[0m"
-yad --plug="$KEY" --tabnum="1" --form --image="abp.png" yad --text-info --wrap < $WDIR/LANG/installer/menu-fr.txt &\
+source $WDIR/LANG/installer/$vpiLANG
+yad --plug="$KEY" --tabnum="1" --form --image="abp.png" yad --text-info --text="$menuINTRO00\n\n Tofdz 2023"&\
 yad --plug="$KEY" --tabnum="2" --checklist --list --text="XBPS : Liste des paquets xbps utile" --hide-column="2" \
 		--column="CHECK" --column="XBPS" --column="PAQUET" --column="DESCRIPTION" \
 		true "XBPS" "cifs-utils" "Outil pour connexion SMB" \
@@ -1019,17 +1056,17 @@ yad --plug="$KEY" --tabnum="2" --checklist --list --text="XBPS : Liste des paque
 		false "XBPS" "thunderbird" "Client pour les Mails" \
 		false "XBPS" "birdtray" "Garder Thunderbird en icone dans la barre des taches" \
 		true "XBPS" "gufw" "GUI pour le firewall" \
-		false "XBPS" "zenmap" "Testeur de réseau" \
-		true "XBPS" "vlc" "lecteur multimedia vlc" \
-		false "XBPS" "gimp" "logiciel d'edition d'image" \
-		false "XBPS" "blender" "logiciel de conception 3D" \
-		false "XBPS" "ytmdl" "telechargez vos playlists youtube" \
-		true "XBPS" "filelight" "Affichez les données de vos disques durs !" \
-		true "XBPS" "lutris" "Jouez à vos jeu windows favoris préconfiguré pour linux." \
-		true "XBPS" "CPU-X" "Affichez les informations CPU" \
+		false "XBPS" "zenmap" "Tester la sécurité de votre réseau et +" \
+		true "XBPS" "vlc" "Lecteur multimedia audio vidéo VLC" \
+		false "XBPS" "gimp" "Logiciel d'édition d'image & photos" \
+		false "XBPS" "blender" "Logiciel 3D" \
+		false "XBPS" "ytmdl" "Téléchargez vos playlists youtube" \
+		true "XBPS" "filelight" "Affichez le remplissage de vos dossiers & disques durs !" \
+		false "XBPS" "lutris" "Jouez à vos jeu windows favoris préconfiguré pour linux." \
+		false "XBPS" "CPU-X" "Affichez les informations CPU" \
 		true "XBPS" "xfce4-plugins" "Suite de plugin pour personnaliser votre interface xfce" \
 		true "XBPS" "xfce4-screenshooter" "Prendre des captures d'ecran" \
-		true "XBPS" "deluge" "Telechargez vos torrent et magnet link" \
+		false "XBPS" "deluge" "Telechargez vos torrent et magnet link" \
 		true "XBPS" "caffeine-ng" "Gestion de l'écran de veille" &>$res1&\
 yad --plug="$KEY" --tabnum="3" --form --text="FIX : Tous les correctifs dispo pour VoidLinux" --separator="\n" \
 		--field="FIX - Lenovo Thinkpad :CB" "!T420!X250!T470" \
@@ -1037,7 +1074,7 @@ yad --plug="$KEY" --tabnum="3" --form --text="FIX : Tous les correctifs dispo po
 		--field="FIX - ShiftLock:CB" "!SHIFTLOCK"&>$res2&\
 yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les applications déjà configuré pour vous" --hide-column="3" \
 		--column="CHECK" --column=" :IMG" --column="APPS" --column="PAQUET" --column="DESCRIPTION" \
-		false "$icons/I3wm-color-50.png" "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
+		true "$icons/I3wm-color-50.png" "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
 		false "$icons/I3wm-color-50.png" "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
 		true "$icons/I3wm-color-50.png" "APPS" "PICOM" "Composition : affichage effet graphique" \
 		false "$icons/Virtualbox-50.png" "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
@@ -1077,14 +1114,17 @@ function MENUFIN(){
 
 echo -e "[ FIN ]==> Installation terminée"
 
-yad --info --title="$TITLE v$version : Installation terminée" \
-	--text="Installation terminée !\n\nBonne journée !\n\nTofdz"
+sudo -S yad --info --title="$TITLE v$version : Installation terminée" \
+	--text="Installation terminée !\n\nReboot necessaire !!!\n\nBonne journée !\n\nTofdz" \
+	--button="Reboot:1" --button="Quit:0"
 valret=$?
 case $valret in
 	0)
-	pkill yad
+	sudo -S pkill yad
 	exit
 	;;
+	1)
+	sudo -S reboot
 	252)
 	exit
 	;;
