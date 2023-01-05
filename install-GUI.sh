@@ -1125,6 +1125,7 @@ case $valret in
 	;;
 	1)
 	sudo -S reboot
+	;;
 	252)
 	exit
 	;;
