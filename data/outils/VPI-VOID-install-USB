@@ -16,7 +16,13 @@ LISTUSB=$(mktemp --tmpdir iface1.XXXXXXXX)
 LISTUSB2=$(mktemp --tmpdir iface1.XXXXXXXX)
 
 ADDRESS="https://alpha.de.repo.voidlinux.org/live/current/"
+function CLEAN(){
 
+sudo -S rm -f LIST*
+sudo -S rm -f index*
+sudo -S rm -f $XDG_DOWNLOAD_DIR/$iso
+
+}
 function MENUINTRO(){
 
 zenity --question --window-icon=$HOME/Images/test.png --title "$TITLE $version" --width 350 --height 100 --text "Bonjour $USER !\n\nCet utilitaire va télécharger et installer Voidlinux\n\nATTENTION A CHOISIR LA BONNE PARTITION !!!!"
@@ -122,22 +128,16 @@ echo $usb > $LISTUSB2 && cut -c-4 $LISTUSB2 > $LISTUSB
 cat $LISTUSB
 }
 function ISODL(){
-wget $ADDRESS$iso --progress=bar:force 2>&1 -q | zenity --progress --pulsate --title "VOID-Iso2Usb" --text "Téléchargement de l'iso\n $iso" --auto-close
+wget $ADDRESS$iso --progress=bar:force
 }
 function DDISO(){
 # MONTAGE DE L'ISO SUR LA PARTITION SELECTIONNEE
 echo "DDISO"
 echo $XDG_DOWNLOAD_DIR/$iso
 cat $LISTUSB
-sudo -S dd bs=4M if=$XDG_DOWNLOAD_DIR/$iso of=/dev/$(cat $LISTUSB) status=progress 2>&1 | zenity --width 400 --height 100 --title "Installation Clé USB VoidLinux" --text "Création clé USB Void en cours\n" --auto-close --progress --pulsate
-sudo sync | zenity --info --title "VOID-Iso2Usb" --width 500 --height 100 "Travail terminé" --text "Clé synchro - Go install !!!"
+sudo -S dd bs=4M if=$XDG_DOWNLOAD_DIR/$iso of=/dev/$(cat $LISTUSB) status=progress
+sudo sync
+zenity --info --title "VOID-Iso2Usb" --width 500 --height 100 "Travail terminé" --text "Clé synchro - Go install !!!"
 }
 
 MENUINTRO
-function CLEAN(){
-
-sudo -S rm -f LIST*
-sudo -S rm -f index*
-sudo -S rm -f $XDG_DOWNLOAD_DIR/$iso
-
-}

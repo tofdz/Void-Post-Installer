@@ -4,11 +4,11 @@ VER1=$(cat /etc/sysctl.conf|grep vm.max_map_count=1048576)
 VER2=$(cat /etc/sysctl.conf|grep "abi.vsyscall32 = 0")
 VER4=$(cat /etc/security/limits.conf|grep '1048576')
 VER5=$(cat /etc/environment|grep -c 'qt5ct')
-sudo -s <<eof
-echo -e "==> 00 Void : System modifications"
+sudo -S <<eof
+sudo -S echo -e "==> 00 Void : System modifications"
 
 # CLEANINSTALL
-echo -e "==> CLEANER"
+sudo -S echo -e "==> CLEANER"
 
 #CLEANER
 sudo -S echo "===> BASE CLEANING - PLEASE WAIT !"
@@ -31,8 +31,7 @@ sudo -S echo "==> Suppression Base_Install.conf"
 sudo -S rm /etc/xbps.d/Base_Install.conf
 
 # Verification /etc/sysctl.conf
-echo "==> Vérification /etc/sysctl.conf : $VER1"
-echo "===> 02 /etc/sysctl.conf : vm.max_map_count=1048576"
+sudo -S echo -e "==> Vérification /etc/sysctl.conf : $VER1"
 if [ -e $VER1 ]; then
 	echo "==!> Modification /etc/sysclt absente : modification en cours"
 	echo "vm.max_map_count=1048576" | sudo -S tee -a /etc/sysctl.conf
@@ -40,6 +39,7 @@ if [ -e $VER1 ]; then
 	else
 	echo "==> Fichier /etc/sysctl.conf : déjà modifié"
 fi
+
 sudo -S echo "===> 03 /etc/sysctl.conf : abi.vsyscall32 = 0"
 if [ -e $VER2 ]; then
 	sudo -S echo "Modification /etc/sysclt absente : modification en cours"
@@ -82,10 +82,10 @@ if [ -e $(cat /etc/profile|grep "/.local/bin") ]; then
 	echo 'if [ -d $HOME/.local/share/flatpak/exports/share ]; then' | sudo -S tee -a /etc/profile
 	echo 'PATH=$HOME/.local/share/flatpak/exports/share:$PATH' | sudo -S tee -a /etc/profile
 	echo 'fi' | sudo -S tee -a /etc/profile
-	sudo -S echo 'Fichier profile - Terminé !'
+	sudo -S echo -e "Fichier profile - Terminé !"
 else
-	echo -e "==> /etc/profile : Fichier /etc/profile déjà modifié : "
-	echo -e "==> /etc/profile : TERMINE"
+	sudo -S echo -e "==> /etc/profile : Fichier /etc/profile déjà modifié : "
+	sudo -S echo -e "==> /etc/profile : TERMINE"
 fi
 
 eof

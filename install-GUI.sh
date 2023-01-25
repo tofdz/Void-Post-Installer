@@ -1,16 +1,14 @@
 #!/bin/bash
 # NAME : Void-Post-Installer
-# LAUNCHER : install.sh
-
-TITLE="Void Post Installer"
-version="0.3.0"
-# Date : 16/11/2020 maj 04/01/2023
+# Date : 16/11/2020 maj 24/01/2023
 # by Tofdz
 # assisted by :
-#
 # DrNeKoSan : crash test !
 # Odile     : Les cafés !
 # Celine    : Les petits pains !!
+
+TITLE="Void Post Installer"
+version="0.3.2"
 voiduser=$USER
 WDIR=$(pwd)
 scripts="$WDIR/data/install"
@@ -124,10 +122,7 @@ sudo -S xbps-install -Syuv xbps
 # INSTALLATION VPM
 sudo -S xbps-install -Syuv vpm vsv void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
 # CLEANALL
-cd $scripts
-./00-VOID-SYS.sh
-
-
+SYS
 # DRIVERS CPU/GPU/BLUETOOTH/VIRTIO
 sudo -S echo -e "===> BASE INSTALL : CPU/GPU"
 
@@ -151,7 +146,7 @@ sudo -S vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 aget
 sudo -S rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
 
 # Base Apps
-sudo -S vpm i -y linux5.15 linux5.15-headers linux-firmware dracut-network dracut-uefi xorg-server-devel xorg-server-devel-32bit git-all nano inxi zenity snooze zsh curl wget python3-pip thunar-archive-plugin catfish testdisk octoxbps cpufrequtils notepadqq mc htop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
+sudo -S xbps-install -y linux5.15 linux5.15-headers linux-firmware dracut-network xorg-server-devel xorg-server-devel-32bit git-all nano inxi zenity snooze zsh curl wget python3-pip thunar-archive-plugin catfish testdisk octoxbps cpufrequtils notepadqq mc htop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
 sudo -S ln -s /etc/sv/socklog-unix /var/service; sudo -S ln -s /etc/sv/nanoklogd /var/service;
 
 #========================================
@@ -249,13 +244,99 @@ echo "</action>" >> $HOME/.config/Thunar/uca.xml
 echo "</actions>" >> $HOME/.config/Thunar/uca.xml
 cd $WDIR
 }
+function SYS(){
+voiduser=$(echo $USER)
+VER1=$(cat /etc/sysctl.conf|grep vm.max_map_count=1048576)
+VER2=$(cat /etc/sysctl.conf|grep "abi.vsyscall32 = 0")
+VER4=$(cat /etc/security/limits.conf|grep '1048576')
+VER5=$(cat /etc/environment|grep -c 'qt5ct')
+sudo -S echo -e "==> 00 Void : System modifications"
+
+#CLEANER
+sudo -S echo "===> BASE CLEANING - PLEASE WAIT !"
+
+echo "ignorepkg=linux-firmware-amd" | sudo -S tee /etc/xbps.d/Base_Install.conf
+echo "ignorepkg=linux-firmware-intel" | sudo -S tee -a /etc/xbps.d/Base_Install.conf
+echo "ignorepkg=linux-firmware-nvidia" | sudo -S tee -a /etc/xbps.d/Base_Install.conf
+echo "ignorepkg=xf86-video-amdgpu" | sudo -S tee -a /etc/xbps.d/Base_Install.conf
+echo "ignorepkg=xf86-video-ati" | sudo -S tee -a /etc/xbps.d/Base_Install.conf
+echo "ignorepkg=xf86-video-dummy" | sudo -S tee -a /etc/xbps.d/Base_Install.conf
+echo "ignorepkg=xf86-video-fbdev" | sudo -S tee -a /etc/xbps.d/Base_Install.conf
+echo "ignorepkg=xf86-video-intel" | sudo -S tee -a /etc/xbps.d/Base_Install.conf
+echo "ignorepkg=xf86-video-nouveau" | sudo -S tee -a /etc/xbps.d/Base_Install.conf
+echo "ignorepkg=xf86-video-vesa" | sudo -S tee -a /etc/xbps.d/Base_Install.conf
+echo "ignorepkg=xf86-video-vmware" | sudo -S tee -a /etc/xbps.d/Base_Install.conf
+cd /etc/xbps.d/
+sudo -S chown root:root Base_Install.conf
+sudo -S vpm remove -y linux-firmware-amd linux-firmware-intel linux-firmware-nvidia xf86-video-amdgpu xf86-video-ati xf86-video-dummy xf86-video-fbdev xf86-video-intel xf86-video-nouveau xf86-video-vesa xf86-video-vmware 
+sudo -S echo "==> Suppression Base_Install.conf"
+sudo -S rm Base_Install.conf
+
+# Verification /etc/sysctl.conf
+sudo -S echo -e "==> Vérification /etc/sysctl.conf : $VER1"
+if [ -e $VER1 ]; then
+	echo "==!> Modification /etc/sysclt absente : modification en cours"
+	echo "vm.max_map_count=1048576" | sudo -S tee -a /etc/sysctl.conf
+	echo "==> Vérification /etc/sysctl.conf : $VER1"
+	else
+	echo "==> Fichier /etc/sysctl.conf : déjà modifié"
+fi
+
+sudo -S echo "===> 03 /etc/sysctl.conf : abi.vsyscall32 = 0"
+if [ -e $VER2 ]; then
+	sudo -S echo "Modification /etc/sysclt absente : modification en cours"
+	echo "abi.vsyscall32 = 0" | sudo -S tee -a /etc/sysctl.conf
+	sudo -S echo "Vérification /etc/sysctl.conf : $VER2"
+	else
+	sudo -S echo "Fichier /etc/sysctl.conf : déjà modifié"
+fi
+
+# Verification limits.conf
+sudo -S echo "===> 04 /etc/security/limits.conf pour $voiduser"
+if [ -e $VER4 ]; then
+	sudo -S echo "==> Modification /etc/security/limits.conf"
+	echo "$voiduser           -       nice            -20" | sudo -S tee -a /etc/security/limits.conf
+	echo "$voiduser           -       nofile          1048576" | sudo -S tee -a /etc/security/limits.conf
+else
+	sudo -S echo "==> /etc/security/limits.conf déjà modifié"
+fi
+
+# Modification /etc/environment
+if [ -e $VER5 ]; then
+sudo -S echo "==> Modification /etc/environment QT_QPA_PLATEFORMTHEME=qt5ct"
+echo 'export QT_QPA_PLATFORMTHEME=qt5ct' | sudo -S tee -a /etc/environment
+else
+sudo -S echo "PASS ==> /etc/environment déjà modifié"
+fi
+
+#==============================
+# PATH : $HOME/$USER/.local/bin
+#==============================
+echo "===> $HOME/.local/bin : Modification fichiers"
+if [ -e $(cat /etc/profile|grep "/.local/bin") ]; then
+	sudo -S echo "==> /etc/profile : Modification en cours ..."
+	echo 'if [ -d "$HOME/.local/bin" ]; then' | sudo -S tee -a /etc/profile
+	echo 'PATH=$HOME/.local/bin:$PATH' | sudo -S tee -a /etc/profile
+	echo 'fi' | sudo -S tee -a /etc/profile
+	echo 'if [ -d /var/lib/flatpak/exports/share ]; then' | sudo -S tee -a /etc/profile
+	echo 'PATH=/var/lib/flatpak/exports/share:$PATH' | sudo -S tee -a /etc/profile
+	echo 'fi' | sudo -S tee -a /etc/profile
+	echo 'if [ -d $HOME/.local/share/flatpak/exports/share ]; then' | sudo -S tee -a /etc/profile
+	echo 'PATH=$HOME/.local/share/flatpak/exports/share:$PATH' | sudo -S tee -a /etc/profile
+	echo 'fi' | sudo -S tee -a /etc/profile
+	sudo -S echo -e "Fichier profile - Terminé !"
+else
+	sudo -S echo -e "==> /etc/profile : Fichier /etc/profile déjà modifié : "
+	sudo -S echo -e "==> /etc/profile : TERMINE"
+fi
+}
 
 # SUPPORT BLUETOOTH & VIRTIONET
 function BLUETOOTH(){
 echo "==> BLUETOOTH CHECK INSTALL"
 if [ $(echo $blueDETECT | grep -c "Present") != 0 ]; then
 	echo "==> BLUETOOTH DETECTED"
-	sudo -S vpm i -y bluez bluez-qt5 blueman
+	sudo -S xbps-install -y bluez bluez-qt5 blueman
 	sudo -S ln -s /etc/sv/bluetoothd/ /var/service/
 	blueDETECT=$(sudo -S lsusb | grep "Bluetooth")
 else
@@ -282,22 +363,28 @@ fi
 # SUPPORT CPU & GPU
 function INTELCPU(){
 echo "===> CPU : INTEL INSTALL"
-sudo -S vpm i -y intel-ucode linux-firmware-intel
+sudo -S xbps-install -y intel-ucode linux-firmware-intel
+
+}
+function INTELGPU(){
+echo -e "==> INTELINSTALL"
+sudo -S xbps-install -y mesa mesa-dri mesa-vulkan-intel linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode
+
 }
 function AMDCPU(){
 echo "===> CPU : AMD INSTALL"
-sudo -S vpm i -y linux-firmware-amd
+sudo -S xbps-install -y linux-firmware-amd
 }
 function AMDGPU(){
 
 echo "===> AMD INSTALL"
-sudo -S vpm i -y mesa mesa-dri linux-firmware-amd
+sudo -S xbps-install -y linux-firmware-amd mesa mesa-dri
 
 }
 function NVIDIA(){
 
 sudo -S echo -e "===> nvidia INSTALL"
-sudo -S vpm i -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl nvtop
+sudo -S xbps-install -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl nvtop
 # Fichier de configuration pour la gestion des ventilateurs
 sudo -S touch /etc/X11/xorg.conf.d/11-nvidia.conf
 echo 'Section "OutputClass"' | sudo -S tee /etc/X11/xorg.conf.d/11-nvidia.conf
@@ -324,19 +411,18 @@ echo 'Terminal=false'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
 echo 'Hidden=false'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
 
 }
-function INTELGPU(){
-echo -e "==> INTELINSTALL"
-sudo -S vpm i -y mesa mesa-dri mesa-vulkan-intel linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode
-}
+
 # UTILITAIRES SOURIS/CLAVIER CORSAIR & SOURIS STEELSERIES
 function STEELSERIES(){
-echo "===> STEELSERIES INSTALL"
-cd $scripts
-./07-VOID-rivalcfg.sh
-cd $WDIR
+cd $HOME
+git clone https://github.com/flozz/rivalcfg.git
+cd rivalcfg
+pip3 install .
+sudo -S rivalcfg --update-udev
+sudo -S rivalcfg -p 125
 }
 function CORSAIR(){
-sudo -S vpm i -y ckb-next;
+sudo -S xbps-install -y ckb-next;
 sudo -S ln -s /etc/sv/ckb-next-daemon /var/service;
 sudo -S vsv enable ckb-next-daemon && sudo vsv start ckb-next-daemon;
 }
@@ -344,35 +430,17 @@ sudo -S vsv enable ckb-next-daemon && sudo vsv start ckb-next-daemon;
 function T420(){
 
 echo "===> T420 addons"
-sudo -S vpm i -y tlp tlp-rdw tp_smapi-dkms tpacpi-bat mesa-dri linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel libva-intel-driver
+sudo -S xbps-install -y tlp tlp-rdw tp_smapi-dkms tpacpi-bat mesa-dri linux-firmware-intel vulkan-loader mesa-vulkan-intel intel-video-accel libva-intel-driver
 sudo -S chmod +x $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh
 sudo -S pycp $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh /etc/acpi
 sudo -S vsv restart acpid
-}
-function X250(){
-
-echo "===> X250 addons"
-if [ -n $(sudo grep 'intel' /etc/default/grub) ];then
-	echo "Modification du fichier /etc/default/grub"
-	sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4" intel_iommu=igfx_off/' /etc/default/grub
-	cat /etc/default/grub
-	echo "Mise à jour de Grub"
-	sudo update-grub
-else
-	echo "Fichier déjà modifié"
-fi
-sudo chmod +x $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh;sudo pycp $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh /etc/acpi
-sudo vsv restart acpid;
-sudo vpm i -y linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode mesa-dri mesa-vulkan-intel
-sudo vpm i -y tp_smapi-dkms tpacpi-bat
-
 }
 function T470(){
 
 # Support TouchScreen
 if [ $(lsusb|grep -c "Touch") != 0]; then
 	sudo -S echo -e "T470 : TouchScreen detecté : installation"
-	sudo -S vpm i -y xinput xinput_calibrator
+	sudo -S xbps-install -y xinput xinput_calibrator
 	if [ ! -f $shareapp/VPI-TouchScreen_Calibration ]; then
 		echo '#!/bin/bash' > $dirapp/VPI-TouchScreen_Calibration
 		echo 'PASS=$(yad --entry --image=window-maximize --title="TouchScreen Calibration" --hide-text --text="TouchScreen Calibration\n\nEnter user password :\n")' >> $dirapp/VPI-TouchScreen_Calibration
@@ -393,17 +461,80 @@ if [ $(lsusb|grep -c "Touch") != 0]; then
 	else
 		echo 'VPI-TouchScreen_Calibration.desktop présent'
 	fi
+	
+	if [ $(grep -c "MOZ_USE_XINPUT2" /etc/security/pam_env.conf) = 0]; then
+	echo "MOZ_USE_XINPUT2 DEFAULT=1"|sudo -S tee -a /etc/security/pam_env.conf
+	sudo -S echo -e "[T470][TOUCH]Fichier /etc/security/pam_env.conf modifié avec succès"
+	else
+	sudo -S echo -e "[T470][TOUCH]Fichier /etc/security/pam_env.conf deja modifié"
+	fi
 else
 	sudo -S echo -e "T470 : TouchScreen non detecté"
 fi
+
+sudo -S xbps-install -y acpid tlp tpacpi-bat
+if [ ! -d /var/service/acpid ]; then
+	sudo -S ln -s /etc/sv/acpid /var/service
+	sudo -S echo -e "[OK] Service ACPID activé"
+else
+	sudo -S echo -e "[OK] Service ACPID deja actif"
+fi
 }
+function X250(){
+
+echo "===> X250 addons"
+if [ -n $(sudo grep 'intel' /etc/default/grub) ];then
+	echo "Modification du fichier /etc/default/grub"
+	sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4" intel_iommu=igfx_off/' /etc/default/grub
+	cat /etc/default/grub
+	echo "Mise à jour de Grub"
+	sudo update-grub
+else
+	echo "Fichier déjà modifié"
+fi
+sudo chmod +x $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh;sudo pycp $HOME/Void-Post-Installer/lenovo/lenovo-mutemusic.sh /etc/acpi
+sudo vsv restart acpid;
+sudo xbps-install -y linux-firmware-broadcom linux-firmware-intel linux-firmware-network intel-ucode mesa-dri mesa-vulkan-intel
+sudo xbps-install -y tp_smapi-dkms tpacpi-bat
+
+}
+# CORRECTION BUG CLAVIER AZERTY AU LOGIN
+function ELOGIND(){
+
+# Configuration clavier azerty pour
+# se connecter à sa session.
+sudo -S echo "===> ELOGIND AZERTY"
+if [ -d /etc/X11/xorg.conf.d ]; then
+	sudo -S echo -e "Dossier xorg.conf.d présent"
+else
+	sudo -S mkdir -p /etc/X11/xorg.conf.d/
+	sudo -S echo -e "Dossier crée"
+fi
+				
+if [ -f /etc/X11/xorg.conf.d/00-Keyboard.conf ]; then
+	sudo -S echo -e "Fichier 00-Keyboard.conf présent"
+	
+	# TEST DU FICHIER (A FAIRE)
+	
+else
+	sudo -S touch /etc/X11/xorg.conf.d/00-Keyboard.conf
+	sudo -S echo 'Section "InputClass' > /etc/X11/xorg.conf.d/00-Keyboard.conf
+    	sudo -S echo '     Identifier "system-keyboard"' >> /etc/X11/xorg.conf.d/00-Keyboard.conf
+    	sudo -S echo '     MatchisKeyboard "on"' >> /etc/X11/xorg.conf.d/00-Keyboard.conf
+	sudo -S echo '     Option "XkbLayout" "fr"' >> /etc/X11/xorg.conf.d/00-Keyboard.conf
+    	sudo -S echo '     Option "XkbModel" "pc105"' >> /etc/X11/xorg.conf.d/00-Keyboard.conf
+	sudo -S	echo 'EndSection' >> /etc/X11/xorg.conf.d/00-Keyboard.conf
+fi
+}
+# CORRECTION COMPORTEMENT TOUCHE VERR MAJ & SHIFT
 function SHIFTLOCK(){
 # Fonction verr. maj + shift
+lang=$(echo $(echo $(locale|grep "LC_MESSAGE")|cut -d '"' -f2)|cut -d "_" -f1)
 sudo -S touch /etc/X11/xorg.conf.d/00-Keyboard.conf
 echo 'Section "InputClass"' | sudo -S tee /etc/X11/xorg.conf.d/00-Keyboard.conf
 echo '     Identifier "system-keyboard"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
 echo '     MatchisKeyboard "on"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
-echo '     Option "XkbLayout" "fr"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
+echo '     Option "XkbLayout" "'"$lang"'"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
 echo '     Option "XkbModel" "pc105"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
 echo '     Option "XkbOptions" "caps:shiftlock"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
 echo 'EndSection' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
@@ -412,7 +543,7 @@ echo 'EndSection' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
 function FLATPAK(){
 echo "===> FLATPAK"
 # installation via flatpak de Discord & Parsec
-sudo -S vpm i -y flatpak
+sudo -S xbps-install -y flatpak
 echo "Flatpak : Création des repos si non existant"
 flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
@@ -446,39 +577,41 @@ echo 'include "/usr/share/nano/perl.nanorc"' >> $HOME/.nanorc
 echo 'include "/usr/share/nano/python.nanorc"' >> $HOME/.nanorc
 echo 'include "/usr/share/nano/sh.nanorc"' >> $HOME/.nanorc
 echo 'include "/usr/share/nano/tex.nanorc"' >> $HOME/.nanorc
-
+echo 'set linenumbers' >> $HOME/.nanorc
 }
 function GUFW(){
-if [ $(sudo -S vpm list|grep -c "gufw") != 0 ]; then
-	sudo -S echo -e "[GUFW] ==> Config files"
-	VPIXFCE
-	if [ ! -f $dirapp/VPI-Firewall ]; then
-		echo '#!/bin/bash' > $dirapp/VPI-Firewall
-		echo 'PASS=$(yad --entry --image=security-low --title="GUFW Firewall" --hide-text --text="Firewall Launcher\n\nEnter user password :\n")' >> $dirapp/VPI-Firewall
-		echo 'echo $PASS|sudo -S gufw-pkexec' >> $dirapp/VPI-Firewall
-		chmod +x $dirapp/VPI-Firewall
-	else
-		echo "Fichier VPI-Firewall présent"
-	fi
-	if [ ! -f $shareapp/VPI-Firewall.desktop ]; then
-	# VPI-Firewall
-		echo '[Desktop Entry]' > $shareapp/VPI-Firewall.desktop
-		echo 'Version=1.0' >> $shareapp/VPI-Firewall.desktop
-		echo 'Type=Application' >> $shareapp/VPI-Firewall.desktop
-		echo 'Name=VPI-Firewall' >> $shareapp/VPI-Firewall.desktop
-		echo 'Exec=VPI-Firewall' >> $shareapp/VPI-Firewall.desktop
-		echo 'Icon=security-low' >> $shareapp/VPI-Firewall.desktop
-		echo 'Terminal=false' >> $shareapp/VPI-Firewall.desktop
-		echo 'StartupNotify=false' >> $shareapp/VPI-Firewall.desktop
-		echo 'Categories=X-VPI;' >> $shareapp/VPI-Firewall.desktop
-	else
-		echo "Fichier VPI-Firewall.desktop présent"
-	fi
+sudo -S echo -e "[GUFW][INSTALL] ==> Démarrage"
+sudo -S xbps-install -y ufw gufw
+sudo -S ln -s /etc/sv/ufw /var/service
+sudo -S echo -e "[GUFW] ==> Config files"
+VPIXFCE
+if [ ! -f $dirapp/VPI-Firewall ]; then
+	echo '#!/bin/bash' > $dirapp/VPI-Firewall
+	echo 'PASS=$(yad --entry --image=security-low --title="GUFW Firewall" --hide-text --text="Firewall Launcher\n\nEnter user password :\n")' >> $dirapp/VPI-Firewall
+	echo 'echo $PASS|sudo -S gufw-pkexec' >> $dirapp/VPI-Firewall
+	chmod +x $dirapp/VPI-Firewall
 else
-	sudo -S echo -e "[GUFW] ==> Paquet gufw absent : veuillez installer gufw"
+	echo "Fichier VPI-Firewall présent"
+fi
+if [ ! -f $shareapp/VPI-Firewall.desktop ]; then
+# VPI-Firewall
+	echo '[Desktop Entry]' > $shareapp/VPI-Firewall.desktop
+	echo 'Version=1.0' >> $shareapp/VPI-Firewall.desktop
+	echo 'Type=Application' >> $shareapp/VPI-Firewall.desktop
+	echo 'Name=VPI-Firewall' >> $shareapp/VPI-Firewall.desktop
+	echo 'Exec=VPI-Firewall' >> $shareapp/VPI-Firewall.desktop
+	echo 'Icon=security-low' >> $shareapp/VPI-Firewall.desktop
+	echo 'Terminal=false' >> $shareapp/VPI-Firewall.desktop
+	echo 'StartupNotify=false' >> $shareapp/VPI-Firewall.desktop
+	echo 'Categories=X-VPI;' >> $shareapp/VPI-Firewall.desktop
+else
+	echo "Fichier VPI-Firewall.desktop présent"
 fi
 }
 function VPIXFCE(){
+
+unset ligne
+unset ligne2
 dirmenu="$HOME/.config/menus"
 file="xfce-applications.menu"
 sudo -S echo -e "[VPIXFCE] ==> Verification Backup fichier $file"
@@ -493,6 +626,7 @@ fi
 
 sudo -S echo -e "[VPIXFCE] ==> Edition fichier $file"
 if [ $(grep -c "X-VPI" $dirmenu/$file) = 0 ]; then
+
 	sudo -S echo -e "[VPIXFCE] ==> Fichier $file non modifié : modification en cours"
 	ligne=$(grep -n "Name>Other" $dirmenu/$file|cut -d: -f1)
 	lignecorr=$(($ligne-2))
@@ -505,8 +639,8 @@ if [ $(grep -c "X-VPI" $dirmenu/$file) = 0 ]; then
 		</Include>\\
 	</Menu>" $dirmenu/$file > $dirmenu/xfce-test
 	
-ligne=$(grep -n "Menuname>Other" $dirmenu/xfce-test|cut -d: -f1)
-sed "$ligne a\\
+ligne2=$(grep -n "Menuname>Other" $dirmenu/xfce-test|cut -d: -f1)
+sudo -S sed "$ligne2 a\\
 		<Menuname>VPI</Menuname>" $dirmenu/xfce-test > $dirmenu/$file
 	rm $dirmenu/xfce-test
 	sudo -S echo -e "[VPIXFCE] ==> $file modifié"
@@ -654,25 +788,23 @@ cd $WDIR
 function OHMYZSH(){
 
 # Installation de OhmyZsh!
-echo "===> OHMYZSH INSTALL"
-sudo vpm i -y zsh
+sudo -S echo -e "===> OHMYZSH INSTALL"
+sudo xbps-install -y zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 }
-function ELOGIND(){
 
-# Configuration clavier azerty pour
-# se connecter à sa session.
-echo -e "===> CONFIGURATION AZERTY AU LOGIN"
-cd $scripts
-sudo -S ./03-VOID-Login_AZERTY.sh
-cd $WDIR
+function CUPS(){
+sudo -S echo -e "[CUPS][INSTALL]"
+# Paquets a installer
+sudo -S xbps-install -y cups cups-filter nss-mdns avahi system-config-printer
+sudo -S ln -s /etc/sv/cupsd /var/service
+sudo -S vsv enable cupsd
 }
-
 function TEAMVIEWER(){
 
 # Installation TeamViewer
 sudo -S echo "===> TeamViewer : Installation"
-sudo -S vpm i -y minizip qt5-quickcontrols
+sudo -S xbps-install -y minizip qt5-quickcontrols
 if [ ! -d $HOME/Applications ]; then
 	sudo -S echo "Repertoire Application absent : création"
 	mkdir $HOME/Applications
@@ -686,9 +818,42 @@ cd $HOME/Applications/teamviewer
 pycp $HOME/Applications/teamviewer/teamviewer.desktop $HOME/.local/share/applications
 
 }
+function VIRTMANAGER(){
+sudo xbps-install -y virt-manager qemu libvirt dbus bridge-utils
+if [ ! -d /var/service/dbus ]; then
+sudo -S ln -s /etc/sv/dbus /var/service
+sudo -S echo -e "Service dbus monté"
+else
+sudo -S echo -e "Service dbus déjà monté"
+fi
+if [ ! -d /var/service/libvirtd ]; then
+sudo -S ln -s /etc/sv/libvirtd /var/service
+sudo -S echo -e "Service libvirt monté"
+else
+sudo -S echo -e "Service libvirt déjà monté"
+fi
+if [ ! -d /var/service/virtlockd ]; then
+sudo -S ln -s /etc/sv/virtlockd /var/service
+sudo -S echo -e "Service virtlockd monté"
+else
+sudo -S echo -e "Service virtlockd déjà monté"
+fi
+if [ ! -d /var/service/virtlogd ]; then
+sudo -S ln -s /etc/sv/virtlogd /var/service
+sudo -S echo -e "Service virtlogd monté"
+else
+sudo -S echo -e "Service virtlogd déjà monté"
+fi
+
+}
+function VIRTUALBOX(){
+sudo -S xbps-install -y virtualbox-ose virtualbox-ose-dkms
+sudo -S xbps-reconfigure -f virtualbox-ose-dkms
+sudo -S modules-load
+}
 function VMWAREWSPLY(){
 echo "==> APPS : VMWare Workstation Player 16"
-sudo -S vpm i -y libpcsclite pcsclite
+sudo -S xbps-install -y libpcsclite pcsclite
 sudo -S ln -s /etc/sv/pcscd /var/service
 sudo vsv start pcscd
 cd $HOME
@@ -716,7 +881,7 @@ fi
 }
 function VMWAREWSPRO(){
 echo "==> APPS : VMWare Workstation Pro 16"
-sudo -S vpm i -y make libpcsclite pcsclite
+sudo -S xbps-install -y make libpcsclite pcsclite
 sudo -S ln -s /etc/sv/pcscd /var/service
 sudo vsv start pcscd
 cd $HOME
@@ -760,16 +925,11 @@ vmwareSELECT=$(yad --title="VMWare WorkStation installation" \
 			)
 $vmwareSELECT
 }
-function VIRTUALBOX(){
-echo "===> VIRTUALBOX INSTALL"
-
-cd $scripts
-./09-VOID-VirtualBox.sh
-cd $WDIR
-}
 function DISCORD(){
 sudo -S echo "===> Discord : Installation"
 cd $HOME
+
+# Check directory d'installation
 if [ ! -d $HOME/Applications ];then
 	mkdir $HOME/Applications
 fi
@@ -780,29 +940,38 @@ fi
 
 # Téléchargement & installation de Discord
 sudo -S echo -e "Discord : Téléchargement"
-	cd $HOME/Applications
-	wget -O discord.tar.gz "https://discordapp.com/api/download?platform=linux&format=tar.gz"
-	tar xfv discord.tar.gz; rm discord.tar.gz;
+cd $HOME/Applications
+wget -O discord.tar.gz "https://discordapp.com/api/download?platform=linux&format=tar.gz"
+tar xfv discord.tar.gz; rm discord.tar.gz;
+# Création launcher Discord (fonction auto detection update au lancement)
+if [ ! -f $dirapp/VPI-Discord_Updater ]; then
+pycp $outils/VPI-Discord_Updater $dirapp
+chmod +x $dirapp/VPI-Discord_Updater
+sudo -S echo -e "VPI-Discord_Updater : installé"
+else
+sudo -S echo -e "VPI-Discord_Updater : déjà installé"
+fi
+
 # Création raccourci pour le menu systeme
 sudo -S echo -e "Discord : Création raccourci"	
-	echo "[Desktop Entry]" > $HOME/.local/share/applications/discord.desktop
-	echo "Name=Discord" >> $HOME/.local/share/applications/discord.desktop
-	echo "StartupWMClass=discord" >> $HOME/.local/share/applications/discord.desktop
-	echo "Comment=All-in-one voice and text chat for gamers that's free, secure, and works on both your desktop and phone." >> $HOME/.local/share/applications/discord.desktop
-	echo "GenericName=Internet Messenger" >> $HOME/.local/share/applications/discord.desktop
-	echo "Exec=$HOME/Applications/Discord/Discord" >> $HOME/.local/share/applications/discord.desktop
-	echo "Icon=discord" >> $HOME/.local/share/applications/discord.desktop
-	echo "Type=Application" >> $HOME/.local/share/applications/discord.desktop
-	echo "Categories=Network;InstantMessaging;" >> $HOME/.local/share/applications/discord.desktop
-	echo "Path=$HOME/Applications/Discord" >> $HOME/.local/share/applications/discord.desktop
-	echo "Terminal=false" >> $HOME/.local/share/applications/discord.desktop
-	echo "StartupNotify=false" >> $HOME/.local/share/applications/discord.desktop
+	echo "[Desktop Entry]" > $shareapp/discord.desktop
+	echo "Name=Discord" >> $shareapp/discord.desktop
+	echo "StartupWMClass=discord" >> $shareapp/discord.desktop
+	echo "Comment=All-in-one voice and text chat for gamers that's free, secure, and works on both your desktop and phone." >> $shareapp/discord.desktop
+	echo "GenericName=Internet Messenger" >> $shareapp/discord.desktop
+	echo "Exec=$HOME/.local/bin/VPI-Discord_Launcher" >> $shareapp/discord.desktop
+	echo "Icon=discord" >> $shareapp/discord.desktop
+	echo "Type=Application" >> $shareapp/discord.desktop
+	echo "Categories=Network;InstantMessaging;" >> $shareapp/discord.desktop
+	echo "Path=$HOME/.local/bin/" >> $shareapp/discord.desktop
+	echo "Terminal=false" >> $shareapp/discord.desktop
+	echo "StartupNotify=false" >> $shareapp/discord.desktop
 }
 function PICOM(){
 echo "Picom : Installation"
 # Nettoyage préalable
 if [[ $(sudo -S vpm list|grep -c "picom") != 0 ]]; then
-		sudo -S echo -e "ignorepkg=picom" > /etc/xbps.d/void.conf
+		sudo -S echo -e "ignorepkg=picom" | sudo -S tee /etc/xbps.d/void.conf
 		sudo -S vpm remove -y picom
 		sudo -S rm /etc/xbps.d/void.conf
 fi
@@ -814,7 +983,7 @@ if [[ $(sudo -S vpm list|grep -c "compton") != 0 ]]; then
 		sudo -S rm /etc/xbps.d/void.conf
 fi
 
-sudo -S vpm i -y picom
+sudo -S xbps-install -y picom
 # Installation Picom-ibhagwan
 #cd $HOME
 #git clone https://github.com/void-linux/void-packages
@@ -838,22 +1007,21 @@ echo "Flatpak : Installation Parsec"
 flatpak install --user -y Parsec
 }
 function STEAM(){
-echo -e "===> STEAM"
-cd $scripts
-./05-VOID-Steam.sh
-cd $WDIR
+sudo -S echo -e "==> Install Steam"
+# Installation de Steam sur VoidLinux.
+sudo -S xbps-install -y libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit
+# Installation de Steam via flatpak (Easy Anti Cheat actif)
+flatpak install --user com.valvesoftware.Steam
 }
 function GOG(){
-echo "===> GOG INSTALL"
-cd $scripts
-./06-VOID-GOG.sh
-cd $WDIR
+sudo -S echo -e "[GOG] Installation"
+sudo -S xbps-install -y minigalaxy LGOGDownloader python3-gogs-client
 }
 function WINE(){
-echo "===> WINE INSTALL"
-cd $scripts
-./10-VOID-Wine.sh
-cd $WDIR
+# Installation de Wine pour Voidlinux
+sudo -S xbps-install -y wine winetricks wine-tools wine-mono wine-gecko wine-32bit libwine-32bit;
+# Installation des dépendances pour wine
+winetricks allfonts d3dcompiler_47 d3drm d3dx10 d3dx9 d3dx11_43 dxvk vkd3d l3codecx gfw
 }
 function PROTONFLAT(){
 # Installation ProtonGE pour Steam (steam flatpak version)
@@ -861,7 +1029,6 @@ function PROTONFLAT(){
 echo "==> Install Proton via Flatpak"
 flatpak install --user com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 }
-
 function AUTOINSTALL(){
 echo -e "\033[33,40m==>   AUTOINSTALL\033[0m"
 SSHKEYTEST
@@ -873,7 +1040,6 @@ STEAM
 WINE
 PROTONFLAT
 OHMYZSH
-sudo echo "Fin de AUTO-LIGHT"
 MENUFIN
 }
 function CUSTOMINSTALL(){
@@ -881,7 +1047,6 @@ echo -e "\033[33,40m==>   CUSTOMINSTALL\033[0m"
 MENUPARSER
 SSHKEYTEST
 BASE
-GUFW
 NANORC
 FLATPAK
 XBPSLOADER
@@ -902,7 +1067,6 @@ echo -e "##\t\tV $version"
 echo -e "##"
 echo -e "######"
 }
-
 function DETECT(){
 # DETECTION CPU
 cpuDETECT="No Detect"
@@ -970,11 +1134,10 @@ echo -e "customXBPS : ${customXBPS[@]}"
 echo -e "customAPPS : ${customAPP[@]}"
 rm $res1 $res2 $res3 $TMP01 $TMP02 $TMP03 $TMP04
 }
-
 function XBPSLOADER(){
 # MOULINETTE XBPSLOADER
 echo -e "===XBPSLOADER===> XBPSLOADER :"
-sudo vpm i -y ${customXBPS[@]}
+sudo xbps-install -y ${customXBPS[@]}
 }
 function APPSLOADER(){
 echo -e "==> APPS LOADER START"
@@ -988,7 +1151,6 @@ ${customAPP[$i]};
 i=$(($i+1))
 done
 }
-
 function MENULANG(){
 
 BANNER
@@ -1019,9 +1181,14 @@ echo -e "\033[33,40m==>   MENU01START\033[0m"
 DETECT
 source $WDIR/LANG/installer/$vpiLANG
 menuCHOIX=$(yad --list --title="$TITLE $version" \
-				--text="$vpiLANG\n$menu01START00\n\n==== AUTO DETECT ====\n\nUtilisateur\t : \t$voiduser\n\nCPU TYPE\t : \t$cpuDETECT\nGPU TYPE\t : \t$gpuDETECT\n\nBluetooth\t : \t$blueDETECT\nVirtio-net\t : \t$vmDETECT" \
-				--width="530" --height="220" \
-				--center --on-top --icon --icon-size=32 \
+				--text="$vpiLANG\n$menu01START00 \
+				\n\n==== AUTO DETECT ==== \
+				\n\nUtilisateur\t : \t$voiduser \
+				\nCPU TYPE\t : \t$cpuDETECT \
+				\nGPU TYPE\t : \t$gpuDETECT \
+				\n\nBluetooth\t : \t$blueDETECT \
+				\nVirtio-net\t : \t$vmDETECT\n" \
+				--width="530" --height="320" --center --on-top --icon --icon-size=32 \
 				--column="TYPE" --column="Description" --print-column="1" --separator="" \
 				"MINIMAL" "$menu01START01" \
 				"CUSTOM" "$menu01START02")
@@ -1048,14 +1215,20 @@ esac
 function MENU02CUSTOM(){
 echo -e "\033[33,40m==>   MENU02CUSTOM\033[0m"
 source $WDIR/LANG/installer/$vpiLANG
-yad --plug="$KEY" --tabnum="1" --form --image="abp.png" yad --text-info --text="$menuINTRO00\n\n Tofdz 2023"&\
+yad --plug="$KEY" --tabnum="1" --form --image="abp.png" yad --text-info --text="$menuINTRO00 \
+				\n\n==== AUTO DETECT ==== \
+				\n\nUtilisateur\t : \t$voiduser \
+				\nCPU TYPE\t : \t$cpuDETECT \
+				\nGPU TYPE\t : \t$gpuDETECT \
+				\nBluetooth\t : \t$blueDETECT \
+				\nVirtio-net\t : \t$vmDETECT \
+				\n\nTofdz 2023"&\
 yad --plug="$KEY" --tabnum="2" --checklist --list --text="XBPS : Liste des paquets xbps utile" --hide-column="2" \
 		--column="CHECK" --column="XBPS" --column="PAQUET" --column="DESCRIPTION" \
 		true "XBPS" "cifs-utils" "Outil pour connexion SMB" \
 		true "XBPS" "smbclient" "Outil pour connexion SMB (suite)" \
 		false "XBPS" "thunderbird" "Client pour les Mails" \
 		false "XBPS" "birdtray" "Garder Thunderbird en icone dans la barre des taches" \
-		true "XBPS" "gufw" "GUI pour le firewall" \
 		false "XBPS" "zenmap" "Tester la sécurité de votre réseau et +" \
 		true "XBPS" "vlc" "Lecteur multimedia audio vidéo VLC" \
 		false "XBPS" "gimp" "Logiciel d'édition d'image & photos" \
@@ -1073,25 +1246,28 @@ yad --plug="$KEY" --tabnum="3" --form --text="FIX : Tous les correctifs dispo po
 		--field="FIX - AZERTY at login:CB" "!ELOGIND" \
 		--field="FIX - ShiftLock:CB" "!SHIFTLOCK"&>$res2&\
 yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les applications déjà configuré pour vous" --hide-column="3" \
-		--column="CHECK" --column=" :IMG" --column="APPS" --column="PAQUET" --column="DESCRIPTION" \
+		--column="CHECK" --column=":IMG" --column="APPS" --column="PAQUET" --column="DESCRIPTION" \
+		true "$icons/gufw-50.png" "APPS" "GUFW" "Un firewall avec interface graphique" \
+		false "$icons/cups-50.png" "APPS" "CUPS" "Impression" \
 		true "$icons/I3wm-color-50.png" "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
 		false "$icons/I3wm-color-50.png" "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
 		true "$icons/I3wm-color-50.png" "APPS" "PICOM" "Composition : affichage effet graphique" \
+		true "$icons/virt-manager-50.png" "APPS" "VIRTMANAGER" "Gestionnaire de serveur et de machines virtuelles" \
 		false "$icons/Virtualbox-50.png" "APPS" "VIRTUALBOX" "Gestionnaire de machines virtuelles" \
-		true "$icons/teamviewer_48.png" "APPS" "TEAMVIEWER" "TeamViewer" \
+		false "$icons/teamviewer_48.png" "APPS" "TEAMVIEWER" "TeamViewer" \
 		false "$icons/VMWare-Workstation-50.png" "APPS" "MENUVMWAREWS" "VMWARE Workstation Pro / Player 16" \
 		false "$icons/Parsec-50.png" "APPS" "PARSEC" "Gaming en streaming remote" \
 		false "$icons/steelseries-light-50.png" "APPS" "STEELSERIES" "Reglages periphériques Steel Series (souris)" \
 		false "$icons/Corsair-light-50.png" "APPS" "CORSAIR" "Reglages périphériques Corsair (clavier/souris)" \
 		false "$icons/Gog-light-50.png" "APPS" "GOG" "Installation de Gog Galaxy (Minigalaxy)" \
-		true "$icons/Wine-50.png" "APPS" "WINE" "Pouvoir installer des applications windows sur voidlinux" \
-		true "$icons/Steam-color-50.png" "APPS" "STEAM" "Installation de Steam" \
-		true "$icons/Steam-color-50.png" "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
+		false "$icons/Wine-50.png" "APPS" "WINE" "Pouvoir installer des applications windows sur voidlinux" \
+		false "$icons/Steam-color-50.png" "APPS" "STEAM" "Installation de Steam" \
+		false "$icons/Steam-color-50.png" "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
 		true "$icons/Discord-light-50.png" "APPS" "DISCORD" "Célèbre plateforme de chat vocale" \
 		true "$icons/ohmyzsh-50.png" "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" &>$res3&\
 yad --notebook --key="$KEY" --title="$TITLE" --image="abp.png" --text="$TITLE" \
 		--center --on-top \
-		--width="780" --height="750" --separator="|" \
+		--width="780" --height="650" --separator="|" \
 		--tab="Acceuil" --tab="XBPS" --tab="Fix" --tab="APPS" \
 		--button="Exit:1" --button="OK:0"
 ret=$?
