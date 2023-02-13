@@ -1,6 +1,6 @@
 #!/bin/bash
 # NAME : Void-Post-Installer
-# Date : 16/11/2020 maj 24/01/2023
+# Date : 16/11/2020 maj 13/02/2023
 # by Tofdz
 # assisted by :
 # DrNeKoSan : crash test !
@@ -8,7 +8,7 @@
 # Celine    : Les petits pains !!
 
 TITLE="Void Post Installer"
-version="0.3.2"
+version="0.3.3"
 voiduser=$USER
 WDIR=$(pwd)
 scripts="$WDIR/data/install"
@@ -51,27 +51,25 @@ done
 function SSHKEYTEST(){
 SSHDIR="$HOME/.ssh/"
 PRIK="id_ed25519"
-echo -e "[ SSH ] ==> CHECK CLES SSH"
+sudo -S echo -e "[ SSH ] ==> CHECK CLES SSH"
 if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
 			# On ouvre une fenetre pour saisir la passphrase
 			PASSPHRASE=$(yad --entry --width="800" --height="100" \
 							--title="$TITLE $version" --text="Vous n'avez pas généré de clés SSH. Un mot de passe (passphrase) est demandé (sans = connexion auto)" \
 							--entry-label="Votre passphrase SSH : " \
 							--entry-text="")
-			echo $PASSPHRASE
 			valret=$?
 			case $valret in
 				0)
 				# On génère la clé avec la passphrase
-				echo "Passphrase : $PASSPHRASE"
 				if [[ -z "$PASSPHRASE" ]]; then
-						ssh-keygen -f $SSHDIR$PRIK -t ed25519 -N ""
+					ssh-keygen -f $SSHDIR$PRIK -t ed25519 -N ""
 				else
-				ssh-keygen -f $SSHDIR$PRIK -t ed25519  -P $PASSPHRASE
+					ssh-keygen -f $SSHDIR$PRIK -t ed25519  -P $PASSPHRASE
 				fi
 				;;
 				1)
-				echo "EXIT"
+				sudo -S echo "EXIT"
 				exit
 				;;
 				252)
@@ -79,7 +77,7 @@ if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
 				;;
 			esac
 	else
-			echo -e "[ SSH ] ==> fichiers ssh deja present"
+			sudo -S echo -e "[ SSH ] ==> fichiers ssh deja present"
 	fi
 ### Installation des clés dans la configuration
 ## Config SSH
@@ -117,7 +115,7 @@ fi
 }
 function BASE(){
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
-echo -e "===> BASE INSTALL"
+sudo -S echo -e "===> BASE INSTALL"
 sudo -S xbps-install -Syuv xbps
 # INSTALLATION VPM
 sudo -S xbps-install -Syuv vpm vsv void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
@@ -135,10 +133,10 @@ BLUETOOTH
 VIRTIONET
 
 # Kernel 
-echo -e "===> BASE INSTALL : Kernel : Update"
-echo "==> Kernel : Purge"
+sudo -S echo -e "===> BASE INSTALL : Kernel : Update"
+sudo -S echo "==> Kernel : Purge"
 sudo -S vkpurge rm all
-echo "==> Update Grub"
+sudo -S echo "==> Update Grub"
 sudo -S update-grub
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
@@ -191,12 +189,12 @@ fi
 sudo -S pycp -g $WDIR/wallpapers/* $XDG_PICTURES_DIR
 
 # Installation fonts SanFrancisco
-echo -e "===> Fonts SanFrancisco"
+sudo -S echo -e "===> Fonts SanFrancisco"
 cd $HOME
 git clone https://github.com/supermarin/YosemiteSanFranciscoFont
 if [ ! -d $HOME/.fonts ];then
 	sudo mkdir $HOME/.fonts/
-	echo -e "Repertoire .fonts crée !"
+	sudo -S echo -e "Repertoire .fonts crée !"
 fi
 sudo -S pycp -g $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
 sudo -S fc-cache -fv
@@ -333,36 +331,36 @@ fi
 
 # SUPPORT BLUETOOTH & VIRTIONET
 function BLUETOOTH(){
-echo "==> BLUETOOTH CHECK INSTALL"
+sudo -S echo -e "==> BLUETOOTH CHECK INSTALL"
 if [ $(echo $blueDETECT | grep -c "Present") != 0 ]; then
-	echo "==> BLUETOOTH DETECTED"
+	sudo -S echo -e "==> BLUETOOTH DETECTED"
 	sudo -S xbps-install -y bluez bluez-qt5 blueman
 	sudo -S ln -s /etc/sv/bluetoothd/ /var/service/
 	blueDETECT=$(sudo -S lsusb | grep "Bluetooth")
 else
-	echo "==> BLUETOOTH NOT DETECTED : SKIP PROCESS"
+	sudo -S echo -e "==> BLUETOOTH NOT DETECTED : SKIP PROCESS"
 fi
 }
 function VIRTIONET(){
 
 if [ $(echo $vmDETECT | grep -c "Present") != 0 ]; then
-	echo "==> VM detectée : install VIRTIONET"
-	echo "==> Virtio-net : Install"
+	sudo -S echo -e "==> VM detectée : install VIRTIONET"
+	sudo -S echo -e "==> Virtio-net : Install"
 		if [ ! -f /etc/modules-load.d/virtio.conf ];then
 			sudo -S touch /etc/modules-load.d/virtio.conf
 			sudo -S echo "# load virtio-net" | sudo -S tee /etc/modules-load.d/virtio.conf
 			sudo -S echo "virtio-net" | sudo -S tee -a /etc/modules-load.d/virtio.conf
-			echo "==> Virtio-net : Fichier crée"
+			sudo -S echo -e "==> Virtio-net : Fichier crée"
 		else
-			echo "==> Virtio-net : fichier déjà présent"
+			sudo -S echo -e "==> Virtio-net : fichier déjà présent"
 		fi
 else
-	echo "==> VIRTIO NOT DETECTED : SKIP PROCESS"
+	sudo -S echo -e "==> VIRTIO NOT DETECTED : SKIP PROCESS"
 fi
 }
 # SUPPORT CPU & GPU
 function INTELCPU(){
-echo "===> CPU : INTEL INSTALL"
+sudo -S echo -e "===> CPU : INTEL INSTALL"
 sudo -S xbps-install -y intel-ucode linux-firmware-intel
 
 }
@@ -414,6 +412,7 @@ echo 'Hidden=false'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
 
 # UTILITAIRES SOURIS/CLAVIER CORSAIR & SOURIS STEELSERIES
 function STEELSERIES(){
+sudo -S echo -e "[MOUSE] SteelSeries Driver"
 cd $HOME
 git clone https://github.com/flozz/rivalcfg.git
 cd rivalcfg
@@ -422,9 +421,9 @@ sudo -S rivalcfg --update-udev
 sudo -S rivalcfg -p 125
 }
 function CORSAIR(){
+sudo -S echo -e "[DEVICE] Corsair Driver"
 sudo -S xbps-install -y ckb-next;
 sudo -S ln -s /etc/sv/ckb-next-daemon /var/service;
-sudo -S vsv enable ckb-next-daemon && sudo vsv start ckb-next-daemon;
 }
 # OPTIMISATION FOR LENOVO LAPTOP
 function T420(){
@@ -503,7 +502,7 @@ function ELOGIND(){
 
 # Configuration clavier azerty pour
 # se connecter à sa session.
-sudo -S echo "===> ELOGIND AZERTY"
+sudo -S echo -e "===> ELOGIND AZERTY"
 if [ -d /etc/X11/xorg.conf.d ]; then
 	sudo -S echo -e "Dossier xorg.conf.d présent"
 else
@@ -541,10 +540,10 @@ echo 'EndSection' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
 }
 
 function FLATPAK(){
-echo "===> FLATPAK"
+sudo -S echo -e "===> FLATPAK"
 # installation via flatpak de Discord & Parsec
 sudo -S xbps-install -y flatpak
-echo "Flatpak : Création des repos si non existant"
+sudo -S echo -e "Flatpak : Création des repos si non existant"
 flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
 function NANORC(){
@@ -682,7 +681,7 @@ if [ ! -f $shareapp/VPI-Backup-Restore.desktop ]; then
 	echo 'StartupNotify=false' >> $shareapp/VPI-Backup-Restore.desktop
 	echo 'Categories=X-VPI;' >> $shareapp/VPI-Backup-Restore.desktop
 else
-	echo 'VPI-Backup-Restore.desktop présent'
+	sudo -S echo -e 'VPI-Backup-Restore.desktop présent'
 fi
 
 # VPI-ManageUser
@@ -697,7 +696,7 @@ echo 'Terminal=false' >> $shareapp/VPI-ManageUser.desktop
 echo 'StartupNotify=false' >> $shareapp/VPI-ManageUser.desktop
 echo 'Categories=X-VPI;' >> $shareapp/VPI-ManageUser.desktop
 else
-	echo 'VPI-ManageUser.desktop présent'
+	sudo -S echo -e 'VPI-ManageUser.desktop présent'
 fi
 #VPI-UPDATER
 if [ ! -f $shareapp/VPI-UPDATER.desktop ]; then
@@ -789,16 +788,16 @@ function OHMYZSH(){
 
 # Installation de OhmyZsh!
 sudo -S echo -e "===> OHMYZSH INSTALL"
-sudo xbps-install -y zsh
+sudo -S xbps-install -y zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 }
 
 function CUPS(){
 sudo -S echo -e "[CUPS][INSTALL]"
 # Paquets a installer
-sudo -S xbps-install -y cups cups-filter nss-mdns avahi system-config-printer
+sudo -S xbps-install -y cups cups-filter system-config-printer
 sudo -S ln -s /etc/sv/cupsd /var/service
-sudo -S vsv enable cupsd
+
 }
 function TEAMVIEWER(){
 
@@ -819,7 +818,7 @@ pycp $HOME/Applications/teamviewer/teamviewer.desktop $HOME/.local/share/applica
 
 }
 function VIRTMANAGER(){
-sudo xbps-install -y virt-manager qemu libvirt dbus bridge-utils
+sudo -S xbps-install -y virt-manager qemu libvirt dbus bridge-utils
 if [ ! -d /var/service/dbus ]; then
 sudo -S ln -s /etc/sv/dbus /var/service
 sudo -S echo -e "Service dbus monté"
@@ -855,14 +854,13 @@ function VMWAREWSPLY(){
 echo "==> APPS : VMWare Workstation Player 16"
 sudo -S xbps-install -y libpcsclite pcsclite
 sudo -S ln -s /etc/sv/pcscd /var/service
-sudo vsv start pcscd
 cd $HOME
 mkdir VMWareInstall
 cd VMWareInstall
 wget https://download3.vmware.com/software/player/file/VMware-Player-16.0.0-16894299.x86_64.bundle?HashKey=d0d1117816424e5e5d9d2b1adb78361f&params=%7B%22sourcefilesize%22%3A%22160.60+MB%22%2C%22dlgcode%22%3A%22b1acfc7b4cdc5c976601b26eec4384a2%22%2C%22languagecode%22%3A%22fr%22%2C%22source%22%3A%22DOWNLOADS%22%2C%22downloadtype%22%3A%22manual%22%2C%22downloaduuid%22%3A%22601eda45-6233-4fbb-acbe-68b3f3eb841e%22%2C%22dlgtype%22%3A%22Product+Binaries%22%2C%22productversion%22%3A%2216.0.0%22%2C%22productfamily%22%3A%22VMware+Workstation+Player%22%7D&AuthKey=1648578131_4251ce7b8b701b45089c37195873cde6
 chmod +x *
 if [ ! -d /etc/init.d/ ];then
-sudo mkdir /etc/init.d/
+sudo -S mkdir /etc/init.d/
 fi
 sudo -S ./VMware-Player-16.0.0-16894299.x86_64.bundle
 sudo -S sed -i 's/\(Exec=/usr/bin/vmware\).*/\Exec=vmware-launcher-player/' /usr/share/applications/vmware-player.desktop
@@ -880,7 +878,7 @@ else
 fi
 }
 function VMWAREWSPRO(){
-echo "==> APPS : VMWare Workstation Pro 16"
+sudo -S echo -e "==> APPS : VMWare Workstation Pro 16"
 sudo -S xbps-install -y make libpcsclite pcsclite
 sudo -S ln -s /etc/sv/pcscd /var/service
 sudo vsv start pcscd
@@ -926,7 +924,7 @@ vmwareSELECT=$(yad --title="VMWare WorkStation installation" \
 $vmwareSELECT
 }
 function DISCORD(){
-sudo -S echo "===> Discord : Installation"
+sudo -S echo -e "===> Discord : Installation"
 cd $HOME
 
 # Check directory d'installation
@@ -934,7 +932,7 @@ if [ ! -d $HOME/Applications ];then
 	mkdir $HOME/Applications
 fi
 if [ -d $HOME/Applications/Discord ]; then
-	sudo -S echo "discord deja installé, reinstallation en cours"
+	sudo -S echo -e "discord deja installé, reinstallation en cours"
 	sudo -S rm -rfv $HOME/Applications/Discord
 fi
 
@@ -1003,7 +1001,7 @@ sudo -S xbps-install -y picom
 sudo -S pycp $WDIR/config/picom.conf $HOME/.config/
 }
 function PARSEC(){
-echo "Flatpak : Installation Parsec"
+sudo -S echo -e "Flatpak : Installation Parsec"
 flatpak install --user -y Parsec
 }
 function STEAM(){
@@ -1011,7 +1009,7 @@ sudo -S echo -e "==> Install Steam"
 # Installation de Steam sur VoidLinux.
 sudo -S xbps-install -y libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit
 # Installation de Steam via flatpak (Easy Anti Cheat actif)
-flatpak install --user com.valvesoftware.Steam
+flatpak install --user -y com.valvesoftware.Steam
 }
 function GOG(){
 sudo -S echo -e "[GOG] Installation"
@@ -1027,7 +1025,7 @@ function PROTONFLAT(){
 # Installation ProtonGE pour Steam (steam flatpak version)
 
 echo "==> Install Proton via Flatpak"
-flatpak install --user com.valvesoftware.Steam.CompatibilityTool.Proton-GE
+flatpak install --user -y com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 }
 function AUTOINSTALL(){
 echo -e "\033[33,40m==>   AUTOINSTALL\033[0m"
@@ -1105,7 +1103,7 @@ fi
 
 }
 function MENUPARSER(){
-echo -e "===> START : MENU-PARSER"
+sudo -S echo -e "===> START : MENU-PARSER"
 # ALIMENTE LES TABLEAU POUR INSTALL DE XBPS ET APPS
 cat $res1 > $TMP01
 cat $TMP01 | grep XBPS > $TMP02
@@ -1130,23 +1128,23 @@ do
 customAPP+=("$dataAPP")
 done < $TMP03
 
-echo -e "customXBPS : ${customXBPS[@]}"
-echo -e "customAPPS : ${customAPP[@]}"
+sudo -S echo -e "customXBPS : ${customXBPS[@]}"
+sudo -S echo -e "customAPPS : ${customAPP[@]}"
 rm $res1 $res2 $res3 $TMP01 $TMP02 $TMP03 $TMP04
 }
 function XBPSLOADER(){
 # MOULINETTE XBPSLOADER
-echo -e "===XBPSLOADER===> XBPSLOADER :"
-sudo xbps-install -y ${customXBPS[@]}
+sudo -S echo -e "===XBPSLOADER===> XBPSLOADER :"
+sudo -S xbps-install -y ${customXBPS[@]}
 }
 function APPSLOADER(){
-echo -e "==> APPS LOADER START"
+sudo -S echo -e "==> APPS LOADER START"
 compteur=${#customAPP[@]}
-echo -e "Compteur = $compteur"
+sudo -S echo -e "Compteur = $compteur"
 i=0
 while (($compteur!=$i));
 do
-echo -e "==> APPS LOADER BOUCLE WHILE "
+sudo -S echo -e "==> APPS LOADER BOUCLE WHILE "
 ${customAPP[$i]};
 i=$(($i+1))
 done
