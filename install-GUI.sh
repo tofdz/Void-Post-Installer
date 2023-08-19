@@ -29,8 +29,8 @@ TMP03=$(mktemp --tmpdir iface1.XXXXXXXX)
 TMP04=$(mktemp --tmpdir iface1.XXXXXXXX)
 
 function NET(){
-echo -e "===> NET"
-ip[0]=
+sudo -S echo -e "===> NET"
+ip[0]=8.8.8.8
 ip[1]=1.1.1.1
 i=0
 while ((${#ip[*]}!=$i)) ; do
@@ -40,9 +40,9 @@ done
 i=0
 while ((${#ip[*]}!=$i)) ; do
 	if [ ${ipR[$i]} -eq 0 ];then
-	sudo -S echo -e " ${ip[$i]} est ONLINE"
+	sudo -S echo -e "${ip[$i]} est ONLINE"
 	else
-	sudo -S echo -e " ${ip[$i]} est OFFLINE"
+	sudo -S echo -e "${ip[$i]} est OFFLINE : Pas d'accès internet, veuillez vous connecter"
 	exit
 	fi
 	i=$((i+1));
@@ -115,7 +115,7 @@ fi
 }
 function BASE(){
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
-sudo -S echo -e "===> BASE INSTALL"
+sudo -S echo -e "$(ColorTitle)===> BASE INSTALL$(ColorOff)"
 sudo -S xbps-install -Syuv xbps
 # INSTALLATION VPM
 sudo -S xbps-install -Syuv vpm vsv void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
@@ -1152,7 +1152,7 @@ done
 function MENULANG(){
 
 BANNER
-sudo -S echo -e "\033[33,40m==>   MENULANG START\033[0m"
+echo -e "==> MENULANG START"
 vpiLANG=$(yad --title="$TITLE $version" --text="Choisissez votre langue :\n\nChoose your language :" \
 	--center --on-top \
 	--list --width="450" --height="530" --separator="" \
@@ -1175,7 +1175,7 @@ case $valret in
 esac
 }
 function MENU01START(){
-echo -e "\033[33,40m==>   MENU01START\033[0m"
+echo -e "==>   MENU01START"
 DETECT
 source $WDIR/LANG/installer/$vpiLANG
 menuCHOIX=$(yad --list --title="$TITLE $version" \
@@ -1211,7 +1211,7 @@ case $valret in
 esac
 }
 function MENU02CUSTOM(){
-echo -e "\033[33,40m==>   MENU02CUSTOM\033[0m"
+echo -e "==>   MENU02CUSTOM"
 source $WDIR/LANG/installer/$vpiLANG
 yad --plug="$KEY" --tabnum="1" --form --image="abp.png" yad --text-info --text="$menuINTRO00 \
 				\n\n==== AUTO DETECT ==== \
@@ -1285,9 +1285,7 @@ case $ret in
 esac
 }
 function MENUFIN(){
-
 echo -e "[ FIN ]==> Installation terminée"
-
 sudo -S yad --info --title="$TITLE v$version : Installation terminée" \
 	--text="Installation terminée !\n\nReboot necessaire !!!\n\nBonne journée !\n\nTofdz" \
 	--button="Reboot:1" --button="Quit:0"
@@ -1305,4 +1303,5 @@ case $valret in
 	;;
 esac
 }
+NET;
 MENULANG
