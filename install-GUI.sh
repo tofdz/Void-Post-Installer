@@ -144,7 +144,7 @@ sudo -S vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 aget
 sudo -S rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
 
 # Base Apps
-sudo -S xbps-install -y linux-mainline linux-mainline-headers linux-firmware linux-firmware-broadcom linux-firmware-network dracut-network xorg-server-devel xorg-server-devel-32bit git-all nano inxi zenity snooze zsh curl wget python3-pip thunar-archive-plugin catfish testdisk octoxbps cpufrequtils notepadqq mc htop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator;
+sudo -S xbps-install -y linux-mainline linux-mainline-headers linux-firmware linux-firmware-broadcom linux-firmware-network dracut-network xorg-server-devel xorg-server-devel-32bit git-all nano inxi zenity snooze zsh curl wget python3-pip thunar-archive-plugin catfish testdisk octoxbps cpufrequtils notepadqq mc htop tmux xarchiver unzip p7zip-unrar xfburn pkg-config gparted pycp cdrtools socklog socklog-void adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator gnome-disk-utility;
 sudo -S ln -s /etc/sv/socklog-unix /var/service; sudo -S ln -s /etc/sv/nanoklogd /var/service;
 
 #========================================
