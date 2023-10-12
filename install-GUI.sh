@@ -728,21 +728,6 @@ else
 	echo 'VPI-Void-install-USB.desktop présent'
 fi
 
-#VPI-ZenIso
-if [ ! -f $shareapp/VPI-ZenIso.desktop ]; then
-echo '[Desktop Entry]' > $shareapp/VPI-ZenIso.desktop
-echo 'Version=1.0' >> $shareapp/VPI-ZenIso.desktop
-echo 'Type=Application' >> $shareapp/VPI-ZenIso.desktop
-echo 'Name=VPI-ZenIso' >> $shareapp/VPI-ZenIso.desktop
-echo 'Exec=VPI-ZenIso' >> $shareapp/VPI-ZenIso.desktop
-echo 'Icon=tools-media-optical-burn-image' >> $shareapp/VPI-ZenIso.desktop
-echo 'Terminal=false' >> $shareapp/VPI-ZenIso.desktop
-echo 'StartupNotify=false' >> $shareapp/VPI-ZenIso.desktop
-echo 'Categories=X-VPI;' >> $shareapp/VPI-ZenIso.desktop
-else
-	echo 'VPI-ZenIso.desktop présent'
-fi
-
 # VPI-lxdm-config-launcher
 if [ ! -f $shareapp/VPI-lxdm-config-launcher.desktop ]; then
 echo '[Desktop Entry]' > $shareapp/VPI-lxdm-config-launcher.desktop
