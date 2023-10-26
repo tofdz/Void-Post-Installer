@@ -97,7 +97,7 @@ sudo -S xbps-install -y nano notepadqq mc htop tmux gparted cdrtools socklog soc
 sudo -S echo -e "$colJAUNE\n[BASE] == Xfce addons ==\n $colDEFAULT"
 sudo -S xbps-install -y xorg-server-devel snooze thunar-archive-plugin catfish octoxbps pkg-config adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator gnome-disk-utility;
 sudo -S echo -e "$colJAUNE\n[BASE] == Apps with utility ==\n $colDEFAULT"
-sudo -S xbps-install -y testdisk cpufrequtils xarchiver unzip p7zip xfburn;
+sudo -S xbps-install -y testdisk cpufrequtils xarchiver unzip p7zip-unrar xfburn;
 
 sudo -S echo -e "$colJAUNE\n[BASE] == Démarrage service log ==\n $colDEFAULT"
 sudo -S ln -s /etc/sv/socklog-unix /var/service; sudo -S ln -s /etc/sv/nanoklogd /var/service;
@@ -128,13 +128,12 @@ else
 fi
 if [ ! -f /etc/cron.hourly/updater ]; then
 	
-	touch updater 
-	echo -e '#!/bin/bash' > updater
-	echo -e "cd /home/$voiduser/" >> updater
-	echo -e 'exec ./VOID-UPDATER.sh' >> updater
-	chmod +x /updater
-	sudo -S chown root:root updater
-	sudo -S mv updater /etc/cron.hourly/
+	sudo -S touch updater 
+	echo -e '#!/bin/bash' | sudo -S tee /etc/cron.hourly/updater
+	echo -e "cd /home/$voiduser/" | sudo -S tee -a /etc/cron.hourly/updater
+	echo -e 'exec ./VOID-UPDATER.sh' | sudo -S tee -a /etc/cron.hourly/updater
+	sudo -S chmod +x /etc/cron.hourly/updater
+	sudo -S chown root:root /etc/cron.hourly/updater
 	sudo -S ln -s /etc/sv/snooze-hourly /var/service
 else
 	sudo -S echo -e "Fichier deja présent"
@@ -220,11 +219,12 @@ echo "ignorepkg=xf86-video-nouveau" | sudo -S tee -a /etc/xbps.d/Base_Install.co
 echo "ignorepkg=xf86-video-vesa" | sudo -S tee -a /etc/xbps.d/Base_Install.conf
 echo "ignorepkg=xf86-video-vmware" | sudo -S tee -a /etc/xbps.d/Base_Install.conf
 cd /etc/xbps.d/
-sudo -S chown root:root Base_Install.conf
+sudo -S chown root:root Base_Install.conf;
 sudo -S vpm remove -y linux-firmware-amd linux-firmware-intel linux-firmware-nvidia xf86-video-amdgpu xf86-video-ati xf86-video-dummy xf86-video-fbdev xf86-video-intel xf86-video-nouveau xf86-video-vesa xf86-video-vmware 
-sudo -S echo "==> Suppression Base_Install.conf"
+sudo -S echo -e "$colJAUNE\n[BASE] == Suppression Base_Install.conf ==\n$colDEFAULT"
 sudo -S rm Base_Install.conf
-yes "Y" | sudo -S vpm autoremove; sudo -S vpm cleanup;
+sudo -S echo -e "$colJAUNE\n[BASE] == NETTOYAGE PAQUETS & CACHE ==\n$colDEFAULT"
+sudo -S xbps-remove -v -o; sudo -S xbps-remove -v -O;
 # Verification /etc/sysctl.conf
 sudo -S echo -e "==> Vérification /etc/sysctl.conf : $VER1"
 if [ -e $VER1 ]; then
@@ -804,9 +804,9 @@ cd $WDIR
 function OHMYZSH(){
 
 # Installation de OhmyZsh!
-sudo -S echo -e "===> OHMYZSH INSTALL"
-sudo -S xbps-install -y zsh;
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sudo -S echo -e "$colJAUNE\n[OHMYZSH] == Install ==\n$colDEFAULT"
+sudo -S xbps-install -y zsh; 
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; exit
 }
 
 function CUPS(){
