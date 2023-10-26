@@ -1215,8 +1215,8 @@ yad --plug="$KEY" --tabnum="2" --checklist --list --text="XBPS : Liste des paque
 		true "XBPS" "caffeine-ng" "Gestion de l'écran de veille" &>$res1&\
 yad --plug="$KEY" --tabnum="3" --form --text="FIX : Tous les correctifs dispo pour VoidLinux" --separator="\n" \
 		--field="FIX - Lenovo Thinkpad :CB" "!T420!X250!T470" \
-		--field="FIX - AZERTY at login:CB" "^ELOGIND" \
-		--field="FIX - ShiftLock:CB" "!SHIFTLOCK"&>$res2&\
+		--field="FIX - AZERTY at login:CB" "!ELOGIND" \
+		--field="FIX - ShiftLock:CB" "^SHIFTLOCK"&>$res2&\
 yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les applications déjà configuré pour vous" --hide-column="3" \
 		--column="CHECK" --column=":IMG" --column="APPS" --column="PAQUET" --column="DESCRIPTION" \
 		true "$icons/gufw-50.png" "APPS" "GUFW" "Un firewall avec interface graphique" \
