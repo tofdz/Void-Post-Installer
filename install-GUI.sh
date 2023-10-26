@@ -1,6 +1,6 @@
 #!/bin/bash
 # NAME : Void-Post-Installer
-# Date : 16/11/2020 maj 26/10/2023
+# Date : 16/11/2020 maj 13/02/2023
 # by Tofdz
 # assisted by :
 # DrNeKoSan : crash test !
@@ -8,7 +8,7 @@
 # Celine    : Les petits pains !!
 
 TITLE="Void Post Installer"
-version="0.3.4"
+version="0.3.3"
 voiduser=$USER
 WDIR=$(pwd)
 scripts="$WDIR/data/install"
@@ -289,7 +289,7 @@ sudo -S chown root:root Base_Install.conf
 sudo -S vpm remove -y linux-firmware-amd linux-firmware-intel linux-firmware-nvidia xf86-video-amdgpu xf86-video-ati xf86-video-dummy xf86-video-fbdev xf86-video-intel xf86-video-nouveau xf86-video-vesa xf86-video-vmware 
 sudo -S echo "==> Suppression Base_Install.conf"
 sudo -S rm Base_Install.conf
-sudo -S vpm autoremove; sudo -S vpm cleanup;
+yes "Y" | sudo -S vpm autoremove; sudo -S vpm cleanup;
 # Verification /etc/sysctl.conf
 sudo -S echo -e "==> Vérification /etc/sysctl.conf : $VER1"
 if [ -e $VER1 ]; then
@@ -404,6 +404,10 @@ function NVIDIA(){
 sudo -S echo -e "===> nvidia INSTALL"
 sudo -S xbps-install -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl nvtop
 # Fichier de configuration pour la gestion des ventilateurs
+if [ ! -d "/etc/X11/xorg.conf.d" ]; then
+	sudo -S echo -e "$colROUGE[SHIFTLOCK] == REPERTOIRE xorg.conf.d absent ==\n$colDEFAULT"
+	sudo -S mkdir /etc/X11/xorg.conf.d
+fi	
 sudo -S touch /etc/X11/xorg.conf.d/11-nvidia.conf
 echo 'Section "OutputClass"' | sudo -S tee /etc/X11/xorg.conf.d/11-nvidia.conf
 echo '     Identifier "nvidia"' | sudo -S tee -a /etc/X11/xorg.conf.d/11-nvidia.conf
@@ -549,6 +553,10 @@ fi
 function SHIFTLOCK(){
 # Fonction verr. maj + shift
 lang=$(echo $(echo $(locale|grep "LC_MESSAGE")|cut -d '"' -f2)|cut -d "_" -f1)
+if [ ! -d "/etc/X11/xorg.conf.d" ]; then
+	sudo -S echo -e "$colROUGE[SHIFTLOCK] == REPERTOIRE xorg.conf.d absent ==\n$colDEFAULT"
+	sudo -S mkdir /etc/X11/xorg.conf.d
+fi	
 sudo -S touch /etc/X11/xorg.conf.d/00-Keyboard.conf
 echo 'Section "InputClass"' | sudo -S tee /etc/X11/xorg.conf.d/00-Keyboard.conf
 echo '     Identifier "system-keyboard"' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
@@ -794,7 +802,7 @@ function OHMYZSH(){
 # Installation de OhmyZsh!
 sudo -S echo -e "===> OHMYZSH INSTALL"
 sudo -S xbps-install -y zsh;
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)";
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 }
 
 function CUPS(){
@@ -1298,4 +1306,3 @@ esac
 }
 NET;
 MENULANG
-
