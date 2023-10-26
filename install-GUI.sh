@@ -401,7 +401,7 @@ echo 'Version=0.9.4'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
 echo 'Type=Application'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
 echo 'Name=GreenWithEnvy'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
 echo 'Comment=Afterburner Like'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
-echo 'Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=/app/bin/gwe >'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
+echo 'Exec=flatpak run com.leinardi.gwe --hide-window'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
 echo 'OnlyShowIn=XFCE;'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
 echo 'RunHook=0'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
 echo 'StartupNotify=false'|tee -a $HOME/.config/autostart/GreenWithEnvy.desktop
@@ -952,21 +952,9 @@ sudo -S echo -e "Discord : Création raccourci"
 }
 function PICOM(){
 echo "Picom : Installation"
-# Nettoyage préalable
-if [[ $(sudo -S vpm list|grep -c "picom") != 0 ]]; then
-		sudo -S echo -e "ignorepkg=picom" | sudo -S tee /etc/xbps.d/void.conf
-		sudo -S vpm remove -y picom
-		sudo -S rm /etc/xbps.d/void.conf
-fi
-if [[ $(sudo -S vpm list|grep -c "compton") != 0 ]]; then
-		sudo -S echo -e "ignorepkg=compton" > /etc/xbps.d/void.conf
-		sudo -S echo -e "ignorepkg=compton-conf" >> /etc/xbps.d/void.conf
-		sudo -S vpm remove -y compton
-		sudo -S vpm remove -y compton-conf
-		sudo -S rm /etc/xbps.d/void.conf
-fi
+sudo -S xbps-install -y picom compton compton-conf
+sudo -S pycp $WDIR/config/picom.conf $HOME/.config/
 
-sudo -S xbps-install -y picom
 # Installation Picom-ibhagwan
 #cd $HOME
 #git clone https://github.com/void-linux/void-packages
@@ -983,7 +971,7 @@ sudo -S xbps-install -y picom
 #sudo -S xbps-install --repository=hostdir/binpkgs picom-ibhagwan
 
 # CONFIG PICOM
-sudo -S pycp $WDIR/config/picom.conf $HOME/.config/
+
 }
 function PARSEC(){
 sudo -S echo -e "Flatpak : Installation Parsec"
