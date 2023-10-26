@@ -28,6 +28,14 @@ TMP02=$(mktemp --tmpdir iface1.XXXXXXXX)
 TMP03=$(mktemp --tmpdir iface1.XXXXXXXX)
 TMP04=$(mktemp --tmpdir iface1.XXXXXXXX)
 
+# Menu Color
+
+colROUGE='\e[1;31m'
+colVERT='\e[1;32m'
+colJAUNE='\e[1;33m'
+colBLEU='\e[1;34m'
+colDEFAULT='\e[1;37m'
+
 function NET(){
 sudo -S echo -e "===> NET"
 ip[0]=8.8.8.8
@@ -51,7 +59,8 @@ done
 function SSHKEYTEST(){
 SSHDIR="$HOME/.ssh/"
 PRIK="id_ed25519"
-sudo -S echo -e "[ SSH ] ==> CHECK CLES SSH"
+sudo -S echo -e "$colJAUNE\n[SSH] == START ==\n$colDEFAULT"
+sudo -S echo -e "$colJAUNE\n[SSH] == CHECK CLES SSH ==\n$colDEFAULT"
 if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
 			# On ouvre une fenetre pour saisir la passphrase
 			PASSPHRASE=$(yad --entry --width="800" --height="100" \
@@ -69,7 +78,7 @@ if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
 				fi
 				;;
 				1)
-				sudo -S echo "EXIT"
+				sudo -S echo -e "$colROUGE\n[SSH] == EXIT ==\n$colDEFAULT"
 				exit
 				;;
 				252)
@@ -77,23 +86,23 @@ if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
 				;;
 			esac
 	else
-			sudo -S echo -e "[ SSH ] ==> fichiers ssh deja present"
+			sudo -S echo -e "$colVERT\n[SSH] == Fichiers ssh déjà présent ==\n$colDEFAULT"
 	fi
 ### Installation des clés dans la configuration
 ## Config SSH
 
 # BACKUP CONFIG FILE
-sudo -S echo -e "[SSHD] Modification /etc/ssh/sshd_config"
+sudo -S echo -e "$colJAUNE\n[SSHD] == Modification /etc/ssh/sshd_config ==\n$colDEFAULT"
 if [ ! -f /etc/ssh/sshd_config.sav ]; then
-	sudo -S echo -e "[SSHD] Backup en cours vers /etc/ssh/sshd_config.sav"
+	sudo -S echo -e "$colJAUNE\n[SSHD] == Backup en cours vers /etc/ssh/sshd_config.sav ==\n$colDEFAULT"
 	sudo -S pycp /etc/ssh/sshd_config /etc/ssh/sshd_config.sav
 	if [ -f /etc/ssh/sshd_config.sav ]; then
-		sudo -S echo -e "[SSHD] Backup OK"
+		sudo -S echo -e "$colVERT\n[SSHD] == Backup OK ==\n$colDEFAULT"
 	else
-		sudo -S echo -e "[SSHD] Backup échoué : erreur"
+		sudo -S echo -e "$colROUGE\n[SSHD] !! Backup échoué : erreur !!\n$colDEFAULT"
 	fi
 else
-	sudo -S echo -e "sshd déjà backup"
+	sudo -S echo -e "$colVERT\n[SSHD] == sshd déjà backup ==\n$colDEFAULT"
 fi
 # CONFIG SSHD_CONFIG
 if [ $(grep -c "HostKey $SSHDIR$PRIK" /etc/ssh/sshd_config) = 0 ]; then
@@ -102,27 +111,27 @@ if [ $(grep -c "HostKey $SSHDIR$PRIK" /etc/ssh/sshd_config) = 0 ]; then
 	sudo -S sed "$ligne a\\
 HostKey $SSHDIR$PRIK" /etc/ssh/sshd_config > $WDIR/sshd_config
 sudo -S rm /etc/ssh/sshd_config;
-sudo -S echo -e "[SSHD] Remplacement du fichier sshd d'origine par celui modifié"
+sudo -S echo -e "$colVERT\n[SSHD] == Remplacement du fichier sshd d'origine par celui modifié ==\n$colDEFAULT"
 sudo -S cp $WDIR/sshd_config /etc/ssh/
 	if [ -f /etc/ssh/sshd_config ]; then
-		sudo -S echo -e "[SSHD] Fichier bien remplacé "
+		sudo -S echo -e "$colVERT\n[SSHD] == Fichier bien remplacé ==\n$colDEFAULT"
 	else
-		sudo -S echo -e "[SSHD] Fichier absent : erreur"
+		sudo -S echo -e "$colROUGE\n[SSHD] Fichier absent : erreur ==\n$colDEFAULT"
 	fi
 else
-sudo -S echo -e "[SSHD] Fichier sshd_config déjà patché"
+sudo -S echo -e "$colJAUNE[SSHD] == Fichier sshd_config déjà patché ==\n$colDEFAULT"
 fi
 }
 function BASE(){
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
-sudo -S echo -e "\e[1;33m===> BASE INSTALL\e[1;37m"
+sudo -S echo -e "$colJAUNE\n[BASE] == BASE INSTALL ==\n$colDEFAULT"
 sudo -S xbps-install -Syuv xbps
 # INSTALLATION VPM
 sudo -S xbps-install -Syuv vpm vsv void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
 # CLEANALL
 SYS
 # DRIVERS CPU/GPU/BLUETOOTH/VIRTIO
-sudo -S echo -e "\e[1;33m===> BASE INSTALL : CPU/GPU\e[1;37m"
+sudo -S echo -e "$colJAUNE\n[BASE] == BASE INSTALL : CPU/GPU ==\n$colDEFAULT"
 
 # CPU & GPU INSTALL
 $cpuDETECT
@@ -133,10 +142,10 @@ BLUETOOTH
 VIRTIONET
 
 # Kernel 
-sudo -S echo -e "\e[1;33m===> BASE INSTALL : Kernel : Update\e[1;37m"
-sudo -S echo "\e[1;33m==> Kernel : Purge\e[1;37m"
+sudo -S echo -e "$colJAUNE\n[BASE] ==> BASE INSTALL : Kernel : Update\n$colDEFAULT"
+sudo -S echo "$colJAUNE\n[BASE] == Kernel : Purge ==\n$colDEFAULT"
 sudo -S vkpurge rm all
-sudo -S echo "\e[1;33m==> Update Grub\e[1;37m"
+sudo -S echo "$colJAUNE\n[BASE] == Update Grub ==\n$colDEFAULT"
 sudo -S update-grub
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
@@ -144,18 +153,18 @@ sudo -S vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 aget
 sudo -S rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
 
 # Base Apps
-sudo -S echo -e "\e[1;33m== Base : Firmware & co ==\e[1;37m"
+sudo -S echo -e "$colJAUNE\n[BASE] == Firmware & co ==\n $colDEFAULT"
 sudo -S xbps-install -y linux-mainline linux-mainline-headers linux-firmware linux-firmware-broadcom linux-firmware-network dracut-network 
 
-sudo -S echo -e "\e[1;33m== Base : Minimum Apps\e[1;37m"
+sudo -S echo -e "$colJAUNE\n[BASE] == Minimum Apps ==\n $colDEFAULT"
 sudo -S xbps-install -y nano notepadqq mc htop tmux gparted pycp cdrtools socklog socklog-void zenity curl wget python3-pip inxi;
 
-sudo -S echo -e "\e[1;33m== Base : xfce add ons\e[1;37m"
+sudo -S echo -e "$colJAUNE\n[BASE] == Xfce addons ==\n $colDEFAULT"
 sudo -S xbps-install -y xorg-server-devel snooze thunar-archive-plugin catfish octoxbps pkg-config adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator gnome-disk-utility;
-sudo -S echo -e "\e[1;33m== Base : Apps with utility\e[1;37m"
+sudo -S echo -e "$colJAUNE\n[BASE] == Apps with utility ==\n $colDEFAULT"
 sudo -S xbps-install -y testdisk cpufrequtils xarchiver unzip p7zip-unrar xfburn;
 
-sudo -S echo -e "\e[1;33m== Base : Démarrage service log\e[1;37m"
+sudo -S echo -e "$colJAUNE\n[BASE] == Démarrage service log ==\n $colDEFAULT"
 sudo -S ln -s /etc/sv/socklog-unix /var/service; sudo -S ln -s /etc/sv/nanoklogd /var/service;
 
 #========================================
@@ -280,7 +289,7 @@ sudo -S chown root:root Base_Install.conf
 sudo -S vpm remove -y linux-firmware-amd linux-firmware-intel linux-firmware-nvidia xf86-video-amdgpu xf86-video-ati xf86-video-dummy xf86-video-fbdev xf86-video-intel xf86-video-nouveau xf86-video-vesa xf86-video-vmware 
 sudo -S echo "==> Suppression Base_Install.conf"
 sudo -S rm Base_Install.conf
-
+sudo -S vpm autoremove; sudo -S vpm cleanup;
 # Verification /etc/sysctl.conf
 sudo -S echo -e "==> Vérification /etc/sysctl.conf : $VER1"
 if [ -e $VER1 ]; then
