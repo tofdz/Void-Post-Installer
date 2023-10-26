@@ -773,8 +773,8 @@ function OHMYZSH(){
 
 # Installation de OhmyZsh!
 sudo -S echo -e "===> OHMYZSH INSTALL"
-sudo -S xbps-install -y zsh
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sudo -S xbps-install -y zsh;
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)";
 exit
 }
 
