@@ -97,7 +97,7 @@ sudo -S xbps-install -y nano notepadqq mc htop tmux gparted cdrtools socklog soc
 sudo -S echo -e "$colJAUNE\n[BASE] == Xfce addons ==\n $colDEFAULT"
 sudo -S xbps-install -y xorg-server-devel snooze thunar-archive-plugin catfish octoxbps pkg-config adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator gnome-disk-utility;
 sudo -S echo -e "$colJAUNE\n[BASE] == Apps with utility ==\n $colDEFAULT"
-sudo -S xbps-install -y testdisk cpufrequtils xarchiver unzip p7zip-unrar xfburn;
+sudo -S xbps-install -y testdisk cpufrequtils xarchiver unzip p7zip xfburn;
 
 sudo -S echo -e "$colJAUNE\n[BASE] == Démarrage service log ==\n $colDEFAULT"
 sudo -S ln -s /etc/sv/socklog-unix /var/service; sudo -S ln -s /etc/sv/nanoklogd /var/service;
