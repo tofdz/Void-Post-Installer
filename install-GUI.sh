@@ -1,6 +1,6 @@
 #!/bin/bash
 # NAME : Void-Post-Installer
-# Date : 16/11/2020 maj 13/02/2023
+# Date : 16/11/2020 maj 26/10/2023
 # by Tofdz
 # assisted by :
 # DrNeKoSan : crash test !
@@ -8,7 +8,7 @@
 # Celine    : Les petits pains !!
 
 TITLE="Void Post Installer"
-version="0.3.3"
+version="0.3.4"
 voiduser=$USER
 WDIR=$(pwd)
 scripts="$WDIR/data/install"
@@ -206,7 +206,7 @@ else
 fi
 
 # INSTALLATION Wallpaper
-sudo -S pycp -g $WDIR/wallpapers/* $XDG_PICTURES_DIR
+sudo -S pycp -g $WDIR/wallpapers/* /usr/share/backgrounds/xfce/
 
 # Installation fonts SanFrancisco
 sudo -S echo -e "===> Fonts SanFrancisco"
@@ -1298,3 +1298,4 @@ esac
 }
 NET;
 MENULANG
+
