@@ -148,10 +148,10 @@ sudo -S echo -e "== Base : Firmware & co =="
 sudo -S xbps-install -y linux-mainline linux-mainline-headers linux-firmware linux-firmware-broadcom linux-firmware-network dracut-network 
 
 sudo -S echo -e "== Base : Minimum Apps"
-sudo -S xbps-install -y notepadqq mc htop tmux gparted pycp cdrtools socklog socklog-void zenity curl wget python3-pip ;
+sudo -S xbps-install -y nano notepadqq mc htop tmux gparted pycp cdrtools socklog socklog-void zenity curl wget python3-pip inxi;
 
 sudo -S echo -e "== Base : xfce add ons"
-sudo -S xbps-install -y xorg-server-devel xorg-server-devel-32bit git-all nano inxi snooze thunar-archive-plugin catfish octoxbps pkg-config adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator gnome-disk-utility;
+sudo -S xbps-install -y xorg-server-devel snooze thunar-archive-plugin catfish octoxbps pkg-config adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator gnome-disk-utility;
 sudo -S echo -e "== Base : Apps with utility"
 sudo -S xbps-install -y testdisk cpufrequtils xarchiver unzip p7zip-unrar xfburn;
 
