@@ -93,6 +93,7 @@ if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
 
 # BACKUP CONFIG FILE
 sudo -S echo -e "$colJAUNE\n[SSHD] == Modification /etc/ssh/sshd_config ==\n$colDEFAULT"
+sudo xbps-install -Syuv pycp;
 if [ ! -f /etc/ssh/sshd_config.sav ]; then
 	sudo -S echo -e "$colJAUNE\n[SSHD] == Backup en cours vers /etc/ssh/sshd_config.sav ==\n$colDEFAULT"
 	sudo -S pycp /etc/ssh/sshd_config /etc/ssh/sshd_config.sav
@@ -142,10 +143,10 @@ BLUETOOTH
 VIRTIONET
 
 # Kernel 
-sudo -S echo -e "$colJAUNE\n[BASE] ==> BASE INSTALL : Kernel : Update\n$colDEFAULT"
-sudo -S echo "$colJAUNE\n[BASE] == Kernel : Purge ==\n$colDEFAULT"
+sudo -S echo -e "$colJAUNE\n[BASE] == BASE INSTALL : Kernel : Update ==\n$colDEFAULT"
+sudo -S echo -e "$colJAUNE\n[BASE] == Kernel : Purge ==\n$colDEFAULT"
 sudo -S vkpurge rm all
-sudo -S echo "$colJAUNE\n[BASE] == Update Grub ==\n$colDEFAULT"
+sudo -S echo -e "$colJAUNE\n[BASE] == Update Grub ==\n$colDEFAULT"
 sudo -S update-grub
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
@@ -693,10 +694,13 @@ fi
 }
 function VPIAPPS(){
 sudo -S echo -e "==> Installation VPI-Apps"
-pycp $outils/VPI-* $dirapp
+sudo -S pycp $outils/VPI-* $dirapp
 # VERIFICATION PRESENCE & MODIF FICHIER MENU
 VPIXFCE
-
+if [ ! -d "$shareapp" ]; then
+	sudo -S echo -e "$colROUGE[VPIAPPS] == REPERTOIRE $shareapp absent ==\n$colDEFAULT"
+	sudo -S mkdir $shareapp
+fi	
 #VPI-Backup-Restore
 if [ ! -f $shareapp/VPI-Backup-Restore.desktop ]; then
 	echo '[Desktop Entry]' > $shareapp/VPI-Backup-Restore.desktop
