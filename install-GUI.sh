@@ -115,14 +115,14 @@ fi
 }
 function BASE(){
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
-sudo -S echo -e "$(ColorTitle)===> BASE INSTALL$(ColorOff)"
+sudo -S echo -e "\e[1;33m===> BASE INSTALL\e[1;37m"
 sudo -S xbps-install -Syuv xbps
 # INSTALLATION VPM
 sudo -S xbps-install -Syuv vpm vsv void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
 # CLEANALL
 SYS
 # DRIVERS CPU/GPU/BLUETOOTH/VIRTIO
-sudo -S echo -e "===> BASE INSTALL : CPU/GPU"
+sudo -S echo -e "\e[1;33m===> BASE INSTALL : CPU/GPU\e[1;37m"
 
 # CPU & GPU INSTALL
 $cpuDETECT
@@ -133,10 +133,10 @@ BLUETOOTH
 VIRTIONET
 
 # Kernel 
-sudo -S echo -e "===> BASE INSTALL : Kernel : Update"
-sudo -S echo "==> Kernel : Purge"
+sudo -S echo -e "\e[1;33m===> BASE INSTALL : Kernel : Update\e[1;37m"
+sudo -S echo "\e[1;33m==> Kernel : Purge\e[1;37m"
 sudo -S vkpurge rm all
-sudo -S echo "==> Update Grub"
+sudo -S echo "\e[1;33m==> Update Grub\e[1;37m"
 sudo -S update-grub
 
 # OPTI SYSTEME Void (On degage les trucs useless ou qui font conflit comme dhcpcd)
@@ -144,18 +144,18 @@ sudo -S vsv disable dhcpcd agetty-hvc0 agetty-hvsi0 agetty-tty2 agetty-tty3 aget
 sudo -S rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi0 /var/service/agetty-tty2 /var/service/agetty-tty3 /var/service/agetty-tty4 /var/service/agetty-tty5 /var/service/agetty-tty6;
 
 # Base Apps
-sudo -S echo -e "== Base : Firmware & co =="
+sudo -S echo -e "\e[1;33m== Base : Firmware & co ==\e[1;37m"
 sudo -S xbps-install -y linux-mainline linux-mainline-headers linux-firmware linux-firmware-broadcom linux-firmware-network dracut-network 
 
-sudo -S echo -e "== Base : Minimum Apps"
+sudo -S echo -e "\e[1;33m== Base : Minimum Apps\e[1;37m"
 sudo -S xbps-install -y nano notepadqq mc htop tmux gparted pycp cdrtools socklog socklog-void zenity curl wget python3-pip inxi;
 
-sudo -S echo -e "== Base : xfce add ons"
+sudo -S echo -e "\e[1;33m== Base : xfce add ons\e[1;37m"
 sudo -S xbps-install -y xorg-server-devel snooze thunar-archive-plugin catfish octoxbps pkg-config adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator gnome-disk-utility;
-sudo -S echo -e "== Base : Apps with utility"
+sudo -S echo -e "\e[1;33m== Base : Apps with utility\e[1;37m"
 sudo -S xbps-install -y testdisk cpufrequtils xarchiver unzip p7zip-unrar xfburn;
 
-sudo -S echo -e "== Base : Démarrage service log"
+sudo -S echo -e "\e[1;33m== Base : Démarrage service log\e[1;37m"
 sudo -S ln -s /etc/sv/socklog-unix /var/service; sudo -S ln -s /etc/sv/nanoklogd /var/service;
 
 #========================================
