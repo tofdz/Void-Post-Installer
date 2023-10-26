@@ -56,76 +56,11 @@ while ((${#ip[*]}!=$i)) ; do
 	i=$((i+1));
 done
 }
-function SSHKEYTEST(){
-SSHDIR="$HOME/.ssh/"
-PRIK="id_ed25519"
-sudo -S echo -e "$colJAUNE\n[SSH] == START ==\n$colDEFAULT"
-sudo -S echo -e "$colJAUNE\n[SSH] == CHECK CLES SSH ==\n$colDEFAULT"
-if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
-			# On ouvre une fenetre pour saisir la passphrase
-			PASSPHRASE=$(yad --entry --width="800" --height="100" \
-							--title="$TITLE $version" --text="Vous n'avez pas généré de clés SSH. Un mot de passe (passphrase) est demandé (sans = connexion auto)" \
-							--entry-label="Votre passphrase SSH : " \
-							--entry-text="")
-			valret=$?
-			case $valret in
-				0)
-				# On génère la clé avec la passphrase
-				if [[ -z "$PASSPHRASE" ]]; then
-					ssh-keygen -f $SSHDIR$PRIK -t ed25519 -N ""
-				else
-					ssh-keygen -f $SSHDIR$PRIK -t ed25519  -P $PASSPHRASE
-				fi
-				;;
-				1)
-				sudo -S echo -e "$colROUGE\n[SSH] == EXIT ==\n$colDEFAULT"
-				exit
-				;;
-				252)
-				exit
-				;;
-			esac
-	else
-			sudo -S echo -e "$colVERT\n[SSH] == Fichiers ssh déjà présent ==\n$colDEFAULT"
-	fi
-### Installation des clés dans la configuration
-## Config SSH
 
-# BACKUP CONFIG FILE
-sudo -S echo -e "$colJAUNE\n[SSHD] == Modification /etc/ssh/sshd_config ==\n$colDEFAULT"
-if [ ! -f /etc/ssh/sshd_config.sav ]; then
-	sudo -S echo -e "$colJAUNE\n[SSHD] == Backup en cours vers /etc/ssh/sshd_config.sav ==\n$colDEFAULT"
-	sudo -S pycp /etc/ssh/sshd_config /etc/ssh/sshd_config.sav
-	if [ -f /etc/ssh/sshd_config.sav ]; then
-		sudo -S echo -e "$colVERT\n[SSHD] == Backup OK ==\n$colDEFAULT"
-	else
-		sudo -S echo -e "$colROUGE\n[SSHD] !! Backup échoué : erreur !!\n$colDEFAULT"
-	fi
-else
-	sudo -S echo -e "$colVERT\n[SSHD] == sshd déjà backup ==\n$colDEFAULT"
-fi
-# CONFIG SSHD_CONFIG
-if [ $(grep -c "HostKey $SSHDIR$PRIK" /etc/ssh/sshd_config) = 0 ]; then
-	ligne=$(grep -n "#HostKey /etc/ssh/ssh_host_ed25519_key" /etc/ssh/sshd_config|cut -d: -f1)
-	lignecorr=$(($ligne+1))
-	sudo -S sed "$ligne a\\
-HostKey $SSHDIR$PRIK" /etc/ssh/sshd_config > $WDIR/sshd_config
-sudo -S rm /etc/ssh/sshd_config;
-sudo -S echo -e "$colVERT\n[SSHD] == Remplacement du fichier sshd d'origine par celui modifié ==\n$colDEFAULT"
-sudo -S cp $WDIR/sshd_config /etc/ssh/
-	if [ -f /etc/ssh/sshd_config ]; then
-		sudo -S echo -e "$colVERT\n[SSHD] == Fichier bien remplacé ==\n$colDEFAULT"
-	else
-		sudo -S echo -e "$colROUGE\n[SSHD] Fichier absent : erreur ==\n$colDEFAULT"
-	fi
-else
-sudo -S echo -e "$colJAUNE[SSHD] == Fichier sshd_config déjà patché ==\n$colDEFAULT"
-fi
-}
 function BASE(){
 # MISE A JOUR DU SYSTEME (OBLIGATOIRE PREMIERE FOIS POUR DL)
 sudo -S echo -e "$colJAUNE\n[BASE] == BASE INSTALL ==\n$colDEFAULT"
-sudo -S xbps-install -Syuv xbps
+sudo -S xbps-install -Syuv xbps; sudo -S xbps-install -Suyv;
 # INSTALLATION VPM
 sudo -S xbps-install -Syuv vpm vsv void-repo-multilib void-repo-nonfree void-repo-multilib-nonfree;
 # CLEANALL
@@ -346,6 +281,72 @@ if [ -e $(cat /etc/profile|grep "/.local/bin") ]; then
 else
 	sudo -S echo -e "==> /etc/profile : Fichier /etc/profile déjà modifié : "
 	sudo -S echo -e "==> /etc/profile : TERMINE"
+fi
+}
+function SSHKEYTEST(){
+SSHDIR="$HOME/.ssh/"
+PRIK="id_ed25519"
+sudo -S echo -e "$colJAUNE\n[SSH] == START ==\n$colDEFAULT"
+sudo -S echo -e "$colJAUNE\n[SSH] == CHECK CLES SSH ==\n$colDEFAULT"
+if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
+			# On ouvre une fenetre pour saisir la passphrase
+			PASSPHRASE=$(yad --entry --width="800" --height="100" \
+							--title="$TITLE $version" --text="Vous n'avez pas généré de clés SSH. Un mot de passe (passphrase) est demandé (sans = connexion auto)" \
+							--entry-label="Votre passphrase SSH : " \
+							--entry-text="")
+			valret=$?
+			case $valret in
+				0)
+				# On génère la clé avec la passphrase
+				if [[ -z "$PASSPHRASE" ]]; then
+					ssh-keygen -f $SSHDIR$PRIK -t ed25519 -N ""
+				else
+					ssh-keygen -f $SSHDIR$PRIK -t ed25519  -P $PASSPHRASE
+				fi
+				;;
+				1)
+				sudo -S echo -e "$colROUGE\n[SSH] == EXIT ==\n$colDEFAULT"
+				exit
+				;;
+				252)
+				exit
+				;;
+			esac
+	else
+			sudo -S echo -e "$colVERT\n[SSH] == Fichiers ssh déjà présent ==\n$colDEFAULT"
+	fi
+### Installation des clés dans la configuration
+## Config SSH
+
+# BACKUP CONFIG FILE
+sudo -S echo -e "$colJAUNE\n[SSHD] == Modification /etc/ssh/sshd_config ==\n$colDEFAULT"
+if [ ! -f /etc/ssh/sshd_config.sav ]; then
+	sudo -S echo -e "$colJAUNE\n[SSHD] == Backup en cours vers /etc/ssh/sshd_config.sav ==\n$colDEFAULT"
+	sudo -S pycp /etc/ssh/sshd_config /etc/ssh/sshd_config.sav
+	if [ -f /etc/ssh/sshd_config.sav ]; then
+		sudo -S echo -e "$colVERT\n[SSHD] == Backup OK ==\n$colDEFAULT"
+	else
+		sudo -S echo -e "$colROUGE\n[SSHD] !! Backup échoué : erreur !!\n$colDEFAULT"
+	fi
+else
+	sudo -S echo -e "$colVERT\n[SSHD] == sshd déjà backup ==\n$colDEFAULT"
+fi
+# CONFIG SSHD_CONFIG
+if [ $(grep -c "HostKey $SSHDIR$PRIK" /etc/ssh/sshd_config) = 0 ]; then
+	ligne=$(grep -n "#HostKey /etc/ssh/ssh_host_ed25519_key" /etc/ssh/sshd_config|cut -d: -f1)
+	lignecorr=$(($ligne+1))
+	sudo -S sed "$ligne a\\
+HostKey $SSHDIR$PRIK" /etc/ssh/sshd_config > $WDIR/sshd_config
+sudo -S rm /etc/ssh/sshd_config;
+sudo -S echo -e "$colVERT\n[SSHD] == Remplacement du fichier sshd d'origine par celui modifié ==\n$colDEFAULT"
+sudo -S cp $WDIR/sshd_config /etc/ssh/
+	if [ -f /etc/ssh/sshd_config ]; then
+		sudo -S echo -e "$colVERT\n[SSHD] == Fichier bien remplacé ==\n$colDEFAULT"
+	else
+		sudo -S echo -e "$colROUGE\n[SSHD] Fichier absent : erreur ==\n$colDEFAULT"
+	fi
+else
+sudo -S echo -e "$colJAUNE[SSHD] == Fichier sshd_config déjà patché ==\n$colDEFAULT"
 fi
 }
 
