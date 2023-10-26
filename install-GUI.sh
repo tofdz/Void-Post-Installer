@@ -34,7 +34,7 @@ colROUGE='\e[1;31m'
 colVERT='\e[1;32m'
 colJAUNE='\e[1;33m'
 colBLEU='\e[1;34m'
-colDEFAULT='\e[1;37m'
+colDEFAULT='\e[0;37m'
 
 function NET(){
 sudo -S echo -e "===> NET"
