@@ -93,7 +93,6 @@ if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
 
 # BACKUP CONFIG FILE
 sudo -S echo -e "$colJAUNE\n[SSHD] == Modification /etc/ssh/sshd_config ==\n$colDEFAULT"
-sudo xbps-install -Syuv pycp;
 if [ ! -f /etc/ssh/sshd_config.sav ]; then
 	sudo -S echo -e "$colJAUNE\n[SSHD] == Backup en cours vers /etc/ssh/sshd_config.sav ==\n$colDEFAULT"
 	sudo -S pycp /etc/ssh/sshd_config /etc/ssh/sshd_config.sav
@@ -158,7 +157,7 @@ sudo -S echo -e "$colJAUNE\n[BASE] == Firmware & co ==\n $colDEFAULT"
 sudo -S xbps-install -y linux-mainline linux-mainline-headers linux-firmware linux-firmware-broadcom linux-firmware-network dracut-network 
 
 sudo -S echo -e "$colJAUNE\n[BASE] == Minimum Apps ==\n $colDEFAULT"
-sudo -S xbps-install -y nano notepadqq mc htop tmux gparted pycp cdrtools socklog socklog-void zenity curl wget python3-pip inxi;
+sudo -S xbps-install -y nano notepadqq mc htop tmux gparted cdrtools socklog socklog-void zenity curl wget python3-pip inxi pycp;
 
 sudo -S echo -e "$colJAUNE\n[BASE] == Xfce addons ==\n $colDEFAULT"
 sudo -S xbps-install -y xorg-server-devel snooze thunar-archive-plugin catfish octoxbps pkg-config adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator gnome-disk-utility;
@@ -1034,8 +1033,8 @@ flatpak install --user -y com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 }
 function AUTOINSTALL(){
 echo -e "\033[33,40m==>   AUTOINSTALL\033[0m"
-SSHKEYTEST
 BASE
+SSHKEYTEST
 GUFW
 NANORC
 FLATPAK
@@ -1048,8 +1047,8 @@ MENUFIN
 function CUSTOMINSTALL(){
 echo -e "\033[33,40m==>   CUSTOMINSTALL\033[0m"
 MENUPARSER
-SSHKEYTEST
 BASE
+SSHKEYTEST
 NANORC
 FLATPAK
 XBPSLOADER
