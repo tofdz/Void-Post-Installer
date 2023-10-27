@@ -559,8 +559,9 @@ function SHIFTLOCK(){
 # Fonction verr. maj + shift
 lang=$(echo $(echo $(locale|grep "LC_MESSAGE")|cut -d '"' -f2)|cut -d "_" -f1)
 if [ ! -d "/etc/X11/xorg.conf.d" ]; then
-	sudo -S echo -e "$colROUGE[SHIFTLOCK] == REPERTOIRE xorg.conf.d absent ==\n$colDEFAULT"
+	sudo -S echo -e "$colROUGE\n[SHIFTLOCK] == REPERTOIRE xorg.conf.d absent ==\n$colDEFAULT"
 	sudo -S mkdir /etc/X11/xorg.conf.d
+	sudo -S echo -e "$colVERT\n[SHIFTLOCK] == Répertoire xorg.conf.d crée ==\n$colDEFAULT"
 fi	
 sudo -S touch /etc/X11/xorg.conf.d/00-Keyboard.conf
 echo 'Section "InputClass"' | sudo -S tee /etc/X11/xorg.conf.d/00-Keyboard.conf
@@ -612,10 +613,10 @@ echo 'include "/usr/share/nano/tex.nanorc"' >> $HOME/.nanorc
 echo 'set linenumbers' >> $HOME/.nanorc
 }
 function GUFW(){
-sudo -S echo -e "[GUFW][INSTALL] ==> Démarrage"
+sudo -S echo -e "$colJAUNE\n[GUFW] == Démarrage installation ==\n$colDEFAULT"
 sudo -S xbps-install -y ufw gufw
 sudo -S ln -s /etc/sv/ufw /var/service
-sudo -S echo -e "[GUFW] ==> Config files"
+sudo -S echo -e "$colJAUNE\n[GUFW] == Config files ==\n$colDEFAULT"
 #VPIXFCE
 if [ ! -f $dirapp/VPI-Firewall ]; then
 	echo '#!/bin/bash' > $dirapp/VPI-Firewall
@@ -624,6 +625,9 @@ if [ ! -f $dirapp/VPI-Firewall ]; then
 	chmod +x $dirapp/VPI-Firewall
 else
 	echo "Fichier VPI-Firewall présent"
+fi
+if [ ! -d "$shareapp" ]; then
+	mkdir $shareapp
 fi
 if [ ! -f $shareapp/VPI-Firewall.desktop ]; then
 # VPI-Firewall
@@ -647,6 +651,11 @@ unset ligne2
 dirmenu="$HOME/.config/menus"
 file="xfce-applications.menu"
 sudo -S echo -e "[VPIXFCE] ==> Verification Backup fichier $file"
+if [ ! -d "$dirmenu" ]; then
+	mkdir $dirmenu
+	sudo -S echo -e "$colVERT\n[VPIXFCE] == Création Répertoire $dirmenu ==\n$colDEFAULT"
+fi
+
 if [ -f $dirmenu/$file.bak ]; then
 	sudo -S echo -e "[VPIXFCE] ==> Fichier $file.bak présent"
 	else
@@ -683,9 +692,8 @@ if [ ! -d "$HOME/.local/share/desktop-directories"]; then
 	sudo -S echo -e "$colROUGE\n[VPI-APPS] == MENU VPI-APPS : Répertoire .local/share/desktop-directories absent ==\n$colDEFAULT"
 	mkdir $HOME/.local/share/desktop-directories;
 	sudo -S echo -e "$colVERT\n[VPI-APPS] == MENU VPI-APPS : Répertoire .local/share/desktop-directories créé ==\n$colDEFAULT"
-else
-	sudo -S echo -e "$colVERT\n[VPI-APPS] == MENU VPI-APS : Répertoire .local/share/desktop-directories déjà présent ==\n$colDEFAULT"
 fi
+
 if [ ! -f "$HOME/.local/share/desktop-directories/VPI.directory" ]; then
 	sudo -S echo -e "[VPIXFCE] ==> Création VPI.directory"
 	echo 'Fichier VPI.directory absent : création'
