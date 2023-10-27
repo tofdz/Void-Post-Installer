@@ -98,7 +98,7 @@ sudo -S xbps-install -y nano notepadqq mc htop tmux gparted cdrtools socklog soc
 sudo -S echo -e "$colJAUNE\n[BASE] == Xfce addons ==\n $colDEFAULT"
 sudo -S xbps-install -y xorg-server-devel snooze thunar-archive-plugin catfish octoxbps pkg-config adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator gnome-disk-utility;
 sudo -S echo -e "$colJAUNE\n[BASE] == Apps with utility ==\n $colDEFAULT"
-sudo -S xbps-install -y testdisk cpufrequtils xarchiver unzip p7zip-unrar xfburn;
+sudo -S xbps-install -y testdisk cpufrequtils xarchiver unzip p7zip xfburn;
 
 sudo -S echo -e "$colJAUNE\n[BASE] == Démarrage service log ==\n $colDEFAULT"
 sudo -S ln -s /etc/sv/socklog-unix /var/service; sudo -S ln -s /etc/sv/nanoklogd /var/service;
@@ -120,7 +120,7 @@ else
 	sudo -S echo -e "Service snooze-daily déjà présent"
 fi
 # Copie VOID-UPDATER dans .local/bin
-sudo -S pycp $WDIR/outils/VOID-UPDATER.sh $dirapp;
+sudo -S pycp $outils/VPI-UPDATER $dirapp;
 if [ ! -d /etc/cron.hourly ]; then
 	sudo -S echo -e "Dossier absent : création"
 	sudo -S mkdir /etc/cron.hourly
@@ -131,8 +131,8 @@ if [ ! -f /etc/cron.hourly/updater ]; then
 	
 	sudo -S touch updater 
 	echo -e '#!/bin/bash' | sudo -S tee /etc/cron.hourly/updater
-	echo -e "cd /home/$voiduser/" | sudo -S tee -a /etc/cron.hourly/updater
-	echo -e 'exec ./VOID-UPDATER.sh' | sudo -S tee -a /etc/cron.hourly/updater
+	echo -e "cd $dirapp" | sudo -S tee -a /etc/cron.hourly/updater
+	echo -e 'exec ./VPI-UPDATER' | sudo -S tee -a /etc/cron.hourly/updater
 	sudo -S chmod +x /etc/cron.hourly/updater
 	sudo -S chown root:root /etc/cron.hourly/updater
 	sudo -S ln -s /etc/sv/snooze-hourly /var/service
