@@ -1131,16 +1131,15 @@ done < $TMP04
 cat $res3 | grep APPS > $TMP01
 cat $TMP01 | cut -d "|" -f4 > $TMP02
 sed 's/.*/& /' $TMP02 > $TMP03
-cat $res2 > $TMP01
-# BESOIN DE SUPPRIMER LES LIGNES VIDES SUR TMP01
-sed '/^$/d' $TMP01 > $TMP02
-# ON RAJOUTE LES FIX A LA LISTE DES APPS POUR LA CHARGER DANS LE TABLEAU EN MEME TEMPS
-cat $TMP02 >> $TMP03
+# LISTE DES FIXS & PARSING
+cat $res2 > $TMP01; sed '/^$/d' $TMP01 > $TMP02;
+# ON RAJOUTE LES FIX AU DEBUT DE LA LISTE DES APPS POUR LA CHARGER DANS LE TABLEAU EN MEME TEMPS
+cat $TMP03 >> $TMP02
 unset customAPP
 while read -r dataAPP
 do
 customAPP+=("$dataAPP")
-done < $TMP03
+done < $TMP02
 
 sudo -S echo -e "customXBPS : ${customXBPS[@]}"
 sudo -S echo -e "customAPPS : ${customAPP[@]}"
