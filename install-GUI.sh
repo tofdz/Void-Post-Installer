@@ -699,7 +699,7 @@ sudo -S pycp $outils/VPI-* $dirapp
 VPIXFCE
 if [ ! -d "$shareapp" ]; then
 	sudo -S echo -e "$colROUGE[VPIAPPS] == REPERTOIRE $shareapp absent ==\n$colDEFAULT"
-	sudo -S mkdir $shareapp
+	mkdir $shareapp
 fi	
 #VPI-Backup-Restore
 if [ ! -f $shareapp/VPI-Backup-Restore.desktop ]; then
@@ -806,7 +806,7 @@ function OHMYZSH(){
 # Installation de OhmyZsh!
 sudo -S echo -e "$colJAUNE\n[OHMYZSH] == Install ==\n$colDEFAULT"
 sudo -S xbps-install -y zsh; 
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; exit
 }
 
 function CUPS(){
@@ -946,15 +946,16 @@ cd $HOME
 
 # Check directory d'installation
 if [ ! -d $HOME/Applications ];then
+	sudo -S echo -e "$colVERT\n[DISCORD] == Création Répertoire Applications ==\n$colDEFAULT"
 	mkdir $HOME/Applications
 fi
 if [ -d $HOME/Applications/Discord ]; then
-	sudo -S echo -e "discord deja installé, reinstallation en cours"
+	sudo -S echo -e "$colJAUNE\n[DISCORD] == Discord déjà installé, réinstallation en cours ==\n$colDEFAULT"
 	sudo -S rm -rfv $HOME/Applications/Discord
 fi
 
 # Téléchargement & installation de Discord
-sudo -S echo -e "Discord : Téléchargement"
+sudo -S echo -e "$colJAUNE\n[DISCORD] == Discord : Téléchargement ==\n$colDEFAULT"
 cd $HOME/Applications
 wget -O discord.tar.gz "https://discordapp.com/api/download?platform=linux&format=tar.gz"
 tar xfv discord.tar.gz; rm discord.tar.gz;
