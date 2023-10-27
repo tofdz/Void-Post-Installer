@@ -948,6 +948,7 @@ cd $HOME
 if [ ! -d $HOME/Applications ];then
 	sudo -S echo -e "$colVERT\n[DISCORD] == Création Répertoire Applications ==\n$colDEFAULT"
 	mkdir $HOME/Applications
+	chown -R $voiduser:$voiduser $HOME/Applications
 fi
 if [ -d $HOME/Applications/Discord ]; then
 	sudo -S echo -e "$colJAUNE\n[DISCORD] == Discord déjà installé, réinstallation en cours ==\n$colDEFAULT"
