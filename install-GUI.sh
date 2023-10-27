@@ -120,7 +120,10 @@ else
 	sudo -S echo -e "Service snooze-daily déjà présent"
 fi
 # Copie VOID-UPDATER dans .local/bin
-sudo -S pycp $outils/VPI-UPDATER $dirapp;
+if [ ! -d "$dirapp" ]; then
+	mkdir $dirapp
+fi
+pycp $outils/VPI-UPDATER $dirapp;
 if [ ! -d /etc/cron.hourly ]; then
 	sudo -S echo -e "Dossier absent : création"
 	sudo -S mkdir /etc/cron.hourly
@@ -141,7 +144,7 @@ else
 fi
 
 # INSTALLATION Wallpaper
-sudo -S pycp -g $WDIR/wallpapers/* /usr/share/backgrounds/xfce/
+sudo -S pycp -g $WDIR/data/wallpapers/* /usr/share/backgrounds/xfce/
 
 # Installation fonts SanFrancisco
 sudo -S echo -e "===> Fonts SanFrancisco"
@@ -677,11 +680,11 @@ else
 	sudo -S echo "[VPIXFCE] Fichier $file déjà modifié"
 fi
 if [ ! -d "$HOME/.local/share/desktop-directories"]; then
-	sudo -S echo -e "$colROUGE\n[VPI-APPS] == MENU VPI-APPS : Répertoire .local/share/desktop-directories absent ==\n$solDEFAULT"
+	sudo -S echo -e "$colROUGE\n[VPI-APPS] == MENU VPI-APPS : Répertoire .local/share/desktop-directories absent ==\n$colDEFAULT"
 	mkdir $HOME/.local/share/desktop-directories;
-	sudo -S echo -e "$colVERT\n[VPI-APPS] == MENU VPI-APPS : Répertoire .local/share/desktop-directories créé ==\n$solDEFAULT"
+	sudo -S echo -e "$colVERT\n[VPI-APPS] == MENU VPI-APPS : Répertoire .local/share/desktop-directories créé ==\n$colDEFAULT"
 else
-	sudo -S echo -e "$colVERT\n[VPI-APPS] == MENU VPI-APS : Répertoire .local/share/desktop-directories déjà présent"
+	sudo -S echo -e "$colVERT\n[VPI-APPS] == MENU VPI-APS : Répertoire .local/share/desktop-directories déjà présent ==\n$colDEFAULT"
 fi
 if [ ! -f "$HOME/.local/share/desktop-directories/VPI.directory" ]; then
 	sudo -S echo -e "[VPIXFCE] ==> Création VPI.directory"
