@@ -13,6 +13,7 @@ voiduser=$USER
 WDIR=$(pwd)
 scripts="$WDIR/data/install"
 outils="$WDIR/data/outils"
+config="$WDIR/data/config"
 icons="$WDIR/data/icons"
 dirapp="$HOME/.local/bin"
 shareapp="$HOME/.local/share/applications"
@@ -224,7 +225,7 @@ sudo -S vpm remove -y linux-firmware-amd linux-firmware-intel linux-firmware-nvi
 sudo -S echo -e "$colJAUNE\n[BASE] == Suppression Base_Install.conf ==\n$colDEFAULT"
 sudo -S rm Base_Install.conf
 sudo -S echo -e "$colJAUNE\n[BASE] == NETTOYAGE PAQUETS & CACHE ==\n$colDEFAULT"
-sudo -S xbps-remove -v -o; sudo -S xbps-remove -v -O;
+sudo -S xbps-remove -v -o --yes; sudo -S xbps-remove -v -O --yes;
 # Verification /etc/sysctl.conf
 sudo -S echo -e "==> Vérification /etc/sysctl.conf : $VER1"
 if [ -e $VER1 ]; then
@@ -612,7 +613,7 @@ sudo -S echo -e "[GUFW][INSTALL] ==> Démarrage"
 sudo -S xbps-install -y ufw gufw
 sudo -S ln -s /etc/sv/ufw /var/service
 sudo -S echo -e "[GUFW] ==> Config files"
-VPIXFCE
+#VPIXFCE
 if [ ! -f $dirapp/VPI-Firewall ]; then
 	echo '#!/bin/bash' > $dirapp/VPI-Firewall
 	echo 'PASS=$(yad --entry --image=security-low --title="GUFW Firewall" --hide-text --text="Firewall Launcher\n\nEnter user password :\n")' >> $dirapp/VPI-Firewall
@@ -675,8 +676,14 @@ sudo -S sed "$ligne2 a\\
 else
 	sudo -S echo "[VPIXFCE] Fichier $file déjà modifié"
 fi
-
-if [ ! -f $HOME/.local/share/desktop-directories/VPI.directory ]; then
+if [ ! -d "$HOME/.local/share/desktop-directories"]; then
+	sudo -S echo -e "$colROUGE\n[VPI-APPS] == MENU VPI-APPS : Répertoire .local/share/desktop-directories absent ==\n$solDEFAULT"
+	mkdir $HOME/.local/share/desktop-directories;
+	sudo -S echo -e "$colVERT\n[VPI-APPS] == MENU VPI-APPS : Répertoire .local/share/desktop-directories créé ==\n$solDEFAULT"
+else
+	sudo -S echo -e "$colVERT\n[VPI-APPS] == MENU VPI-APS : Répertoire .local/share/desktop-directories déjà présent"
+fi
+if [ ! -f "$HOME/.local/share/desktop-directories/VPI.directory" ]; then
 	sudo -S echo -e "[VPIXFCE] ==> Création VPI.directory"
 	echo 'Fichier VPI.directory absent : création'
 	echo '[Desktop Entry]' > $HOME/.local/share/desktop-directories/VPI.directory
@@ -806,7 +813,7 @@ function OHMYZSH(){
 # Installation de OhmyZsh!
 sudo -S echo -e "$colJAUNE\n[OHMYZSH] == Install ==\n$colDEFAULT"
 sudo -S xbps-install -y zsh; 
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; exit
 }
 
 function CUPS(){
@@ -987,7 +994,7 @@ sudo -S echo -e "Discord : Création raccourci"
 function PICOM(){
 echo "Picom : Installation"
 sudo -S xbps-install -y picom compton compton-conf
-sudo -S pycp $WDIR/config/picom.conf $HOME/.config/
+sudo -S pycp $config/picom.conf $HOME/.config/
 
 # Installation Picom-ibhagwan
 #cd $HOME
