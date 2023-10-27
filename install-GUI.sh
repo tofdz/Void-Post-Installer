@@ -331,8 +331,10 @@ if [ $(ls $SSHDIR|grep -c "$PRIK") != 2 ]; then
 				# On génère la clé avec la passphrase
 				if [[ -z "$PASSPHRASE" ]]; then
 					ssh-keygen -f $SSHDIR$PRIK -t ed25519 -N ""
+					ssh-add id_ed25519
 				else
 					ssh-keygen -f $SSHDIR$PRIK -t ed25519  -P $PASSPHRASE
+					ssh-add id_ed25519
 				fi
 				;;
 				1)
