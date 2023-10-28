@@ -1363,7 +1363,7 @@ function MENUFIN(){
 echo -e "[ FIN ]==> Installation terminée"
 sudo -S yad --info --title="$TITLE v$version : Installation terminée" \
 	--text="Installation terminée !\n\nReboot necessaire !!!\n\nBonne journée !\n\nTofdz" \
-	--button="Reboot:1" --button="Quit:0"
+	--button="Log out (auto):1" --button="Fermer:0"
 valret=$?
 case $valret in
 	0)
@@ -1371,7 +1371,7 @@ case $valret in
 	exit
 	;;
 	1)
-	sudo -S reboot
+	xfce-session-logout --logout
 	;;
 	252)
 	exit
@@ -1379,4 +1379,4 @@ case $valret in
 esac
 }
 NET;
-MENULANG
+MENULANG | tee $WDIR/VPI_install.log;
