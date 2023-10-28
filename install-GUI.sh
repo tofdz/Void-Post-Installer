@@ -215,6 +215,11 @@ cd $WDIR
 
 function THEME(){
 sudo -S echo -e "$colJAUNE\n[THEME] == Installation Theme VPI ==\n$colDEFAULT"
+# Patch pour désactiver sauvegarde session
+if [ -d "$HOME/.cache/sessions/" ]; then
+	rm -rfv $HOME/.cache/sessions/
+	chmod -w $HOME/.cache/sessions/
+fi
 # Installation Theme Qogir
 cd $HOME
 sudo -S echo -e "$colJAUNE\n[THEME] == Installation Qogir ==\n$colDEFAULT"
@@ -246,7 +251,7 @@ mkdir $HOME/.config/xfce4-BAK
 sudo -S echo -e "$colJAUNE\n[THEME] == Installation dotfiles xfce4 ==\n$colDEFAULT"
 pycp -g $HOME/.config/xfce4/panel/* $HOME/.config/xfce4-BAK
 # Nettoyage theme actuel
-sudo -S rm -rf $HOME/.config/xfce4/panel/;
+sudo -S rm -rfv $HOME/.config/xfce4/panel/;
 pycp -f $config/xfce4/* $HOME/.config/xfce4/
 }
 function SYS(){
