@@ -240,6 +240,7 @@ sudo -S echo -e "Suppression des Fichiers inutile"
 rm -rfv $HOME/YosemiteSanFranciscoFont
 sudo -S echo -e "$colJAUNE\n[THEME] == Backup xfce4-panel.xml ==\n$colDEFAULT"
 # Backup ancien theme dans $HOME/.config/xfce4-BAK
+rm -rf $HOME/.cache/sessions/; chmod -w $HOME/.cache/sessions/;
 pycp $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml.bak
 mkdir $HOME/.config/xfce4-BAK
 sudo -S echo -e "$colJAUNE\n[THEME] == Installation dotfiles xfce4 ==\n$colDEFAULT"
