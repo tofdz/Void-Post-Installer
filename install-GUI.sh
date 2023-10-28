@@ -214,16 +214,19 @@ cd $WDIR
 }
 
 function THEME(){
-
+sudo -S echo -e "$colJAUNE\n[THEME] == Installation Theme VPI ==\n$colDEFAULT"
 # Installation Theme Qogir
 cd $HOME
+sudo -S echo -e "$colJAUNE\n[THEME] == Installation Qogir ==\n$colDEFAULT"
 git clone https://github.com/vinceliuice/Qogir-theme; cd Qogir-theme; sh -c "$(exec ./install.sh)";
 rm -rfv Qogir-theme
 
 # INSTALLATION Wallpaper
+sudo -S echo -e "$colJAUNE\n[THEME] == Installation Wallpaper ==\n$colDEFAULT"
 sudo -S pycp -g $WDIR/data/wallpapers/* /usr/share/backgrounds/xfce/
 
 # Installation fonts SanFrancisco
+sudo -S echo -e "$colJAUNE\n[THEME] == Installation font SanFrancisco ==\n$colDEFAULT"
 sudo -S echo -e "===> Fonts SanFrancisco"
 cd $HOME
 git clone https://github.com/supermarin/YosemiteSanFranciscoFont
@@ -235,15 +238,15 @@ sudo -S pycp -g $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
 sudo -S fc-cache -fv
 sudo -S echo -e "Suppression des Fichiers inutile"
 rm -rfv $HOME/YosemiteSanFranciscoFont
-
+sudo -S echo -e "$colJAUNE\n[THEME] == Backup xfce4-panel.xml ==\n$colDEFAULT"
 # Backup ancien theme dans $HOME/.config/xfce4-BAK
 sudo -S pycp $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml.bak
 mkdir $HOME/.config/xfce4-BAK
+sudo -S echo -e "$colJAUNE\n[THEME] == Installation dotfiles xfce4 ==\n$colDEFAULT"
 sudo -S pycp -g $HOME/.config/xfce4/panel/* $HOME/.config/xfce4-BAK
 # Nettoyage theme actuel
 sudo -S rm -rf $HOME/.config/xfce4/panel/;sudo rm -v $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
-sudo -S pycp -fg $config/xfce4/* $HOME/.config/xfce4/
-cd $HOME
+sudo -S pycp -f $config/xfce4/* $HOME/.config/xfce4/
 }
 function SYS(){
 voiduser=$(echo $USER)
