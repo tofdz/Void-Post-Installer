@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Gestionnaire de fichiers Thunar
+Comment=Parcourir le système de fichiers avec le gestionnaire de fichiers
+Exec=thunar %U
+Icon=org.xfce.panel.directorymenu
+Path=
+Terminal=false
+StartupNotify=true

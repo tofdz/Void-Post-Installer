@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=VPI-Firewall
+Comment=
+Exec=VPI-Firewall
+Icon=security-low
+Path=
+Terminal=false
+StartupNotify=false

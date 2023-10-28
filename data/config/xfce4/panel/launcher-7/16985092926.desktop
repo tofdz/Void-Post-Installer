@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Discord
+Comment=All-in-one voice and text chat for gamers that's free, secure, and works on both your desktop and phone.
+Exec=/home/toff/.local/bin/VPI-Discord_Launcher
+Icon=/home/toff/Applications/Discord/discord.png
+Path=
+Terminal=false
+StartupNotify=false

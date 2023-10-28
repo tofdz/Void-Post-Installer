@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Notepadqq
+Comment=Editer des fichier de code source
+Exec=notepadqq %U
+Icon=notepadqq
+Path=
+Terminal=false
+StartupNotify=false
