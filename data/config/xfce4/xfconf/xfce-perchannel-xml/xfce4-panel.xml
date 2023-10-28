@@ -25,9 +25,6 @@
         <value type="int" value="11"/>
         <value type="int" value="12"/>
         <value type="int" value="13"/>
-        <value type="int" value="14"/>
-        <value type="int" value="15"/>
-        <value type="int" value="16"/>
       </property>
     </property>
   </property>
@@ -44,6 +41,7 @@
       <property name="command-switchuser" type="string" value="dm-tool switch-to-greeter"/>
       <property name="menu-opacity" type="int" value="80"/>
       <property name="recent" type="array">
+        <value type="string" value="qt5ct.desktop"/>
         <value type="string" value="octoxbps.desktop"/>
       </property>
     </property>
@@ -72,35 +70,19 @@
         <value type="string" value="16985092685.desktop"/>
       </property>
     </property>
-    <property name="plugin-7" type="string" value="launcher">
-      <property name="items" type="array">
-        <value type="string" value="16985092926.desktop"/>
-      </property>
-    </property>
-    <property name="plugin-8" type="string" value="launcher">
-      <property name="items" type="array">
-        <value type="string" value="16985093637.desktop"/>
-      </property>
-    </property>
-    <property name="plugin-9" type="string" value="launcher">
-      <property name="items" type="array">
-        <value type="string" value="16985094188.desktop"/>
-        <value type="string" value="16985094409.desktop"/>
-      </property>
-    </property>
-    <property name="plugin-10" type="string" value="tasklist">
+    <property name="plugin-7" type="string" value="tasklist">
       <property name="grouping" type="bool" value="true"/>
       <property name="show-wireframes" type="bool" value="false"/>
       <property name="flat-buttons" type="bool" value="false"/>
       <property name="show-handle" type="bool" value="true"/>
       <property name="show-tooltips" type="bool" value="true"/>
     </property>
-    <property name="plugin-11" type="string" value="separator">
+    <property name="plugin-8" type="string" value="separator">
       <property name="expand" type="bool" value="true"/>
       <property name="style" type="uint" value="0"/>
     </property>
-    <property name="plugin-12" type="string" value="pager"/>
-    <property name="plugin-13" type="string" value="systray">
+    <property name="plugin-9" type="string" value="pager"/>
+    <property name="plugin-10" type="string" value="systray">
       <property name="known-items" type="array">
         <value type="string" value="vlc"/>
         <value type="string" value="com.leinardi.gwe"/>
@@ -109,19 +91,21 @@
       <property name="hidden-legacy-items" type="array">
       </property>
       <property name="icon-size" type="int" value="25"/>
+      <property name="known-legacy-items" type="array">
+        <value type="string" value="connexion au réseau ethernet « wired connection 1 » active"/>
+      </property>
     </property>
-    <property name="plugin-14" type="string" value="pulseaudio">
+    <property name="plugin-11" type="string" value="pulseaudio">
       <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
       <property name="persistent-players" type="string" value=""/>
       <property name="volume-max" type="uint" value="110"/>
     </property>
-    <property name="plugin-15" type="string" value="separator">
+    <property name="plugin-12" type="string" value="separator">
       <property name="expand" type="bool" value="false"/>
     </property>
-    <property name="plugin-16" type="string" value="clock">
+    <property name="plugin-13" type="string" value="clock">
       <property name="mode" type="uint" value="4"/>
       <property name="flash-separators" type="bool" value="true"/>
     </property>
   </property>
 </channel>
-
