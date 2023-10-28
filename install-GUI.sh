@@ -217,7 +217,7 @@ function THEME(){
 
 # Installation Theme Qogir
 cd $HOME
-git clone https://github.com/vinceliuice/Qogir-theme; cd Qogir-theme; exec ./install.sh;
+git clone https://github.com/vinceliuice/Qogir-theme; cd Qogir-theme; sh -c "$(exec ./install.sh)";
 rm -rfv Qogir-theme
 
 # INSTALLATION Wallpaper
@@ -242,8 +242,8 @@ mkdir $HOME/.config/xfce4-BAK
 sudo -S pycp -g $HOME/.config/xfce4/panel/* $HOME/.config/xfce4-BAK
 # Nettoyage theme actuel
 sudo -S rm -rf $HOME/.config/xfce4/panel/;sudo rm -v $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
-sudo -S pycp -g $config/xfce4/* $HOME/.config/xfce4/
-
+sudo -S pycp -fg $config/xfce4/* $HOME/.config/xfce4/
+cd $HOME
 }
 function SYS(){
 voiduser=$(echo $USER)
