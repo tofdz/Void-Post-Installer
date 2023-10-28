@@ -10,4 +10,4 @@ MimeType=
 Categories=Utility;GTK;GNOME;
 Keywords=GWE;nvidia;overclock;
 X-Flatpak=com.leinardi.gwe
-X-XFCE-Source=file:///home/toff/.local/share/flatpak/exports/share/applications/com.leinardi.gwe.desktop
+X-XFCE-Source=file://$HOME/.local/share/flatpak/exports/share/applications/com.leinardi.gwe.desktop
