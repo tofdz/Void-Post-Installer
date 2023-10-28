@@ -245,7 +245,7 @@ mkdir $HOME/.config/xfce4-BAK
 sudo -S echo -e "$colJAUNE\n[THEME] == Installation dotfiles xfce4 ==\n$colDEFAULT"
 sudo -S pycp -g $HOME/.config/xfce4/panel/* $HOME/.config/xfce4-BAK
 # Nettoyage theme actuel
-sudo -S rm -rf $HOME/.config/xfce4/panel/;sudo rm -v $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
+sudo -S rm -rf $HOME/.config/xfce4/panel/;sudo rm -fv $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
 sudo -S pycp -f $config/xfce4/* $HOME/.config/xfce4/
 }
 function SYS(){
