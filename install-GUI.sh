@@ -170,21 +170,6 @@ else
 	sudo -S echo -e "Fichier deja présent"
 fi
 
-# INSTALLATION Wallpaper
-sudo -S pycp -g $WDIR/data/wallpapers/* /usr/share/backgrounds/xfce/
-
-# Installation fonts SanFrancisco
-sudo -S echo -e "===> Fonts SanFrancisco"
-cd $HOME
-git clone https://github.com/supermarin/YosemiteSanFranciscoFont
-if [ ! -d $HOME/.fonts ];then
-	sudo mkdir $HOME/.fonts/
-	sudo -S echo -e "Repertoire .fonts crée !"
-fi
-sudo -S pycp -g $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
-sudo -S fc-cache -fv
-sudo -S echo -e "Suppression des Fichiers inutile"
-rm -rfv $HOME/YosemiteSanFranciscoFont
 
 # Attribue à l'utilisateur le group input (pour les manettes de jeu)
 sudo -S echo -e "## Ajout de $voiduser au groupe Input"
@@ -226,6 +211,39 @@ echo "	<text-files/>" >> $HOME/.config/Thunar/uca.xml
 echo "</action>" >> $HOME/.config/Thunar/uca.xml
 echo "</actions>" >> $HOME/.config/Thunar/uca.xml
 cd $WDIR
+}
+
+function THEME(){
+
+# Installation Theme Qogir
+cd $HOME
+git clone https://github.com/vinceliuice/Qogir-theme; cd Qogir-theme; exec ./install.sh;
+rm -rfv Qogir-theme
+
+# INSTALLATION Wallpaper
+sudo -S pycp -g $WDIR/data/wallpapers/* /usr/share/backgrounds/xfce/
+
+# Installation fonts SanFrancisco
+sudo -S echo -e "===> Fonts SanFrancisco"
+cd $HOME
+git clone https://github.com/supermarin/YosemiteSanFranciscoFont
+if [ ! -d $HOME/.fonts ];then
+	sudo mkdir $HOME/.fonts/
+	sudo -S echo -e "Repertoire .fonts crée !"
+fi
+sudo -S pycp -g $HOME/YosemiteSanFranciscoFont/*.ttf $HOME/.fonts/
+sudo -S fc-cache -fv
+sudo -S echo -e "Suppression des Fichiers inutile"
+rm -rfv $HOME/YosemiteSanFranciscoFont
+
+# Backup ancien theme dans $HOME/.config/xfce4-BAK
+sudo -S pycp $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml.bak
+mkdir $HOME/.config/xfce4-BAK
+sudo -S pycp -g $HOME/.config/xfce4/panel/* $HOME/.config/xfce4-BAK
+# Nettoyage theme actuel
+sudo -S rm -rf $HOME/.config/xfce4/panel/;sudo rm -v $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
+sudo -S pycp -g $config/xfce4/* $HOME/.config/xfce4/
+
 }
 function SYS(){
 voiduser=$(echo $USER)
@@ -1299,6 +1317,7 @@ yad --plug="$KEY" --tabnum="3" --form --text="FIX : Tous les correctifs dispo po
 yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les applications déjà configuré pour vous" --hide-column="3" \
 		--column="CHECK" --column=":IMG" --column="APPS" --column="PAQUET" --column="DESCRIPTION" \
 		true "$icons/gufw-50.png" "APPS" "GUFW" "Un firewall avec interface graphique" \
+		true "$icons/theme.png" "APPS" "THEME" "Theme Void Post Installer" \
 		false "$icons/cups-50.png" "APPS" "CUPS" "Impression" \
 		true "$icons/I3wm-color-50.png" "APPS" "VPIAPPS" "Ensemble d'applis assez utile !" \
 		false "$icons/I3wm-color-50.png" "APPS" "I3INSTALLER" "Installation du gestionnaire de fenetre graphique i3" \
