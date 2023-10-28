@@ -1371,7 +1371,7 @@ case $valret in
 	exit
 	;;
 	1)
-	sudo -S xfce-session-logout --logout --fast
+	sudo -S xfce4-session-logout --logout --fast
 	;;
 	252)
 	exit
