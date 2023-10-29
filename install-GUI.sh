@@ -224,7 +224,7 @@ fi
 cd $HOME
 sudo -S echo -e "$colJAUNE\n[THEME] == Installation Qogir ==\n$colDEFAULT"
 git clone https://github.com/vinceliuice/Qogir-theme; cd Qogir-theme; sh -c "$(exec ./install.sh)";
-rm -rfv Qogir-theme
+rm -rfv $WDIR/Qogir-theme
 
 # INSTALLATION Wallpaper
 sudo -S echo -e "$colJAUNE\n[THEME] == Installation Wallpaper ==\n$colDEFAULT"
@@ -245,14 +245,14 @@ sudo -S echo -e "Suppression des Fichiers inutile"
 rm -rfv $HOME/YosemiteSanFranciscoFont
 sudo -S echo -e "$colJAUNE\n[THEME] == Backup xfce4-panel.xml ==\n$colDEFAULT"
 # Backup ancien theme dans $HOME/.config/xfce4-BAK
-rm -rf $HOME/.cache/sessions/; chmod -w $HOME/.cache/sessions/;
+rm -rfv $HOME/.cache/sessions/; chmod -w $HOME/.cache/sessions/;
 pycp $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml $XDG_DOCUMENTS_DIR/xfce4-panel.xml.bak
 mkdir $XDG_DOCUMENTS_DIR/xfce4-BAK
 sudo -S echo -e "$colJAUNE\n[THEME] == Installation dotfiles xfce4 ==\n$colDEFAULT"
-#pycp -g $HOME/.config/xfce4/panel/* $HOME/.config/xfce4-BAK
+pycp -g $HOME/.config/xfce4/panel/* $XDG_DOCUMENTS_DIR/xfce4-BAK
 # Nettoyage theme actuel
 sudo -S rm -rfv $HOME/.config/xfce4/panel/;
-sudo -S rm -rfv $HOME/.config.xfce4/xfconf/xfce-perchannel-xml/xfce4-panel;
+sudo -S rm -rfv $HOME/.config.xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml;
 pycp -f $config/xfce4/* $HOME/.config/xfce4/
 }
 function SYS(){
