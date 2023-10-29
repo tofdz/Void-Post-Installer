@@ -1376,7 +1376,7 @@ function MENUFIN(){
 echo -e "[ FIN ]==> Installation terminée"
 sudo -S yad --info --title="$TITLE v$version : Installation terminée" \
 	--text="Installation terminée !\n\nReboot necessaire !!!\n\nBonne journée !\n\nTofdz" \
-	--button="Log out (auto):1" --button="Fermer:0"
+	--button="Reboot:1" --button="Fermer:0"
 valret=$?
 case $valret in
 	0)
