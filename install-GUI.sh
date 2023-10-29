@@ -705,6 +705,9 @@ if [ ! -f $shareapp/VPI-Firewall.desktop ]; then
 else
 	echo "Fichier VPI-Firewall.desktop présent"
 fi
+sudo -S ufw enable
+# Pour activer des regles dans ufw directement à l'installation
+# sudo ufw allow from 192.168.1.0/24  to any port 22 # Autoriser les ports 22 du sous réseaux 192.168.1.X
 }
 function VPIXFCE(){
 
