@@ -253,6 +253,7 @@ pycp -g $HOME/.config/xfce4/panel/* $XDG_DOCUMENTS_DIR/xfce4-BAK
 fi
 # Préparation pour dotFiles pour XFCE4
 sudo -S echo -e "$colJAUNE\n[THEME] == Préparation xfce4 ==\n$colDEFAULT"
+killall xfce4-panel;
 rm -rfv $HOME/.config/xfce4/panel/*;
 rm -rfv $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml;
 # Installation dotFiles pour XFCE4
@@ -1383,7 +1384,7 @@ case $valret in
 	exit
 	;;
 	1)
-	sudo -S xfce4-session-logout --logout --fast
+	sudo -S reboot -n
 	;;
 	252)
 	exit
