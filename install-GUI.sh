@@ -251,9 +251,10 @@ mkdir $XDG_DOCUMENTS_DIR/xfce4-BAK
 sudo -S echo -e "$colJAUNE\n[THEME] == Installation dotfiles xfce4 ==\n$colDEFAULT"
 pycp -g $HOME/.config/xfce4/panel/* $XDG_DOCUMENTS_DIR/xfce4-BAK
 # Nettoyage theme actuel
-sudo -S rm -rfv $HOME/.config/xfce4/panel/;
-sudo -S rm -rfv $HOME/.config.xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml;
-pycp -f $config/xfce4/* $HOME/.config/xfce4/
+rm -rf $HOME/.config/xfce4/panel/;
+rm -rf $HOME/.config.xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml;
+pycp -f $config/xfce4/panel/launcher-* $HOME/.config/xfce4/panel/
+pycp -f $config/xfce4/xfconf/xfce-perchannel-xml/*.xml $HOME/.config/xfce4/xfconf/xfce-perchannel/
 }
 function SYS(){
 voiduser=$(echo $USER)
