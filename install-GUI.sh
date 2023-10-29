@@ -257,7 +257,8 @@ rm -rfv $HOME/.config/xfce4/panel/*;
 rm -rfv $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml;
 # Installation dotFiles pour XFCE4
 sudo -S echo -e "$colJAUNE\n[THEME] == Installation dotfiles xfce4 ==\n$colDEFAULT"
-pycp $config/xfce4/* $HOME/.config/xfce4/
+pycp -f $config/xfce4/* $HOME/.config/xfce4/
+
 }
 function SYS(){
 voiduser=$(echo $USER)
