@@ -262,7 +262,6 @@ pycp -f $config/xfce4/* $HOME/.config/xfce4/
 
 }
 function SYS(){
-voiduser=$(echo $USER)
 VER1=$(cat /etc/sysctl.conf|grep vm.max_map_count=1048576)
 VER2=$(cat /etc/sysctl.conf|grep "abi.vsyscall32 = 0")
 VER4=$(cat /etc/security/limits.conf|grep '1048576')
@@ -942,7 +941,7 @@ sudo -S echo -e "Service virtlogd monté"
 else
 sudo -S echo -e "Service virtlogd déjà monté"
 fi
-
+sudo -S usermod -a -G libvirt $voiduser
 }
 function VIRTUALBOX(){
 sudo -S xbps-install -y virtualbox-ose virtualbox-ose-dkms
