@@ -8,7 +8,7 @@
 # Celine    : Les petits pains !!
 
 TITLE="Void Post Installer"
-version="0.3.4"
+version="0.3.5"
 voiduser=$USER
 WDIR=$(pwd)
 scripts="$WDIR/data/install"
