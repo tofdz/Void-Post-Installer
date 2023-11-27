@@ -469,7 +469,9 @@ sudo -S xbps-install -y linux-firmware-amd mesa mesa-dri
 function NVIDIA(){
 
 sudo -S echo -e "===> nvidia INSTALL"
-sudo -S xbps-install -y mesa mesa-dri mesa-vdpau mesa-vdpau-32bit mesa-opencl nvidia nvidia-libs-32bit nvidia-opencl nvtop
+sudo -S xbps-install -y nvidia nvidia-opencl nvidia-firmware linux-firmware-nvidia nvtop;
+sudo -S xbps-install -y mesa mesa-dri mesa-opencl mesa-vaapi mesa-vdpau;
+sudo -S xbps-install -y Vulkan-Header Vulkan-ValidationLayers vulkan-loader;
 # Fichier de configuration pour la gestion des ventilateurs
 if [ ! -d "/etc/X11/xorg.conf.d" ]; then
 	sudo -S echo -e "$colROUGE[SHIFTLOCK] == REPERTOIRE xorg.conf.d absent ==\n$colDEFAULT"
@@ -1321,7 +1323,7 @@ yad --plug="$KEY" --tabnum="2" --checklist --list --text="XBPS : Liste des paque
 		false "XBPS" "gimp" "Logiciel d'édition d'image & photos" \
 		false "XBPS" "blender" "Logiciel 3D" \
 		false "XBPS" "ytmdl" "Téléchargez vos playlists youtube" \
-		true "XBPS" "filelight" "Affichez le remplissage de vos dossiers & disques durs !" \
+		true "XBPS" "baobab" "Affichez le remplissage de vos dossiers & disques durs !" \
 		false "XBPS" "lutris" "Jouez à vos jeu windows favoris préconfiguré pour linux." \
 		false "XBPS" "CPU-X" "Affichez les informations CPU" \
 		true "XBPS" "xfce4-plugins" "Suite de plugin pour personnaliser votre interface xfce" \
