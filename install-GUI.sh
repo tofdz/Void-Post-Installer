@@ -896,7 +896,7 @@ sudo -S echo -e "$colVERT BONJOUR $colJAUNE BISOUS $colDEFAULT"
 function CUPS(){
 sudo -S echo -e "[CUPS][INSTALL]"
 # Paquets a installer
-sudo -S xbps-install -y cups cups-filter system-config-printer
+sudo -S xbps-install -y cups cups-filters system-config-printer
 sudo -S ln -s /etc/sv/cupsd /var/service
 
 }
