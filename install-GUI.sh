@@ -91,7 +91,7 @@ sudo -S rm /var/service/dhcpcd /var/service/agetty-hvc0 /var/service/agetty-hvsi
 
 # Base Apps
 sudo -S echo -e "$colJAUNE\n[BASE] == Firmware & co ==\n $colDEFAULT"
-sudo -S xbps-install -y linux-mainline linux-mainline-headers linux-firmware linux-firmware-broadcom linux-firmware-network dracut-network 
+sudo -S xbps-install -y linux-lts linux-lts-headers linux-firmware linux-firmware-broadcom linux-firmware-network dracut-network 
 sudo -S echo -e "$colJAUNE\n[BASE] == Minimum Apps ==\n $colDEFAULT"
 sudo -S xbps-install -y nano notepadqq mc htop tmux gparted cdrtools socklog socklog-void zenity curl wget python3-pip inxi pycp;
 sudo -S echo -e "$colJAUNE\n[BASE] == Xfce addons ==\n $colDEFAULT"
@@ -639,7 +639,7 @@ echo 'EndSection' | sudo -S tee -a /etc/X11/xorg.conf.d/00-Keyboard.conf
 
 function FLATPAK(){
 sudo -S echo -e "===> FLATPAK"
-# installation via flatpak de Discord & Parsec
+# installation de flatpak
 sudo -S xbps-install -y flatpak
 sudo -S echo -e "Flatpak : Création des repos si non existant"
 flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -1026,7 +1026,7 @@ vmwareSELECT=$(yad --title="VMWare WorkStation installation" \
 			)
 $vmwareSELECT
 }
-function DISCORD(){
+function DISCORDAPP(){
 sudo -S echo -e "===> Discord : Installation"
 cd $HOME
 
@@ -1070,6 +1070,13 @@ sudo -S echo -e "Discord : Création raccourci"
 	echo "Terminal=false" >> $shareapp/discord.desktop
 	echo "StartupNotify=false" >> $shareapp/discord.desktop
 }
+=================
+
+function DISCORDFLAT(){
+sudo -S echo -e "===> Discord : Installation"
+flatpak install --user com.discordapp.Discord -y
+}
+================
 function PICOM(){
 echo "Picom : Installation"
 sudo -S xbps-install -y picom compton compton-conf
@@ -1353,7 +1360,8 @@ yad --plug="$KEY" --tabnum="4" --checklist --list --text="APPS : Toutes les appl
 		false "$icons/Wine-50.png" "APPS" "WINE" "Pouvoir installer des applications windows sur voidlinux" \
 		false "$icons/Steam-color-50.png" "APPS" "STEAM" "Installation de Steam" \
 		false "$icons/Steam-color-50.png" "APPS" "PROTONFLAT" "Version flatpak de Proton-GE pour steam flatpak" \
-		true "$icons/Discord-light-50.png" "APPS" "DISCORD" "Célèbre plateforme de chat vocale" \
+		false "$icons/Discord-light-50.png" "APPS" "DISCORDAPPS" "Célèbre plateforme de chat vocale (tar.gz)" \
+  		true "$icons/Discord-light-50.png" "APPS" "DISCORDFLAT" "Célèbre plateforme de chat vocale (flatpak)" \
 		true "$icons/ohmyzsh-50.png" "APPS" "OHMYZSH" "Shell bien plus avancé que le terminal de base ;) à essayer !" &>$res3&\
 yad --notebook --key="$KEY" --title="$TITLE" --image="abp.png" --text="$TITLE" \
 		--center --on-top \
