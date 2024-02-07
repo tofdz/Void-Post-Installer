@@ -95,7 +95,7 @@ sudo -S xbps-install -y linux-lts linux-lts-headers linux-firmware linux-firmwar
 sudo -S echo -e "$colJAUNE\n[BASE] == Minimum Apps ==\n $colDEFAULT"
 sudo -S xbps-install -y nano notepadqq mc htop tmux gparted cdrtools socklog socklog-void zenity curl wget python3-pip inxi pycp;
 sudo -S echo -e "$colJAUNE\n[BASE] == Xfce addons ==\n $colDEFAULT"
-sudo -S xbps-install -y xorg-server-devel snooze thunar-archive-plugin catfish octoxbps pkg-config adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator gnome-disk-utility;
+sudo -S xbps-install -y xorg-server-devel snooze thunar-archive-plugin catfish octoxbps pkg-config adwaita-qt qt5ct xfce4-pulseaudio-plugin gnome-calculator gnome-disk-utility mugshot menulibre;
 sudo -S echo -e "$colJAUNE\n[BASE] == Apps with utility ==\n $colDEFAULT"
 sudo -S xbps-install -y testdisk cpufrequtils xarchiver unzip p7zip xfburn;
 
